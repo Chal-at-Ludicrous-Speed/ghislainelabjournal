@@ -1,6 +1,6 @@
-name: "Example Lab Journal"
+name: "Lab Journal of Ghislaine"
 author: 
-  - 'Your Name'
+  - 'Ghislaine de Groot'
 output_dir: "docs"
 exclude: 
   - "data"
@@ -10,7 +10,7 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
-    - text: "My journal"
+    - text: "Journal of Ghislaine"
       menu:
       - text: "Page 1"
         href: lab1.html
@@ -20,7 +20,7 @@ navbar:
 
   right:
   - icon: fab fa-github
-    href: https://github.com/JochemTolsma/labjournal
+    href: https://chal-at-ludicrous-speed.github.io/ghislainelabjournal/
 output:
   html_document:
     theme: flatly
