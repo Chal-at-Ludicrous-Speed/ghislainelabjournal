@@ -12,7 +12,7 @@ library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
 opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
 options(width = 100)
-rgl::setupKnitr()
+#rgl::setupKnitr()
 
 
 
@@ -38,6 +38,14 @@ You can journal the assignments of the first day here.
 
 ----
 
+asdfg
+
+# sdf
+sss
+
+## sdfgh
+
+*dfg*
 
 ```{r}
 print("Hello Lab Journal")
