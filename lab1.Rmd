@@ -1,7 +1,7 @@
 ---
 title: "Journal 1"
 #bibliography: references.bib
-author: "Your Name"
+author: "Ghislaine de Groot"
 ---
 
 
@@ -45,7 +45,7 @@ sss
 
 ## sdfgh
 
-*dfg*
+*dfg
 
 ```{r}
 print("Hello Lab Journal")

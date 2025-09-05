@@ -1,6 +1,6 @@
 ---
-title: "Lab journal"
-author: "by: Your Name"
+title: "Lab journal of Ghislaine"
+author: "by: Ghislaine de Groot"
 bibliography: references.bib
 
  
