@@ -38,14 +38,8 @@ You can journal the assignments of the first day here.
 
 ----
 
-asdfg
-
-# sdf
-sss
-
-## sdfgh
-
-*dfg
+# Things I did 
+Replaced the picture! Enjoy my blåhaj.
 
 ```{r}
 print("Hello Lab Journal")
