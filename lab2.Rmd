@@ -4,6 +4,8 @@ title: "Journal 1"
 author: "Ghislaine de Groot"
 ---
 
+
+
 ```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
 library(knitr)
 
@@ -28,16 +30,20 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 
 <br>
 
-------------------------------------------------------------------------
+----
+  
+This is just an example page of your `r colorize("lab journal", "red")`.
+You can journal the assignments of the first day here.
+  
 
-This is just an example page of your `r colorize("lab journal", "red")`. You can journal the assignments of the first day here.
+----
 
-------------------------------------------------------------------------
-
-# Things I did
-
+# Things I did 
 Replaced the picture! Enjoy my blåhaj.
 
 ```{r}
 print("Hello Lab Journal")
 ```
+
+
+
