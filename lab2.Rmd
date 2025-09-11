@@ -1,5 +1,5 @@
 ---
-title: "Journal 1"
+title: "Journal 2"
 #bibliography: references.bib
 author: "Ghislaine de Groot"
 ---
@@ -38,8 +38,8 @@ You can journal the assignments of the first day here.
 
 ----
 
-# Things I did 
-Replaced the picture! Enjoy my blåhaj.
+# Literature and Research Questions 
+The Prestige of Ph.D. Granting Departments of Sociology: A Simple Network Approach
 
 ```{r}
 print("Hello Lab Journal")
