@@ -24,8 +24,6 @@ klippy::klippy(position = c('top', 'right'))
 #klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
 ```
 
-Last compiled on `r format(Sys.time(), '%B, %Y')`
-
 <br>
 
 ------------------------------------------------------------------------
@@ -40,18 +38,29 @@ This is just an example page of your `r colorize("lab journal", "red")`. You can
 
 Replaced the picture! Enjoy my blåhaj.
 
-```{r}
-print("Hello Lab Journal")
-```
 
 # Seminar 2
 
 ## Things I did
 
-Tried adding a second page to my website, but have been unsuccessful.
+Tried adding a second page to my website, but was unsuccessful.
 Did the R Tutorial.
-Read literature.
+Read literature for the RQs.
+Reformulated my research questions.
+Read chapter 1.
 
 ## Literature and Research Questions 
 
-The Academic Caste System.
+Burris (2004) The Academic Caste System: Prestige Hierarchies in PhD Exchange Networks
+- Academics gain social capital from their department (structure)
+- Social capital can be combined with academic merit (e.g. research impact) (individual)
+- Social capital alone has a much higher explanatory power than combined with academic merit
+
+Hanneman (2001) The Prestige of Ph.D. Granting Departments of Sociology: A Simple Network Approach
+- Prestige ranking as the behavioral realization of processes of social exchange
+
+de Haan (2014) Sociology in the Netherlands
+- Dutch Sociology departments have little differentiation
+
+Descriptive: To what extent do Dutch sociology department differ in prestige?
+Explanatory: To what extent do Dutch sociologists gain social capital and academic merit from their department?
