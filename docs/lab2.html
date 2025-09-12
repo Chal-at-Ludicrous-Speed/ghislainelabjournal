@@ -352,6 +352,9 @@ div.tocify {
     <li>
       <a href="lab1.html">Page 1</a>
     </li>
+    <li>
+      <a href="lab2.html">Page 2</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -395,20 +398,36 @@ div.tocify {
 <p><br></p>
 <hr />
 <p>This is just an example page of your <span style="color: red;">lab
-journal</span>. You can journal the assignments of the first day
+journal</span>. You can journal the assignments of the second day
 here.</p>
-<hr />
-<div id="literature-and-research-questions" class="section level1"
-number="1">
-<h1><span class="header-section-number">1</span> Literature and Research
-Questions</h1>
-<p>The Prestige of Ph.D. Granting Departments of Sociology: A Simple
-Network Approach</p>
-<pre class="r test"><code>print(&quot;Hello Lab Journal&quot;)</code></pre>
-<pre class="test2"><code>#&gt; [1] &quot;Hello Lab Journal&quot;</code></pre>
-</div>
+<table style="width:7%;">
+<colgroup>
+<col width="6%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td># Seminar 2</td>
+</tr>
+<tr class="even">
+<td><em>Network description</em></td>
+</tr>
+<tr class="odd">
+<td>## Things I did in class</td>
+</tr>
+<tr class="even">
+<td>Found out how to add a new page.</td>
+</tr>
+</tbody>
+</table>
+<pre class="r test"><code>numbers &lt;- round(runif(10000), 0)
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiSm91cm5hbCAyIgojYmlibGlvZ3JhcGh5OiByZWZlcmVuY2VzLmJpYgphdXRob3I6ICJHaGlzbGFpbmUgZGUgR3Jvb3QiCi0tLQoKCgpgYGB7ciwgZ2xvYmFsc2V0dGluZ3MsIGVjaG89RkFMU0UsIHdhcm5pbmc9RkFMU0UsIHJlc3VsdHM9J2hpZGUnfQpsaWJyYXJ5KGtuaXRyKQoKa25pdHI6Om9wdHNfY2h1bmskc2V0KGVjaG8gPSBUUlVFKQpvcHRzX2NodW5rJHNldCh0aWR5Lm9wdHM9bGlzdCh3aWR0aC5jdXRvZmY9MTAwKSx0aWR5PVRSVUUsIHdhcm5pbmcgPSBGQUxTRSwgbWVzc2FnZSA9IEZBTFNFLGNvbW1lbnQgPSAiIz4iLCBjYWNoZT1UUlVFLCBjbGFzcy5zb3VyY2U9YygidGVzdCIpLCBjbGFzcy5vdXRwdXQ9YygidGVzdDIiKSkKb3B0aW9ucyh3aWR0aCA9IDEwMCkKI3JnbDo6c2V0dXBLbml0cigpCgoKCmNvbG9yaXplIDwtIGZ1bmN0aW9uKHgsIGNvbG9yKSB7c3ByaW50ZigiPHNwYW4gc3R5bGU9J2NvbG9yOiAlczsnPiVzPC9zcGFuPiIsIGNvbG9yLCB4KSB9CgpgYGAKCmBgYHtyIGtsaXBweSwgZWNobz1GQUxTRSwgaW5jbHVkZT1UUlVFfQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQoja2xpcHB5OjprbGlwcHkoY29sb3IgPSAnZGFya3JlZCcpCiNrbGlwcHk6OmtsaXBweSh0b29sdGlwX21lc3NhZ2UgPSAnQ2xpY2sgdG8gY29weScsIHRvb2x0aXBfc3VjY2VzcyA9ICdEb25lJykKYGBgCgpMYXN0IGNvbXBpbGVkIG9uIGByIGZvcm1hdChTeXMudGltZSgpLCAnJUIsICVZJylgCgo8YnI+CgotLS0tCiAgClRoaXMgaXMganVzdCBhbiBleGFtcGxlIHBhZ2Ugb2YgeW91ciBgciBjb2xvcml6ZSgibGFiIGpvdXJuYWwiLCAicmVkIilgLgpZb3UgY2FuIGpvdXJuYWwgdGhlIGFzc2lnbm1lbnRzIG9mIHRoZSBmaXJzdCBkYXkgaGVyZS4KICAKCi0tLS0KCiMgTGl0ZXJhdHVyZSBhbmQgUmVzZWFyY2ggUXVlc3Rpb25zIApUaGUgUHJlc3RpZ2Ugb2YgUGguRC4gR3JhbnRpbmcgRGVwYXJ0bWVudHMgb2YgU29jaW9sb2d5OiBBIFNpbXBsZSBOZXR3b3JrIEFwcHJvYWNoCgpgYGB7cn0KcHJpbnQoIkhlbGxvIExhYiBKb3VybmFsIikKYGBgCgoKCg==</div>
+fake &lt;- matrix(data = numbers, nrow = 100, ncol = 100, byrow = FALSE,
+       dimnames = NULL)
+
+diag(fake) &lt;- 0</code></pre>
+<pre class="r test"><code>library(tidyr)</code></pre>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiSm91cm5hbCAyIgpiaWJsaW9ncmFwaHk6IHJlZmVyZW5jZXMuYmliCmF1dGhvcjogIkdoaXNsYWluZSBkZSBHcm9vdCIKLS0tCgoKCmBgYHtyLCBnbG9iYWxzZXR0aW5ncywgZWNobz1GQUxTRSwgd2FybmluZz1GQUxTRSwgcmVzdWx0cz0naGlkZSd9CmxpYnJhcnkoa25pdHIpCgprbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IFRSVUUpCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQpvcHRpb25zKHdpZHRoID0gMTAwKQojcmdsOjpzZXR1cEtuaXRyKCkKCgoKY29sb3JpemUgPC0gZnVuY3Rpb24oeCwgY29sb3IpIHtzcHJpbnRmKCI8c3BhbiBzdHlsZT0nY29sb3I6ICVzOyc+JXM8L3NwYW4+IiwgY29sb3IsIHgpIH0KCmBgYAoKYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9CmtsaXBweTo6a2xpcHB5KHBvc2l0aW9uID0gYygndG9wJywgJ3JpZ2h0JykpCiNrbGlwcHk6OmtsaXBweShjb2xvciA9ICdkYXJrcmVkJykKI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQpgYGAKCkxhc3QgY29tcGlsZWQgb24gYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiwgJVknKWAKCjxicj4KCi0tLS0KICAKVGhpcyBpcyBqdXN0IGFuIGV4YW1wbGUgcGFnZSBvZiB5b3VyIGByIGNvbG9yaXplKCJsYWIgam91cm5hbCIsICJyZWQiKWAuCllvdSBjYW4gam91cm5hbCB0aGUgYXNzaWdubWVudHMgb2YgdGhlIHNlY29uZCBkYXkgaGVyZS4KICAKCi0tLS0KIyBTZW1pbmFyIDIKCl9OZXR3b3JrIGRlc2NyaXB0aW9uXwoKCiMjIFRoaW5ncyBJIGRpZCBpbiBjbGFzcwoKRm91bmQgb3V0IGhvdyB0byBhZGQgYSBuZXcgcGFnZS4KCi0tLS0KCgpgYGB7cn0KCgoKbnVtYmVycyA8LSByb3VuZChydW5pZigxMDAwMCksIDApCgpmYWtlIDwtIG1hdHJpeChkYXRhID0gbnVtYmVycywgbnJvdyA9IDEwMCwgbmNvbCA9IDEwMCwgYnlyb3cgPSBGQUxTRSwKICAgICAgIGRpbW5hbWVzID0gTlVMTCkKCmRpYWcoZmFrZSkgPC0gMAoKYGBgCgpgYGB7cn0KbGlicmFyeSh0aWR5cikKYGBgCgoK</div>
 
 
 </div>

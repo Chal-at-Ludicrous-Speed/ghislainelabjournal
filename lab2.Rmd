@@ -1,6 +1,6 @@
 ---
 title: "Journal 2"
-#bibliography: references.bib
+bibliography: references.bib
 author: "Ghislaine de Groot"
 ---
 
@@ -33,16 +33,21 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 ----
   
 This is just an example page of your `r colorize("lab journal", "red")`.
-You can journal the assignments of the first day here.
+You can journal the assignments of the second day here.
   
 
 ----
+# Seminar 2
+
+_Network description_
 
 
+## Things I did in class
 
-```{r}
-print("Hello Lab Journal")
-```
+Found out how to add a new page.
+
+----
+
 
 ```{r}
 
@@ -55,22 +60,10 @@ fake <- matrix(data = numbers, nrow = 100, ncol = 100, byrow = FALSE,
 
 diag(fake) <- 0
 
-as.matrix(x, …)
-# S3 method for data.frame
-as.matrix(x, rownames.force = NA, …)
-
-is.matrix(x)
 ```
 
 ```{r}
-
-
-
+library(tidyr)
 ```
 
-# Seminar 2
-_Network description_
 
-## Things I did in class
-
-Found out how to add a new page.
