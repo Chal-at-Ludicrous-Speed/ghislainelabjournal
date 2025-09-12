@@ -36,16 +36,12 @@ klippy::klippy(position = c('top', 'right'))
 _Getting started_
 
 
-## Things I did
+## Things I did in class
 
 Replaced the picture on the homepage! Enjoy my blåhaj.
 
 
-# Seminar 2
-_Network description_
-
-
-## Things I did
+## Things I did at home
 
 Tried adding a second page to my website, but was unsuccessful.
 

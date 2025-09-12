@@ -68,3 +68,9 @@ is.matrix(x)
 
 ```
 
+# Seminar 2
+_Network description_
+
+## Things I did in class
+
+Found out how to add a new page.
