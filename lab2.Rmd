@@ -38,12 +38,33 @@ You can journal the assignments of the first day here.
 
 ----
 
-# Literature and Research Questions 
-The Prestige of Ph.D. Granting Departments of Sociology: A Simple Network Approach
+
 
 ```{r}
 print("Hello Lab Journal")
 ```
 
+```{r}
 
+
+
+numbers <- round(runif(10000), 0)
+
+fake <- matrix(data = numbers, nrow = 100, ncol = 100, byrow = FALSE,
+       dimnames = NULL)
+
+diag(fake) <- 0
+
+as.matrix(x, …)
+# S3 method for data.frame
+as.matrix(x, rownames.force = NA, …)
+
+is.matrix(x)
+```
+
+```{r}
+
+
+
+```
 

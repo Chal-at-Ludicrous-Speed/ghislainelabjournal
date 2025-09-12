@@ -1,6 +1,6 @@
 ---
 title: "Journal 1"
-#bibliography: references.bib
+bibliography: references.bib
 author: "Ghislaine de Groot"
 ---
 
@@ -52,6 +52,8 @@ Tried adding a second page to my website, but was unsuccessful.
 Did the R Tutorial and read Interdependencies.
 
 Read literature for the RQs.
+
+Added literature to the references.bib.
 
 Reformulated my research questions.
 
