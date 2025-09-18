@@ -1,0 +1,51 @@
+---
+title: "Draft of the paper"
+bibliography: references.bib
+author: "Ghislaine de Groot"
+---
+
+# The effect of prestige on collaboration between Dutch Sociology departments
+
+Despite the image of academia as an ivory tower removed from society, research universities are subject to similar, if not the same, social processes that govern the organization of work and labor. The work of one university of university department are valued differently (and unequally), consequently having different levels of prestige. This may indicate stratification between universities and departments, which extents to social mobility and promotion opportunities.    
+Earlier research in the USA (Burris, 2004) showed that sociologists across the 94 US departments formed castes at the top 5%, where those who started at a top-level university stay employed at top-level universities, creating a tightly knit group of collaborators. 
+The little research there is on this topic has not yet covered the Netherlands, despite the importance of Dutch sociology on the international playing field (report source). Most literature is also from two decades ago, and much has changed in the sociological landscape (source)  
+
+I want to examine whether there is a significant difference in prestige between the sociology departments, and how that affects the collaboration networks of sociologists. My aim is to research whether this prestige has an impact on collaboration, which could stratify the quality of research output. As I want to map how sociologists are connected together and have different types and strengths of connections, I will conduct Social Network Analysis. The underlying question is whether academics, in this case sociologists, send collaboration invitations on the basis of another sociologist's own academic output, or on the basis of status by association. To get to a thorough answer, I will look at sociologists who have a different level of status than the department.    
+
+RQ1: How does employment at a Dutch sociology department impact scientific collaboration, based on departmental prestige?
+
+RQ2: What is the effect of departmental prestige on a sociologist with lower social capital and lower academic status?
+
+
+# Types of data and variables from previous studies
+
+Burris used (a proxy for) departmental prestige, while the research before that paper measured individual prestige.
+
+Burris 2004
+
+- Social Capital (proxy?)
+
+- Article Publications
+
+- Citations (excluding self-citations)
+
+- Research Grants
+
+- Weighted Article Publications
+
+- Book Publications
+
+- H-index of university
+
+- Faculty size
+
+Noben et al 
+
+- Time working at department
+
+
+Hâncean et al
+
+- number of published articles
+
+- % papers with more than one author
