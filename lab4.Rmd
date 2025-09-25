@@ -4,6 +4,25 @@ author: "Ghislaine de Groot"
 date: "2025-09-24"
 ---
 
+-----
+
+# Proof of concept
+
+Since I want to test the effect of departmental prestige in relation to individual prestige within the collaboration network of Dutch sociologists, I first had to get data on departments and on individual sociologists. I found out that the staff webpages differ quite a lot in their code structure, and I found it out the hard way. I chose the sociology department at the Vrije Universiteit for this trial run. 
+
+
+I scraped the webpage and removed the rows that did not contain relevant data. Then I created a table, the original odd rows becoming names of sociologists and the original even rows representing the sociologists' functions. 
+
+
+For a measure of individual prestige, I went for the amount of works and the amount of citations per sociologist. As I want departmental prestige to be the sum of citation scores of all members of the department, I did not test departmental prestige yet. This is because I first want to make sure my measure for individual prestige is operational. If this is the case, I can sum members to form a department.
+
+
+Operationalising departmental prestige as such will also include faculty size, which has been used as a measure for the same variable in literature (e.g. Burris, 2004).
+
+
+-----
+
+
 ```{r}
 
 # install.packages('data.table')
