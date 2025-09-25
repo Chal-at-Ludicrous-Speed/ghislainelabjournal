@@ -4,6 +4,94 @@ bibliography: references.bib
 author: "Ghislaine de Groot"
 ---
 
+```{r}
+lpol_staff <- read_html("https://www.universiteitleiden.nl/en/social-behavioural-sciences/political-science/staff#tab-1")
+head(lpol_staff)
+
+lpol_staff <- lpol_staff %>%
+    html_nodes("body") %>%
+    html_nodes(xpath = "//a") %>%
+    html_text()
+
+```
+```{r}
+
+library(tidyr)
+
+packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
+fpackage.check(packages)
+
+fpackage.check <- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave <- function(x, file = NULL, location = "./data/processed/") {
+    ifelse(!dir.exists("data"), dir.create("data"), FALSE)
+    ifelse(!dir.exists("data/processed"), dir.create("data/processed"), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename <- substr(gsub("[:-]", "", Sys.time()), 1, 8)
+    totalname <- paste(location, datename, file, ".rda", sep = "")
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload <- function(filename) {
+    load(filename)
+    get(ls()[ls() != "filename"])
+}
+
+fshowdf <- function(x, ...) {
+    knitr::kable(x, digits = 2, "html", ...) %>%
+        kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+        kableExtra::scroll_box(width = "100%", height = "300px")
+}
+
+install.packages("kabelExtra")
+library(kabelExtra)
+
+options(openalexR.mailto = "ghislaine.degroot@ru.nl")  
+
+url <- "https://api.openalex.org/authors?search=Jochem Tolsma"
+
+# based on what you have learned so far, you would probably first try:
+jt <- read_html("https://api.openalex.org/authors?search=Jochem+Tolsma") %>%
+    html_text2()
+
+substr(jt, 1, 100)
+
+jt_json <- fromJSON("https://api.openalex.org/authors?search=Jochem+Tolsma", simplifyVector = FALSE)
+glimpse(jt_json, max.level = 1)
+
+jt_json[["results"]][[1]][["display_name"]]
+
+df_jt <- jt_json %>%
+    .$results %>%
+    .[[1]] %>%
+    discard(is_empty)
+
+df_jt
+
+df <- oa_fetch(entity = "author", search = "Jochem Tolsma")
+fshowdf(df)
+
+df_papers <- oa_fetch(entity = "works", author.id = df$id)
+df_papers$author[1]
+
+jt_json["results"]
+jt_json$results
+
+str(jt_json$results)
+
+str(jt_json$results, 2)
+
+jt_json$results[[1]]$affiliations
+
+```
 
 
 

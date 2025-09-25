@@ -1,0 +1,162 @@
+---
+title: "lab4"
+author: "Ghislaine de Groot"
+date: "2025-09-24"
+output: html_document
+---
+
+```{r}
+
+# install.packages('data.table')
+library(data.table) 
+library(tidyverse)  
+# install.packages('httr') # we don't need this for now require(httr)
+install.packages("xml2")
+require(xml2)
+install.packages("rvest")
+require(rvest)
+install.packages("devtools")
+require(devtools)
+# Note we're doing something different here. We're installing a *latest* version directly from
+# GitHub This is because the released version of this packages contains some errors!
+devtools::install_github("jkeirstead/scholar")
+
+require(scholar)
+
+# define workdirectory, note the double *backslashes* if you're on windows setwd('/yourpathhere)'
+
+setwd('/Users/ghislaine/Downloads/Github/Social Networks/Webscraping for lab 4')
+```
+```{r}
+# Let's first get the staff page read_html is a function that simply extracts html webpages and
+# puts them in xml format
+
+Rvu_staff <- read_html("https://vu.nl/en/about-vu/faculties/school-of-social-sciences/teams/staff-sociology")
+
+#> Error in open.connection(x, "rb"): HTTP error 404.
+
+# so we need to find WHERE the table is located in the html 'inspect element' in mozilla firefox or
+# 'view page source' and you see that everything AFTER /td in the 'body' of the page seems to be
+# the table we do need
+
+vu_staff <- Rvu_staff %>%
+    rvest::html_nodes("body") %>%
+    xml2::xml_find_all("//p") %>%
+    rvest::html_text2()
+
+vu_staff
+
+library(dplyr)
+
+vu_staff <- as.list(vu_staff)
+
+vu_staff2 <- as.data.frame(vu_staff)
+
+vu_staff3 <- vu_staff2[row(2:185)]
+
+# Remove the first and third rows from the mtcars dataset
+vu_staff3 <- vu_staff2[-c(1, 186:203), ]
+
+vu_staff4 <- as.list(vu_staff3) 
+
+print(vu_staff4)
+
+fodd <- function(x) x%%2 != 0
+feven <- function(x) x%%2 == 0
+
+vu_names <- vu_staff4[fodd(1:184)]
+
+vu_function <- vu_staff4[feven(1:184)]
+
+vu_df <- data.frame(cbind(vu_names, vu_function))
+
+
+```
+
+```{r}
+packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
+
+fpackage.check <- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave <- function(x, file = NULL, location = "./data/processed/") {
+    ifelse(!dir.exists("data"), dir.create("data"), FALSE)
+    ifelse(!dir.exists("data/processed"), dir.create("data/processed"), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename <- substr(gsub("[:-]", "", Sys.time()), 1, 8)
+    totalname <- paste(location, file, "_", datename, ".rda", sep = "")
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload <- function(filename) {
+    load(filename)
+    get(ls()[ls() != "filename"])
+}
+
+fshowdf <- function(x, ...) {
+    knitr::kable(x, digits = 2, "html", ...) %>%
+        kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+        kableExtra::scroll_box(width = "100%", height = "300px")
+}
+
+
+fpackage.check(packages)
+
+library(openalexR)
+library(tidyverse)
+library(scholar)
+library(rvest)
+library(jsonlite)
+
+
+```
+
+```{r}
+
+lw_json <- fromJSON("https://api.openalex.org/people/A5009389179", simplifyVector = FALSE)
+
+glimpse(lw_json)
+
+glimpse(lw_json, max.level = 1)
+
+```
+```{r}
+
+lw__works_json <- fromJSON("https://api.openalex.org/works?page=1&filter=authorships.author.id:a5009389179,type:types/article", simplifyVector = FALSE)
+
+# Later I want to make a table with the author names + affiliations, combined with mean citation index of those 5 works + 2_yr_meancitedness + h_index
+
+# But for now I will use works_count and cited_by_count, so I will only use lw_json. Name, affiliation
+
+lw_json$display_name 
+
+lw_json$last_known_institutions$display_name
+
+df_lw <- lw_json %>%
+    .$last_known_institutions %>%
+    .[[1]] %>%
+    .$display_name %>%
+    discard(is_empty)
+
+lw_json$works_count
+
+lw_json$cited_by_count
+
+name <- lw_json$display_name
+current_university <- df_lw <- lw_json %>%
+    .$last_known_institutions %>%
+    .[[1]] %>%
+    .$display_name %>%
+    discard(is_empty)
+workscount_ind <- lw_json$works_count
+totalcitation_ind <- lw_json$cited_by_count
+sociologists <- data.frame(name, current_university, workscount_ind, totalcitation_ind)
+
+```
