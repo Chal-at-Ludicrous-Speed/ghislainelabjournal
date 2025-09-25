@@ -18,7 +18,7 @@ navbar:
         href: lab2.html
       - text: "Page 3"
         href: lab3.html
-     -  text: "Page 4"
+      - text: "Page 4"
         href: lab4.html
         
         # here, other .Rmds can be added

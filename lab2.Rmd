@@ -1,7 +1,7 @@
 ---
 title: "Journal 2"
-bibliography: references.bib
 author: "Ghislaine de Groot"
+bibliography: references.bib
 ---
 
 
@@ -37,6 +37,7 @@ You can journal the assignments of the second day here.
   
 
 ----
+
 # Seminar 2
 
 _Network description_

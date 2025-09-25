@@ -4,31 +4,50 @@ bibliography: references.bib
 author: "Ghislaine de Groot"
 ---
 
-```{r}
-lpol_staff <- read_html("https://www.universiteitleiden.nl/en/social-behavioural-sciences/political-science/staff#tab-1")
-head(lpol_staff)
+------------------------------------------------------------------------
 
-lpol_staff <- lpol_staff %>%
-    html_nodes("body") %>%
-    html_nodes(xpath = "//a") %>%
-    html_text()
+# Seminar 3 
+
+During this class, we got introduced to webscraping.
+
+Unfortunately, I updated RStudio between last class and the upcoming one, and most of the code appears to be malfunctioning.
+
+
+------------------------------------------------------------------------
+
+```{r}
+
+# lpol_staff <- read_html("https://www.universiteitleiden.nl/en/social-behavioural-sciences/political-science/staff#tab-1")
+# head(lpol_staff)
+
+# lpol_staff <- lpol_staff %>%
+#   html_nodes("body") %>%
+#   html_nodes(xpath = "//a") %>%
+#   html_text()
 
 ```
+-----
+
+The function "read_html" is having issues, so I made turned the above code into notes.
+
+---- 
+
 ```{r}
 
 library(tidyr)
+library(xml2)
 
 packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
-fpackage.check(packages)
+# fpackage.check(packages)
 
-fpackage.check <- function(packages) {
-    lapply(packages, FUN = function(x) {
-        if (!require(x, character.only = TRUE)) {
-            install.packages(x, dependencies = TRUE)
-            library(x, character.only = TRUE)
-        }
-    })
-}
+# fpackage.check <- function(packages) {
+# lapply(packages, FUN = function(x) {
+#      if (!require(x, character.only = TRUE)) {
+#          install.packages(x, dependencies = TRUE)
+#          library(x, character.only = TRUE)
+#      }
+#  })
+# }
 
 fsave <- function(x, file = NULL, location = "./data/processed/") {
     ifelse(!dir.exists("data"), dir.create("data"), FALSE)
@@ -51,31 +70,43 @@ fshowdf <- function(x, ...) {
         kableExtra::scroll_box(width = "100%", height = "300px")
 }
 
-install.packages("kabelExtra")
-library(kabelExtra)
+# install.packages("kabelExtra")
+# library(kabelExtra)
 
 options(openalexR.mailto = "ghislaine.degroot@ru.nl")  
 
 url <- "https://api.openalex.org/authors?search=Jochem Tolsma"
 
 # based on what you have learned so far, you would probably first try:
-jt <- read_html("https://api.openalex.org/authors?search=Jochem+Tolsma") %>%
-    html_text2()
+# jt <- read_html("https://api.openalex.org/authors?search=Jochem+Tolsma") %>%
+#   html_text2()
 
-substr(jt, 1, 100)
+# substr(jt, 1, 100)
+
+library(jsonlite)
+library(rvest)
+library(scholar)
+library(dplyr)
+library(openalexR)
 
 jt_json <- fromJSON("https://api.openalex.org/authors?search=Jochem+Tolsma", simplifyVector = FALSE)
 glimpse(jt_json, max.level = 1)
 
 jt_json[["results"]][[1]][["display_name"]]
 
-df_jt <- jt_json %>%
+# df_jt <- jt_json %>%
+#   .$results %>%
+#   .[[1]] %>%
+#   discard(is_empty) can't figure out why discard is causing issues when trying to knit
+
+# df_jt
+
+df_jt2 <- jt_json %>%
     .$results %>%
-    .[[1]] %>%
-    discard(is_empty)
+    .[[1]]
 
-df_jt
-
+df_jt2
+  
 df <- oa_fetch(entity = "author", search = "Jochem Tolsma")
 fshowdf(df)
 

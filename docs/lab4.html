@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ghislaine de Groot" />
+
+<meta name="date" content="2025-09-24" />
+
+<title>lab4</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Ghislaine's Journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lab1.html">Page 1</a>
+    </li>
+    <li>
+      <a href="lab2.html">Page 2</a>
+    </li>
+    <li>
+      <a href="lab3.html">Page 3</a>
+    </li>
+    <li>
+      <a href="lab4.html">Page 4</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://chal-at-ludicrous-speed.github.io/ghislainelabjournal/">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">lab4</h1>
+<h4 class="author">Ghislaine de Groot</h4>
+<h4 class="date">2025-09-24</h4>
+
+</div>
+
+
+<pre class="r"><code># install.packages(&#39;data.table&#39;)
+library(data.table) 
+library(tidyverse)  </code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ forcats   1.0.0     ✔ stringr   1.5.2
+## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+## ✔ purrr     1.1.0     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::between()     masks data.table::between()
+## ✖ dplyr::filter()      masks stats::filter()
+## ✖ dplyr::first()       masks data.table::first()
+## ✖ lubridate::hour()    masks data.table::hour()
+## ✖ lubridate::isoweek() masks data.table::isoweek()
+## ✖ dplyr::lag()         masks stats::lag()
+## ✖ dplyr::last()        masks data.table::last()
+## ✖ lubridate::mday()    masks data.table::mday()
+## ✖ lubridate::minute()  masks data.table::minute()
+## ✖ lubridate::month()   masks data.table::month()
+## ✖ lubridate::quarter() masks data.table::quarter()
+## ✖ lubridate::second()  masks data.table::second()
+## ✖ purrr::transpose()   masks data.table::transpose()
+## ✖ lubridate::wday()    masks data.table::wday()
+## ✖ lubridate::week()    masks data.table::week()
+## ✖ lubridate::yday()    masks data.table::yday()
+## ✖ lubridate::year()    masks data.table::year()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code># install.packages(&#39;httr&#39;) # we don&#39;t need this for now require(httr)
+
+require(xml2)</code></pre>
+<pre><code>## Loading required package: xml2</code></pre>
+<pre class="r"><code>require(rvest)</code></pre>
+<pre><code>## Loading required package: rvest
+## 
+## Attaching package: &#39;rvest&#39;
+## 
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding</code></pre>
+<pre class="r"><code>require(devtools)</code></pre>
+<pre><code>## Loading required package: devtools
+## Loading required package: usethis</code></pre>
+<pre class="r"><code># Note we&#39;re doing something different here. We&#39;re installing a *latest* version directly from
+# GitHub This is because the released version of this packages contains some errors!
+devtools::install_github(&quot;jkeirstead/scholar&quot;)</code></pre>
+<pre><code>## Using GitHub PAT from the git credential store.
+## Skipping install of &#39;scholar&#39; from a github remote, the SHA1 (2e0a4ca0) has not changed since last install.
+##   Use `force = TRUE` to force installation</code></pre>
+<pre class="r"><code>require(scholar)</code></pre>
+<pre><code>## Loading required package: scholar</code></pre>
+<pre class="r"><code>library(knitr)
+
+# define workdirectory, note the double *backslashes* if you&#39;re on windows setwd(&#39;/yourpathhere)&#39;
+
+setwd(&#39;/Users/ghislaine/Downloads/Github/Social Networks/Webscraping for lab 4&#39;)</code></pre>
+<pre class="r"><code># Let&#39;s first get the staff page read_html is a function that simply extracts html webpages and
+# puts them in xml format
+
+Rvu_staff &lt;- read_html(&quot;https://vu.nl/en/about-vu/faculties/school-of-social-sciences/teams/staff-sociology&quot;)
+
+#&gt; Error in open.connection(x, &quot;rb&quot;): HTTP error 404.
+
+# so we need to find WHERE the table is located in the html &#39;inspect element&#39; in mozilla firefox or
+# &#39;view page source&#39; and you see that everything AFTER /td in the &#39;body&#39; of the page seems to be
+# the table we do need
+
+vu_staff &lt;- Rvu_staff %&gt;%
+    rvest::html_nodes(&quot;body&quot;) %&gt;%
+    xml2::xml_find_all(&quot;//p&quot;) %&gt;%
+    rvest::html_text2()
+
+vu_staff</code></pre>
+<pre><code>##   [1] &quot;Click on \&quot;read more\&quot; to go to the corresponding research profile.&quot;                                                                                                                                                                                                                                                                                            
+##   [2] &quot;dr. Jens Abbing&quot;                                                                                                                                                                                                                                                                                                                                                
+##   [3] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+##   [4] &quot;Nazar Abdulazeez&quot;                                                                                                                                                                                                                                                                                                                                               
+##   [5] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##   [6] &quot;Petra van Aken&quot;                                                                                                                                                                                                                                                                                                                                                 
+##   [7] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##   [8] &quot;Carlijn van Alphen&quot;                                                                                                                                                                                                                                                                                                                                             
+##   [9] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [10] &quot;Carla Bakboord&quot;                                                                                                                                                                                                                                                                                                                                                 
+##  [11] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [12] &quot;prof. dr. René Bekkers&quot;                                                                                                                                                                                                                                                                                                                                         
+##  [13] &quot;Professor&quot;                                                                                                                                                                                                                                                                                                                                                      
+##  [14] &quot;prof. dr. ir. Alice de Boer&quot;                                                                                                                                                                                                                                                                                                                                    
+##  [15] &quot;Endowed chair&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [16] &quot;Henriëtte Boersma-de Vries&quot;                                                                                                                                                                                                                                                                                                                                     
+##  [17] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [18] &quot;dr. Stef Bouwhuis&quot;                                                                                                                                                                                                                                                                                                                                              
+##  [19] &quot;Assistant Professor&quot;                                                                                                                                                                                                                                                                                                                                            
+##  [20] &quot;prof. dr. Marjolein Broese Van Groenou&quot;                                                                                                                                                                                                                                                                                                                         
+##  [21] &quot;Professor&quot;                                                                                                                                                                                                                                                                                                                                                      
+##  [22] &quot;Anika Chowdhury&quot;                                                                                                                                                                                                                                                                                                                                                
+##  [23] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [24] &quot;prof. dr. Maurice Crul&quot;                                                                                                                                                                                                                                                                                                                                         
+##  [25] &quot;Professor&quot;                                                                                                                                                                                                                                                                                                                                                      
+##  [26] &quot;prof. dr. Kathy Davis&quot;                                                                                                                                                                                                                                                                                                                                          
+##  [27] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+##  [28] &quot;Gözde Duran&quot;                                                                                                                                                                                                                                                                                                                                                    
+##  [29] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [30] &quot;Laura Eberlein&quot;                                                                                                                                                                                                                                                                                                                                                 
+##  [31] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [32] &quot;Eddy Elmer&quot;                                                                                                                                                                                                                                                                                                                                                     
+##  [33] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [34] &quot;Muhammad Farooq&quot;                                                                                                                                                                                                                                                                                                                                                
+##  [35] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [36] &quot;prof. dr. Harry Ganzeboom&quot;                                                                                                                                                                                                                                                                                                                                      
+##  [37] &quot;Emiritus professor&quot;                                                                                                                                                                                                                                                                                                                                             
+##  [38] &quot;dr. Mauricio Garnier Villarreal&quot;                                                                                                                                                                                                                                                                                                                                
+##  [39] &quot;Assistant Professor&quot;                                                                                                                                                                                                                                                                                                                                            
+##  [40] &quot;prof. dr. Halleh Ghorashi&quot;                                                                                                                                                                                                                                                                                                                                      
+##  [41] &quot;Professor&quot;                                                                                                                                                                                                                                                                                                                                                      
+##  [42] &quot;Santiago Gómez-Echeverry&quot;                                                                                                                                                                                                                                                                                                                                       
+##  [43] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [44] &quot;Boudewijn Goos&quot;                                                                                                                                                                                                                                                                                                                                                 
+##  [45] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [46] &quot;Alexandra Greene&quot;                                                                                                                                                                                                                                                                                                                                               
+##  [47] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [48] &quot;Saba Hamzah&quot;                                                                                                                                                                                                                                                                                                                                                    
+##  [49] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+##  [50] &quot;Fabian Holle&quot;                                                                                                                                                                                                                                                                                                                                                   
+##  [51] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [52] &quot;Barry Hoolwerf&quot;                                                                                                                                                                                                                                                                                                                                                 
+##  [53] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+##  [54] &quot;Olena van Horick&quot;                                                                                                                                                                                                                                                                                                                                               
+##  [55] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [56] &quot;dr. Mariska van der Horst&quot;                                                                                                                                                                                                                                                                                                                                      
+##  [57] &quot;Assistant professor&quot;                                                                                                                                                                                                                                                                                                                                            
+##  [58] &quot;prof. dr. Martijn Huisman&quot;                                                                                                                                                                                                                                                                                                                                      
+##  [59] &quot;Professor&quot;                                                                                                                                                                                                                                                                                                                                                      
+##  [60] &quot;dr. Erik van Ingen&quot;                                                                                                                                                                                                                                                                                                                                             
+##  [61] &quot;Associate professor&quot;                                                                                                                                                                                                                                                                                                                                            
+##  [62] &quot;dr. Laura Keesman&quot;                                                                                                                                                                                                                                                                                                                                              
+##  [63] &quot;Assistant professor&quot;                                                                                                                                                                                                                                                                                                                                            
+##  [64] &quot;dr. Elif Keskiner&quot;                                                                                                                                                                                                                                                                                                                                              
+##  [65] &quot;Associate professor&quot;                                                                                                                                                                                                                                                                                                                                            
+##  [66] &quot;prof. dr. Saskia Keuzenkamp&quot;                                                                                                                                                                                                                                                                                                                                    
+##  [67] &quot;Endowed chair&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [68] &quot;Saba Aslam Khan&quot;                                                                                                                                                                                                                                                                                                                                                
+##  [69] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [70] &quot;dr. Silvia Klokgieters&quot;                                                                                                                                                                                                                                                                                                                                         
+##  [71] &quot;Assistant Professor&quot;                                                                                                                                                                                                                                                                                                                                            
+##  [72] &quot;dr. Almar Kok&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [73] &quot;Associate professor&quot;                                                                                                                                                                                                                                                                                                                                            
+##  [74] &quot;dr. Stephanie Koolen-Maas&quot;                                                                                                                                                                                                                                                                                                                                      
+##  [75] &quot;Project manager&quot;                                                                                                                                                                                                                                                                                                                                                
+##  [76] &quot;Marga Korporaal&quot;                                                                                                                                                                                                                                                                                                                                                
+##  [77] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [78] &quot;Timo Korstenbroek&quot;                                                                                                                                                                                                                                                                                                                                              
+##  [79] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [80] &quot;Zsuzsa Kovács&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [81] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [82] &quot;Nebil Kusmallah&quot;                                                                                                                                                                                                                                                                                                                                                
+##  [83] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+##  [84] &quot;Frans Lelie&quot;                                                                                                                                                                                                                                                                                                                                                    
+##  [85] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+##  [86] &quot;prof. dr. Aat Liefbroer&quot;                                                                                                                                                                                                                                                                                                                                        
+##  [87] &quot;Endowed chair&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [88] &quot;dr. Marie Lindegaard&quot;                                                                                                                                                                                                                                                                                                                                           
+##  [89] &quot;Professor&quot;                                                                                                                                                                                                                                                                                                                                                      
+##  [90] &quot;Max Littel&quot;                                                                                                                                                                                                                                                                                                                                                     
+##  [91] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+##  [92] &quot;Laura Vargas Llona&quot;                                                                                                                                                                                                                                                                                                                                             
+##  [93] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+##  [94] &quot;Helenard Louw&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [95] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [96] &quot;prof. Ineke Maas&quot;                                                                                                                                                                                                                                                                                                                                               
+##  [97] &quot;Endowed chair&quot;                                                                                                                                                                                                                                                                                                                                                  
+##  [98] &quot;Elly Mariani&quot;                                                                                                                                                                                                                                                                                                                                                   
+##  [99] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [100] &quot;Salma Mataich&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [101] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [102] &quot;Phoebe Mbasalaki&quot;                                                                                                                                                                                                                                                                                                                                               
+## [103] &quot;Research assistant&quot;                                                                                                                                                                                                                                                                                                                                             
+## [104] &quot;prof. dr. Eva-Maria Merz&quot;                                                                                                                                                                                                                                                                                                                                       
+## [105] &quot;Professor&quot;                                                                                                                                                                                                                                                                                                                                                      
+## [106] &quot;Stefan Metaal&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [107] &quot;Lecturer&quot;                                                                                                                                                                                                                                                                                                                                                       
+## [108] &quot;dr. Nasser Mohamedhoesein&quot;                                                                                                                                                                                                                                                                                                                                      
+## [109] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [110] &quot;dr. Andrea Mudd&quot;                                                                                                                                                                                                                                                                                                                                                
+## [111] &quot;Assistant Professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [112] &quot;dr. Jasper Muis&quot;                                                                                                                                                                                                                                                                                                                                                
+## [113] &quot;Assistant professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [114] &quot;dr. Ineke Nagel&quot;                                                                                                                                                                                                                                                                                                                                                
+## [115] &quot;Assistant professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [116] &quot;dr. Nadira Ismail Omarjee&quot;                                                                                                                                                                                                                                                                                                                                      
+## [117] &quot;Lecturer&quot;                                                                                                                                                                                                                                                                                                                                                       
+## [118] &quot;Maartje Orsel&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [119] &quot;Research associate&quot;                                                                                                                                                                                                                                                                                                                                             
+## [120] &quot;Joram Pach&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [121] &quot;Lecturer, PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                        
+## [122] &quot;dr. Dimitris Pavlopoulos&quot;                                                                                                                                                                                                                                                                                                                                       
+## [123] &quot;Associate professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [124] &quot;dr. Elena Ponzoni&quot;                                                                                                                                                                                                                                                                                                                                              
+## [125] &quot;Assistant professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [126] &quot;Marlou Ramaekers&quot;                                                                                                                                                                                                                                                                                                                                               
+## [127] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [128] &quot;Anja Robertus&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [129] &quot;Communication and office manager&quot;                                                                                                                                                                                                                                                                                                                               
+## [130] &quot;Shashi Roopram&quot;                                                                                                                                                                                                                                                                                                                                                 
+## [131] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [132] &quot;Sajad Salmanpour&quot;                                                                                                                                                                                                                                                                                                                                               
+## [133] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [134] &quot;Josje Schut&quot;                                                                                                                                                                                                                                                                                                                                                    
+## [135] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [136] &quot;prof. dr. Theo Schuyt&quot;                                                                                                                                                                                                                                                                                                                                          
+## [137] &quot;Emeritus professor&quot;                                                                                                                                                                                                                                                                                                                                             
+## [138] &quot;Sajad Sepehri&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [139] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [140] &quot;Ying Shen&quot;                                                                                                                                                                                                                                                                                                                                                      
+## [141] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [142] &quot;dr. Mansoureh Shojaee&quot;                                                                                                                                                                                                                                                                                                                                          
+## [143] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [144] &quot;Tamira Sno&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [145] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [146] &quot;Melisa Soto Lafontaine&quot;                                                                                                                                                                                                                                                                                                                                         
+## [147] &quot;Lecturer&quot;                                                                                                                                                                                                                                                                                                                                                       
+## [148] &quot;Sarah Sramota&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [149] &quot;Lecturer&quot;                                                                                                                                                                                                                                                                                                                                                       
+## [150] &quot;Koen Steenks&quot;                                                                                                                                                                                                                                                                                                                                                   
+## [151] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [152] &quot;Josine Steenvoorde&quot;                                                                                                                                                                                                                                                                                                                                             
+## [153] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [154] &quot;prof. dr. Jacquelien van Stekelenburg&quot;                                                                                                                                                                                                                                                                                                                          
+## [155] &quot;Professor, ReSCU Lab&quot;                                                                                                                                                                                                                                                                                                                                           
+## [156] &quot;dr. Joukje Swinkels&quot;                                                                                                                                                                                                                                                                                                                                            
+## [157] &quot;Assistant Professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [158] &quot;dr. Saartje Tack&quot;                                                                                                                                                                                                                                                                                                                                               
+## [159] &quot;Assistant Professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [160] &quot;Tara Tankink&quot;                                                                                                                                                                                                                                                                                                                                                   
+## [161] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [162] &quot;Els Tettelaar&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [163] &quot;Office manager&quot;                                                                                                                                                                                                                                                                                                                                                 
+## [164] &quot;prof. dr. Anne-Mei The&quot;                                                                                                                                                                                                                                                                                                                                         
+## [165] &quot;Endowed chair&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [166] &quot;dr. Lex Thijssen&quot;                                                                                                                                                                                                                                                                                                                                               
+## [167] &quot;Assistant professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [168] &quot;prof. dr. Theo van Tilburg&quot;                                                                                                                                                                                                                                                                                                                                     
+## [169] &quot;Emeritus professor&quot;                                                                                                                                                                                                                                                                                                                                             
+## [170] &quot;Nina Vergeldt&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [171] &quot;Lecturer&quot;                                                                                                                                                                                                                                                                                                                                                       
+## [172] &quot;dr. Ismintha Waldring&quot;                                                                                                                                                                                                                                                                                                                                          
+## [173] &quot;Assistant professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [174] &quot;prof. dr. Pamala Wiepking&quot;                                                                                                                                                                                                                                                                                                                                      
+## [175] &quot;Professor&quot;                                                                                                                                                                                                                                                                                                                                                      
+## [176] &quot;dr. Arjen de Wit&quot;                                                                                                                                                                                                                                                                                                                                               
+## [177] &quot;Assistant professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [178] &quot;Lisa Woensdregt&quot;                                                                                                                                                                                                                                                                                                                                                
+## [179] &quot;Assistant Professor&quot;                                                                                                                                                                                                                                                                                                                                            
+## [180] &quot;Louise Wolff&quot;                                                                                                                                                                                                                                                                                                                                                   
+## [181] &quot;Lecturer&quot;                                                                                                                                                                                                                                                                                                                                                       
+## [182] &quot;Younes Younes&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [183] &quot;PhD candidate&quot;                                                                                                                                                                                                                                                                                                                                                  
+## [184] &quot;Amber Zegers&quot;                                                                                                                                                                                                                                                                                                                                                   
+## [185] &quot;Researcher&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [186] &quot;This website uses cookies&quot;                                                                                                                                                                                                                                                                                                                                      
+## [187] &quot;You can accept all cookies or set your preferences per cookie category. You can always alter your choice by removing the cookies from your browser. VU Amsterdam and others use cookies to: 1) analyse website use; 2) personalise the website; 3) connect to social media networks; 4) show relevant advertisements. More information about the cookies we use&quot;
+## [188] &quot;This website uses cookies&quot;                                                                                                                                                                                                                                                                                                                                      
+## [189] &quot;You can accept all cookies or set your preferences per cookie category. You can always alter your choice by removing the cookies from your browser. VU Amsterdam and others use cookies to: 1) analyse website use; 2) personalise the website; 3) connect to social media networks; 4) show relevant advertisements. More information about the cookies we use&quot;
+## [190] &quot;Cookie preferences&quot;                                                                                                                                                                                                                                                                                                                                             
+## [191] &quot;You can accept all cookies or you can set your preferences per cookie category. You can always alter your choice by removing the cookies from your browser. See more information in the cookie statement.&quot;                                                                                                                                                      
+## [192] &quot;Personal settings:&quot;                                                                                                                                                                                                                                                                                                                                             
+## [193] &quot;Functional&quot;                                                                                                                                                                                                                                                                                                                                                     
+## [194] &quot;These cookies are used to ensure that our website operates properly.&quot;                                                                                                                                                                                                                                                                                           
+## [195] &quot;Analytics&quot;                                                                                                                                                                                                                                                                                                                                                      
+## [196] &quot;These cookies help to analyse the use of the website. These measurement data are subsequently used to improve the website.&quot;                                                                                                                                                                                                                                     
+## [197] &quot;Personalisation&quot;                                                                                                                                                                                                                                                                                                                                                
+## [198] &quot;These cookies are used to analyse how you use our website. This enables us to adapt our website content with information that suits your interests.&quot;                                                                                                                                                                                                            
+## [199] &quot;Social media&quot;                                                                                                                                                                                                                                                                                                                                                   
+## [200] &quot;These cookies are placed by social media networks. For example, if you watch a YouTube video embedded in the website, or use the social media buttons on our website to share or like a post. This allows social media networks to track your internet behaviour and use that for their own purposes.&quot;                                                          
+## [201] &quot;Advertising&quot;                                                                                                                                                                                                                                                                                                                                                    
+## [202] &quot;These cookies are placed by advertising partners. They are used to show you relevant advertisements for Vrije Universiteit Amsterdam on other websites that you visit. They enable advertising networks to track your internet behaviour.&quot;                                                                                                                      
+## [203] &quot;Copyright © 2025 - Vrije Universiteit Amsterdam&quot;</code></pre>
+<pre class="r"><code>library(dplyr)
+
+vu_staff &lt;- as.list(vu_staff)
+
+vu_staff2 &lt;- as.data.frame(vu_staff)
+
+vu_staff3 &lt;- vu_staff2[-c(1, 186:203), ]
+
+vu_staff4 &lt;- as.list(vu_staff3) 
+
+print(vu_staff4)</code></pre>
+<pre><code>## $X.Click.on...read.more...to.go.to.the.corresponding.research.profile..
+## character(0)
+## 
+## $X.dr..Jens.Abbing.
+## character(0)
+## 
+## $X.Researcher.
+## character(0)
+## 
+## $X.Nazar.Abdulazeez.
+## character(0)
+## 
+## $X.PhD.candidate.
+## character(0)
+## 
+## $X.Petra.van.Aken.
+## character(0)
+## 
+## $X.PhD.candidate..1
+## character(0)
+## 
+## $X.Carlijn.van.Alphen.
+## character(0)
+## 
+## $X.PhD.candidate..2
+## character(0)
+## 
+## $X.Carla.Bakboord.
+## character(0)
+## 
+## $X.PhD.candidate..3
+## character(0)
+## 
+## $X.prof..dr..René.Bekkers.
+## character(0)
+## 
+## $X.Professor.
+## character(0)
+## 
+## $X.prof..dr..ir..Alice.de.Boer.
+## character(0)
+## 
+## $X.Endowed.chair.
+## character(0)
+## 
+## $X.Henriëtte.Boersma.de.Vries.
+## character(0)
+## 
+## $X.PhD.candidate..4
+## character(0)
+## 
+## $X.dr..Stef.Bouwhuis.
+## character(0)
+## 
+## $X.Assistant.Professor.
+## character(0)
+## 
+## $X.prof..dr..Marjolein.Broese.Van.Groenou.
+## character(0)
+## 
+## $X.Professor..1
+## character(0)
+## 
+## $X.Anika.Chowdhury.
+## character(0)
+## 
+## $X.PhD.candidate..5
+## character(0)
+## 
+## $X.prof..dr..Maurice.Crul.
+## character(0)
+## 
+## $X.Professor..2
+## character(0)
+## 
+## $X.prof..dr..Kathy.Davis.
+## character(0)
+## 
+## $X.Researcher..1
+## character(0)
+## 
+## $X.Gözde.Duran.
+## character(0)
+## 
+## $X.PhD.candidate..6
+## character(0)
+## 
+## $X.Laura.Eberlein.
+## character(0)
+## 
+## $X.PhD.candidate..7
+## character(0)
+## 
+## $X.Eddy.Elmer.
+## character(0)
+## 
+## $X.PhD.candidate..8
+## character(0)
+## 
+## $X.Muhammad.Farooq.
+## character(0)
+## 
+## $X.PhD.candidate..9
+## character(0)
+## 
+## $X.prof..dr..Harry.Ganzeboom.
+## character(0)
+## 
+## $X.Emiritus.professor.
+## character(0)
+## 
+## $X.dr..Mauricio.Garnier.Villarreal.
+## character(0)
+## 
+## $X.Assistant.Professor..1
+## character(0)
+## 
+## $X.prof..dr..Halleh.Ghorashi.
+## character(0)
+## 
+## $X.Professor..3
+## character(0)
+## 
+## $X.Santiago.Gómez.Echeverry.
+## character(0)
+## 
+## $X.PhD.candidate..10
+## character(0)
+## 
+## $X.Boudewijn.Goos.
+## character(0)
+## 
+## $X.PhD.candidate..11
+## character(0)
+## 
+## $X.Alexandra.Greene.
+## character(0)
+## 
+## $X.PhD.candidate..12
+## character(0)
+## 
+## $X.Saba.Hamzah.
+## character(0)
+## 
+## $X.Researcher..2
+## character(0)
+## 
+## $X.Fabian.Holle.
+## character(0)
+## 
+## $X.PhD.candidate..13
+## character(0)
+## 
+## $X.Barry.Hoolwerf.
+## character(0)
+## 
+## $X.Researcher..3
+## character(0)
+## 
+## $X.Olena.van.Horick.
+## character(0)
+## 
+## $X.PhD.candidate..14
+## character(0)
+## 
+## $X.dr..Mariska.van.der.Horst.
+## character(0)
+## 
+## $X.Assistant.professor.
+## character(0)
+## 
+## $X.prof..dr..Martijn.Huisman.
+## character(0)
+## 
+## $X.Professor..4
+## character(0)
+## 
+## $X.dr..Erik.van.Ingen.
+## character(0)
+## 
+## $X.Associate.professor.
+## character(0)
+## 
+## $X.dr..Laura.Keesman.
+## character(0)
+## 
+## $X.Assistant.professor..1
+## character(0)
+## 
+## $X.dr..Elif.Keskiner.
+## character(0)
+## 
+## $X.Associate.professor..1
+## character(0)
+## 
+## $X.prof..dr..Saskia.Keuzenkamp.
+## character(0)
+## 
+## $X.Endowed.chair..1
+## character(0)
+## 
+## $X.Saba.Aslam.Khan.
+## character(0)
+## 
+## $X.PhD.candidate..15
+## character(0)
+## 
+## $X.dr..Silvia.Klokgieters.
+## character(0)
+## 
+## $X.Assistant.Professor..2
+## character(0)
+## 
+## $X.dr..Almar.Kok.
+## character(0)
+## 
+## $X.Associate.professor..2
+## character(0)
+## 
+## $X.dr..Stephanie.Koolen.Maas.
+## character(0)
+## 
+## $X.Project.manager.
+## character(0)
+## 
+## $X.Marga.Korporaal.
+## character(0)
+## 
+## $X.PhD.candidate..16
+## character(0)
+## 
+## $X.Timo.Korstenbroek.
+## character(0)
+## 
+## $X.PhD.candidate..17
+## character(0)
+## 
+## $X.Zsuzsa.Kovács.
+## character(0)
+## 
+## $X.PhD.candidate..18
+## character(0)
+## 
+## $X.Nebil.Kusmallah.
+## character(0)
+## 
+## $X.Researcher..4
+## character(0)
+## 
+## $X.Frans.Lelie.
+## character(0)
+## 
+## $X.Researcher..5
+## character(0)
+## 
+## $X.prof..dr..Aat.Liefbroer.
+## character(0)
+## 
+## $X.Endowed.chair..2
+## character(0)
+## 
+## $X.dr..Marie.Lindegaard.
+## character(0)
+## 
+## $X.Professor..5
+## character(0)
+## 
+## $X.Max.Littel.
+## character(0)
+## 
+## $X.Researcher..6
+## character(0)
+## 
+## $X.Laura.Vargas.Llona.
+## character(0)
+## 
+## $X.Researcher..7
+## character(0)
+## 
+## $X.Helenard.Louw.
+## character(0)
+## 
+## $X.PhD.candidate..19
+## character(0)
+## 
+## $X.prof..Ineke.Maas.
+## character(0)
+## 
+## $X.Endowed.chair..3
+## character(0)
+## 
+## $X.Elly.Mariani.
+## character(0)
+## 
+## $X.PhD.candidate..20
+## character(0)
+## 
+## $X.Salma.Mataich.
+## character(0)
+## 
+## $X.Researcher..8
+## character(0)
+## 
+## $X.Phoebe.Mbasalaki.
+## character(0)
+## 
+## $X.Research.assistant.
+## character(0)
+## 
+## $X.prof..dr..Eva.Maria.Merz.
+## character(0)
+## 
+## $X.Professor..6
+## character(0)
+## 
+## $X.Stefan.Metaal.
+## character(0)
+## 
+## $X.Lecturer.
+## character(0)
+## 
+## $X.dr..Nasser.Mohamedhoesein.
+## character(0)
+## 
+## $X.Researcher..9
+## character(0)
+## 
+## $X.dr..Andrea.Mudd.
+## character(0)
+## 
+## $X.Assistant.Professor..3
+## character(0)
+## 
+## $X.dr..Jasper.Muis.
+## character(0)
+## 
+## $X.Assistant.professor..2
+## character(0)
+## 
+## $X.dr..Ineke.Nagel.
+## character(0)
+## 
+## $X.Assistant.professor..3
+## character(0)
+## 
+## $X.dr..Nadira.Ismail.Omarjee.
+## character(0)
+## 
+## $X.Lecturer..1
+## character(0)
+## 
+## $X.Maartje.Orsel.
+## character(0)
+## 
+## $X.Research.associate.
+## character(0)
+## 
+## $X.Joram.Pach.
+## character(0)
+## 
+## $X.Lecturer..PhD.candidate.
+## character(0)
+## 
+## $X.dr..Dimitris.Pavlopoulos.
+## character(0)
+## 
+## $X.Associate.professor..3
+## character(0)
+## 
+## $X.dr..Elena.Ponzoni.
+## character(0)
+## 
+## $X.Assistant.professor..4
+## character(0)
+## 
+## $X.Marlou.Ramaekers.
+## character(0)
+## 
+## $X.Researcher..10
+## character(0)
+## 
+## $X.Anja.Robertus.
+## character(0)
+## 
+## $X.Communication.and.office.manager.
+## character(0)
+## 
+## $X.Shashi.Roopram.
+## character(0)
+## 
+## $X.PhD.candidate..21
+## character(0)
+## 
+## $X.Sajad.Salmanpour.
+## character(0)
+## 
+## $X.Researcher..11
+## character(0)
+## 
+## $X.Josje.Schut.
+## character(0)
+## 
+## $X.PhD.candidate..22
+## character(0)
+## 
+## $X.prof..dr..Theo.Schuyt.
+## character(0)
+## 
+## $X.Emeritus.professor.
+## character(0)
+## 
+## $X.Sajad.Sepehri.
+## character(0)
+## 
+## $X.Researcher..12
+## character(0)
+## 
+## $X.Ying.Shen.
+## character(0)
+## 
+## $X.PhD.candidate..23
+## character(0)
+## 
+## $X.dr..Mansoureh.Shojaee.
+## character(0)
+## 
+## $X.Researcher..13
+## character(0)
+## 
+## $X.Tamira.Sno.
+## character(0)
+## 
+## $X.PhD.candidate..24
+## character(0)
+## 
+## $X.Melisa.Soto.Lafontaine.
+## character(0)
+## 
+## $X.Lecturer..2
+## character(0)
+## 
+## $X.Sarah.Sramota.
+## character(0)
+## 
+## $X.Lecturer..3
+## character(0)
+## 
+## $X.Koen.Steenks.
+## character(0)
+## 
+## $X.PhD.candidate..25
+## character(0)
+## 
+## $X.Josine.Steenvoorde.
+## character(0)
+## 
+## $X.PhD.candidate..26
+## character(0)
+## 
+## $X.prof..dr..Jacquelien.van.Stekelenburg.
+## character(0)
+## 
+## $X.Professor..ReSCU.Lab.
+## character(0)
+## 
+## $X.dr..Joukje.Swinkels.
+## character(0)
+## 
+## $X.Assistant.Professor..4
+## character(0)
+## 
+## $X.dr..Saartje.Tack.
+## character(0)
+## 
+## $X.Assistant.Professor..5
+## character(0)
+## 
+## $X.Tara.Tankink.
+## character(0)
+## 
+## $X.PhD.candidate..27
+## character(0)
+## 
+## $X.Els.Tettelaar.
+## character(0)
+## 
+## $X.Office.manager.
+## character(0)
+## 
+## $X.prof..dr..Anne.Mei.The.
+## character(0)
+## 
+## $X.Endowed.chair..4
+## character(0)
+## 
+## $X.dr..Lex.Thijssen.
+## character(0)
+## 
+## $X.Assistant.professor..5
+## character(0)
+## 
+## $X.prof..dr..Theo.van.Tilburg.
+## character(0)
+## 
+## $X.Emeritus.professor..1
+## character(0)
+## 
+## $X.Nina.Vergeldt.
+## character(0)
+## 
+## $X.Lecturer..4
+## character(0)
+## 
+## $X.dr..Ismintha.Waldring.
+## character(0)
+## 
+## $X.Assistant.professor..6
+## character(0)
+## 
+## $X.prof..dr..Pamala.Wiepking.
+## character(0)
+## 
+## $X.Professor..7
+## character(0)
+## 
+## $X.dr..Arjen.de.Wit.
+## character(0)
+## 
+## $X.Assistant.professor..7
+## character(0)
+## 
+## $X.Lisa.Woensdregt.
+## character(0)
+## 
+## $X.Assistant.Professor..6
+## character(0)
+## 
+## $X.Louise.Wolff.
+## character(0)
+## 
+## $X.Lecturer..5
+## character(0)
+## 
+## $X.Younes.Younes.
+## character(0)
+## 
+## $X.PhD.candidate..28
+## character(0)
+## 
+## $X.Amber.Zegers.
+## character(0)
+## 
+## $X.Researcher..14
+## character(0)
+## 
+## $X.This.website.uses.cookies.
+## character(0)
+## 
+## $...
+## character(0)
+## 
+## $X.This.website.uses.cookies..1
+## character(0)
+## 
+## $...
+## character(0)
+## 
+## $X.Cookie.preferences.
+## character(0)
+## 
+## $X.You.can.accept.all.cookies.or.you.can.set.your.preferences.per.cookie.category..You.can.always.alter.your.choice.by.removing.the.cookies.from.your.browser..See.more.information.in.the.cookie.statement..
+## character(0)
+## 
+## $X.Personal.settings..
+## character(0)
+## 
+## $X.Functional.
+## character(0)
+## 
+## $X.These.cookies.are.used.to.ensure.that.our.website.operates.properly..
+## character(0)
+## 
+## $X.Analytics.
+## character(0)
+## 
+## $X.These.cookies.help.to.analyse.the.use.of.the.website..These.measurement.data.are.subsequently.used.to.improve.the.website..
+## character(0)
+## 
+## $X.Personalisation.
+## character(0)
+## 
+## $X.These.cookies.are.used.to.analyse.how.you.use.our.website..This.enables.us.to.adapt.our.website.content.with.information.that.suits.your.interests..
+## character(0)
+## 
+## $X.Social.media.
+## character(0)
+## 
+## $...
+## character(0)
+## 
+## $X.Advertising.
+## character(0)
+## 
+## $X.These.cookies.are.placed.by.advertising.partners..They.are.used.to.show.you.relevant.advertisements.for.Vrije.Universiteit.Amsterdam.on.other.websites.that.you.visit..They.enable.advertising.networks.to.track.your.internet.behaviour..
+## character(0)
+## 
+## $X.Copyright...2025...Vrije.Universiteit.Amsterdam.
+## character(0)</code></pre>
+<pre class="r"><code>fodd &lt;- function(x) x%%2 != 0
+feven &lt;- function(x) x%%2 == 0
+
+vu_names &lt;- vu_staff4[fodd(1:184)]
+
+vu_function &lt;- vu_staff4[feven(1:184)]
+
+vu_df &lt;- data.frame(cbind(vu_names, vu_function))</code></pre>
+<pre><code>## Warning in cbind(vu_names, vu_function): number of rows of result is not a
+## multiple of vector length (arg 2)</code></pre>
+<pre class="r"><code>packages &lt;- c(&quot;tidyverse&quot;, &quot;scholar&quot;, &quot;openalexR&quot;, &quot;rvest&quot;, &quot;jsonlite&quot;)
+
+fpackage.check &lt;- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave &lt;- function(x, file = NULL, location = &quot;./data/processed/&quot;) {
+    ifelse(!dir.exists(&quot;data&quot;), dir.create(&quot;data&quot;), FALSE)
+    ifelse(!dir.exists(&quot;data/processed&quot;), dir.create(&quot;data/processed&quot;), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename &lt;- substr(gsub(&quot;[:-]&quot;, &quot;&quot;, Sys.time()), 1, 8)
+    totalname &lt;- paste(location, file, &quot;_&quot;, datename, &quot;.rda&quot;, sep = &quot;&quot;)
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload &lt;- function(filename) {
+    load(filename)
+    get(ls()[ls() != &quot;filename&quot;])
+}
+
+fshowdf &lt;- function(x, ...) {
+    knitr::kable(x, digits = 2, &quot;html&quot;, ...) %&gt;%
+        kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
+        kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)
+}
+
+
+fpackage.check(packages)</code></pre>
+<pre><code>## Loading required package: openalexR</code></pre>
+<pre><code>## openalexR v2.0.0 introduces breaking changes.
+## See NEWS.md for details.
+## 
+## To suppress this message, add `openalexR.message = suppressed` to your .Renviron file.</code></pre>
+<pre><code>## Loading required package: jsonlite</code></pre>
+<pre><code>## 
+## Attaching package: &#39;jsonlite&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     flatten</code></pre>
+<pre><code>## [[1]]
+## NULL
+## 
+## [[2]]
+## NULL
+## 
+## [[3]]
+## NULL
+## 
+## [[4]]
+## NULL
+## 
+## [[5]]
+## NULL</code></pre>
+<pre class="r"><code>library(openalexR)
+library(tidyverse)
+library(scholar)
+library(rvest)
+library(jsonlite)</code></pre>
+<pre class="r"><code>lw_json &lt;- fromJSON(&quot;https://api.openalex.org/people/A5009389179&quot;, simplifyVector = FALSE)
+
+glimpse(lw_json)</code></pre>
+<pre><code>## List of 17
+##  $ id                       : chr &quot;https://openalex.org/A5009389179&quot;
+##  $ orcid                    : chr &quot;https://orcid.org/0000-0001-9301-533X&quot;
+##  $ display_name             : chr &quot;Lise Woensdregt&quot;
+##  $ display_name_alternatives:List of 1
+##   ..$ : chr &quot;Lise Woensdregt&quot;
+##  $ works_count              : int 19
+##  $ cited_by_count           : int 114
+##  $ summary_stats            :List of 3
+##   ..$ 2yr_mean_citedness: num 0.667
+##   ..$ h_index           : int 6
+##   ..$ i10_index         : int 3
+##  $ ids                      :List of 2
+##   ..$ openalex: chr &quot;https://openalex.org/A5009389179&quot;
+##   ..$ orcid   : chr &quot;https://orcid.org/0000-0001-9301-533X&quot;
+##  $ affiliations             :List of 4
+##   ..$ :List of 2
+##   .. ..$ institution:List of 6
+##   .. ..$ years      :List of 6
+##   ..$ :List of 2
+##   .. ..$ institution:List of 6
+##   .. ..$ years      :List of 3
+##   ..$ :List of 2
+##   .. ..$ institution:List of 6
+##   .. ..$ years      :List of 2
+##   ..$ :List of 2
+##   .. ..$ institution:List of 6
+##   .. ..$ years      :List of 1
+##  $ last_known_institutions  :List of 1
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/I865915315&quot;
+##   .. ..$ ror         : chr &quot;https://ror.org/008xxew50&quot;
+##   .. ..$ display_name: chr &quot;Vrije Universiteit Amsterdam&quot;
+##   .. ..$ country_code: chr &quot;NL&quot;
+##   .. ..$ type        : chr &quot;funder&quot;
+##   .. ..$ lineage     :List of 1
+##  $ topics                   :List of 21
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11350&quot;
+##   .. ..$ display_name: chr &quot;Sex work and related issues&quot;
+##   .. ..$ count       : int 11
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11168&quot;
+##   .. ..$ display_name: chr &quot;International Development and Aid&quot;
+##   .. ..$ count       : int 4
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T13843&quot;
+##   .. ..$ display_name: chr &quot;African Sexualities and LGBTQ+ Issues&quot;
+##   .. ..$ count       : int 3
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11860&quot;
+##   .. ..$ display_name: chr &quot;HIV, Drug Use, Sexual Risk&quot;
+##   .. ..$ count       : int 3
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T14464&quot;
+##   .. ..$ display_name: chr &quot;Community Development and Social Impact&quot;
+##   .. ..$ count       : int 2
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11430&quot;
+##   .. ..$ display_name: chr &quot;Disaster Response and Management&quot;
+##   .. ..$ count       : int 2
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11556&quot;
+##   .. ..$ display_name: chr &quot;Poverty, Education, and Child Welfare&quot;
+##   .. ..$ count       : int 2
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T13839&quot;
+##   .. ..$ display_name: chr &quot;Tourism, Volunteerism, and Development&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11300&quot;
+##   .. ..$ display_name: chr &quot;Global Educational Policies and Reforms&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T10762&quot;
+##   .. ..$ display_name: chr &quot;Migration, Health and Trauma&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T13456&quot;
+##   .. ..$ display_name: chr &quot;Religion, Society, and Development&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T10082&quot;
+##   .. ..$ display_name: chr &quot;HIV/AIDS Research and Interventions&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11933&quot;
+##   .. ..$ display_name: chr &quot;Mining and Resource Management&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T12775&quot;
+##   .. ..$ display_name: chr &quot;Legal Issues in South Africa&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11581&quot;
+##   .. ..$ display_name: chr &quot;Viral Infections and Outbreaks Research&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T10149&quot;
+##   .. ..$ display_name: chr &quot;Anthropological Studies and Insights&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11761&quot;
+##   .. ..$ display_name: chr &quot;Resilience and Mental Health&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T13035&quot;
+##   .. ..$ display_name: chr &quot;Human Rights and Development&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11540&quot;
+##   .. ..$ display_name: chr &quot;Gender, Feminism, and Media&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T10156&quot;
+##   .. ..$ display_name: chr &quot;LGBTQ Health, Identity, and Policy&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11639&quot;
+##   .. ..$ display_name: chr &quot;Mental Health and Patient Involvement&quot;
+##   .. ..$ count       : int 1
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##  $ topic_share              :List of 21
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11350&quot;
+##   .. ..$ display_name: chr &quot;Sex work and related issues&quot;
+##   .. ..$ value       : num 7.04e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T13843&quot;
+##   .. ..$ display_name: chr &quot;African Sexualities and LGBTQ+ Issues&quot;
+##   .. ..$ value       : num 6.7e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T14464&quot;
+##   .. ..$ display_name: chr &quot;Community Development and Social Impact&quot;
+##   .. ..$ value       : num 2.53e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11860&quot;
+##   .. ..$ display_name: chr &quot;HIV, Drug Use, Sexual Risk&quot;
+##   .. ..$ value       : num 2.19e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11933&quot;
+##   .. ..$ display_name: chr &quot;Mining and Resource Management&quot;
+##   .. ..$ value       : num 1.7e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11168&quot;
+##   .. ..$ display_name: chr &quot;International Development and Aid&quot;
+##   .. ..$ value       : num 1.36e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T13839&quot;
+##   .. ..$ display_name: chr &quot;Tourism, Volunteerism, and Development&quot;
+##   .. ..$ value       : num 1.27e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11300&quot;
+##   .. ..$ display_name: chr &quot;Global Educational Policies and Reforms&quot;
+##   .. ..$ value       : num 1.08e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T10149&quot;
+##   .. ..$ display_name: chr &quot;Anthropological Studies and Insights&quot;
+##   .. ..$ value       : num 1.06e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11639&quot;
+##   .. ..$ display_name: chr &quot;Mental Health and Patient Involvement&quot;
+##   .. ..$ value       : num 1.05e-05
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11581&quot;
+##   .. ..$ display_name: chr &quot;Viral Infections and Outbreaks Research&quot;
+##   .. ..$ value       : num 9.5e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11430&quot;
+##   .. ..$ display_name: chr &quot;Disaster Response and Management&quot;
+##   .. ..$ value       : num 9.3e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11556&quot;
+##   .. ..$ display_name: chr &quot;Poverty, Education, and Child Welfare&quot;
+##   .. ..$ value       : num 9e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T10156&quot;
+##   .. ..$ display_name: chr &quot;LGBTQ Health, Identity, and Policy&quot;
+##   .. ..$ value       : num 8.8e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11540&quot;
+##   .. ..$ display_name: chr &quot;Gender, Feminism, and Media&quot;
+##   .. ..$ value       : num 7.4e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T13035&quot;
+##   .. ..$ display_name: chr &quot;Human Rights and Development&quot;
+##   .. ..$ value       : num 7.2e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T12775&quot;
+##   .. ..$ display_name: chr &quot;Legal Issues in South Africa&quot;
+##   .. ..$ value       : num 6.6e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T10762&quot;
+##   .. ..$ display_name: chr &quot;Migration, Health and Trauma&quot;
+##   .. ..$ value       : num 4.8e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T11761&quot;
+##   .. ..$ display_name: chr &quot;Resilience and Mental Health&quot;
+##   .. ..$ value       : num 4.4e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T10082&quot;
+##   .. ..$ display_name: chr &quot;HIV/AIDS Research and Interventions&quot;
+##   .. ..$ value       : num 3.9e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##   ..$ :List of 6
+##   .. ..$ id          : chr &quot;https://openalex.org/T13456&quot;
+##   .. ..$ display_name: chr &quot;Religion, Society, and Development&quot;
+##   .. ..$ value       : num 2.9e-06
+##   .. ..$ subfield    :List of 2
+##   .. ..$ field       :List of 2
+##   .. ..$ domain      :List of 2
+##  $ x_concepts               :List of 25
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C17744445&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q36442&quot;
+##   .. ..$ display_name: chr &quot;Political science&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 89.5
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C199539241&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q7748&quot;
+##   .. ..$ display_name: chr &quot;Law&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 73.7
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C144024400&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q21201&quot;
+##   .. ..$ display_name: chr &quot;Sociology&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 68.4
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C86803240&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q420&quot;
+##   .. ..$ display_name: chr &quot;Biology&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 63.2
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C15744967&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q9418&quot;
+##   .. ..$ display_name: chr &quot;Psychology&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 57.9
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C71924100&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q11190&quot;
+##   .. ..$ display_name: chr &quot;Medicine&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 52.6
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C162324750&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q8134&quot;
+##   .. ..$ display_name: chr &quot;Economics&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 52.6
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C121332964&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q413&quot;
+##   .. ..$ display_name: chr &quot;Physics&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 47.4
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C62520636&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q944&quot;
+##   .. ..$ display_name: chr &quot;Quantum mechanics&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 42.1
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C94625758&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q7163&quot;
+##   .. ..$ display_name: chr &quot;Politics&quot;
+##   .. ..$ level       : int 2
+##   .. ..$ score       : num 42.1
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C205649164&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q1071&quot;
+##   .. ..$ display_name: chr &quot;Geography&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 42.1
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C107993555&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q1662673&quot;
+##   .. ..$ display_name: chr &quot;Gender studies&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 36.8
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C138885662&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q5891&quot;
+##   .. ..$ display_name: chr &quot;Philosophy&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 36.8
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C159047783&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q7215&quot;
+##   .. ..$ display_name: chr &quot;Virology&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 36.8
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C19165224&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q23404&quot;
+##   .. ..$ display_name: chr &quot;Anthropology&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 31.6
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C50522688&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q189833&quot;
+##   .. ..$ display_name: chr &quot;Economic growth&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 31.6
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C95457728&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q309&quot;
+##   .. ..$ display_name: chr &quot;History&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 31.6
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C203014093&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q101929&quot;
+##   .. ..$ display_name: chr &quot;Immunology&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 31.6
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C512399662&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q3505712&quot;
+##   .. ..$ display_name: chr &quot;Family medicine&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 31.6
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C2780100914&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q1297897&quot;
+##   .. ..$ display_name: chr &quot;Sex work&quot;
+##   .. ..$ level       : int 3
+##   .. ..$ score       : num 31.6
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C3013748606&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q15787&quot;
+##   .. ..$ display_name: chr &quot;Human immunodeficiency virus (HIV)&quot;
+##   .. ..$ level       : int 2
+##   .. ..$ score       : num 31.6
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C18903297&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q7150&quot;
+##   .. ..$ display_name: chr &quot;Ecology&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 26.3
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C41008148&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q21198&quot;
+##   .. ..$ display_name: chr &quot;Computer science&quot;
+##   .. ..$ level       : int 0
+##   .. ..$ score       : num 26.3
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C97355855&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q11473&quot;
+##   .. ..$ display_name: chr &quot;Thermodynamics&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 26.3
+##   ..$ :List of 5
+##   .. ..$ id          : chr &quot;https://openalex.org/C111472728&quot;
+##   .. ..$ wikidata    : chr &quot;https://www.wikidata.org/wiki/Q9471&quot;
+##   .. ..$ display_name: chr &quot;Epistemology&quot;
+##   .. ..$ level       : int 1
+##   .. ..$ score       : num 26.3
+##  $ counts_by_year           :List of 9
+##   ..$ :List of 4
+##   .. ..$ year          : int 2025
+##   .. ..$ works_count   : int 1
+##   .. ..$ oa_works_count: int 0
+##   .. ..$ cited_by_count: int 21
+##   ..$ :List of 4
+##   .. ..$ year          : int 2024
+##   .. ..$ works_count   : int 2
+##   .. ..$ oa_works_count: int 1
+##   .. ..$ cited_by_count: int 23
+##   ..$ :List of 4
+##   .. ..$ year          : int 2023
+##   .. ..$ works_count   : int 3
+##   .. ..$ oa_works_count: int 2
+##   .. ..$ cited_by_count: int 36
+##   ..$ :List of 4
+##   .. ..$ year          : int 2022
+##   .. ..$ works_count   : int 3
+##   .. ..$ oa_works_count: int 3
+##   .. ..$ cited_by_count: int 20
+##   ..$ :List of 4
+##   .. ..$ year          : int 2021
+##   .. ..$ works_count   : int 1
+##   .. ..$ oa_works_count: int 1
+##   .. ..$ cited_by_count: int 13
+##   ..$ :List of 4
+##   .. ..$ year          : int 2020
+##   .. ..$ works_count   : int 3
+##   .. ..$ oa_works_count: int 1
+##   .. ..$ cited_by_count: int 8
+##   ..$ :List of 4
+##   .. ..$ year          : int 2019
+##   .. ..$ works_count   : int 3
+##   .. ..$ oa_works_count: int 2
+##   .. ..$ cited_by_count: int 2
+##   ..$ :List of 4
+##   .. ..$ year          : int 2018
+##   .. ..$ works_count   : int 1
+##   .. ..$ oa_works_count: int 0
+##   .. ..$ cited_by_count: int 0
+##   ..$ :List of 4
+##   .. ..$ year          : int 2016
+##   .. ..$ works_count   : int 3
+##   .. ..$ oa_works_count: int 0
+##   .. ..$ cited_by_count: int 1
+##  $ works_api_url            : chr &quot;https://api.openalex.org/works?filter=author.id:A5009389179&quot;
+##  $ updated_date             : chr &quot;2025-09-18T04:06:46.703634&quot;
+##  $ created_date             : chr &quot;2023-07-21&quot;</code></pre>
+<pre class="r"><code>glimpse(lw_json, max.level = 1)</code></pre>
+<pre><code>## List of 17
+##  $ id                       : chr &quot;https://openalex.org/A5009389179&quot;
+##  $ orcid                    : chr &quot;https://orcid.org/0000-0001-9301-533X&quot;
+##  $ display_name             : chr &quot;Lise Woensdregt&quot;
+##  $ display_name_alternatives:List of 1
+##  $ works_count              : int 19
+##  $ cited_by_count           : int 114
+##  $ summary_stats            :List of 3
+##  $ ids                      :List of 2
+##  $ affiliations             :List of 4
+##  $ last_known_institutions  :List of 1
+##  $ topics                   :List of 21
+##  $ topic_share              :List of 21
+##  $ x_concepts               :List of 25
+##  $ counts_by_year           :List of 9
+##  $ works_api_url            : chr &quot;https://api.openalex.org/works?filter=author.id:A5009389179&quot;
+##  $ updated_date             : chr &quot;2025-09-18T04:06:46.703634&quot;
+##  $ created_date             : chr &quot;2023-07-21&quot;</code></pre>
+<pre class="r"><code>lw__works_json &lt;- fromJSON(&quot;https://api.openalex.org/works?page=1&amp;filter=authorships.author.id:a5009389179,type:types/article&quot;, simplifyVector = FALSE)
+
+# Later I want to make a table with the author names + affiliations, combined with mean citation index of those 5 works + 2_yr_meancitedness + h_index
+
+# But for now I will use works_count and cited_by_count, so I will only use lw_json. Name, affiliation
+
+lw_json$display_name </code></pre>
+<pre><code>## [1] &quot;Lise Woensdregt&quot;</code></pre>
+<pre class="r"><code>lw_json$last_known_institutions$display_name</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>df_lw &lt;- lw_json %&gt;%
+    .$last_known_institutions %&gt;%
+    .[[1]] %&gt;%
+    .$display_name %&gt;%
+    discard(is_empty)
+
+lw_json$works_count</code></pre>
+<pre><code>## [1] 19</code></pre>
+<pre class="r"><code>lw_json$cited_by_count</code></pre>
+<pre><code>## [1] 114</code></pre>
+<pre class="r"><code>name &lt;- lw_json$display_name
+current_university &lt;- df_lw &lt;- lw_json %&gt;%
+    .$last_known_institutions %&gt;%
+    .[[1]] %&gt;%
+    .$display_name %&gt;%
+    discard(is_empty)
+workscount_ind &lt;- lw_json$works_count
+totalcitation_ind &lt;- lw_json$cited_by_count
+sociologists &lt;- data.frame(name, current_university, workscount_ind, totalcitation_ind)</code></pre>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAibGFiNCIKYXV0aG9yOiAiR2hpc2xhaW5lIGRlIEdyb290IgpkYXRlOiAiMjAyNS0wOS0yNCIKLS0tCgpgYGB7cn0KCiMgaW5zdGFsbC5wYWNrYWdlcygnZGF0YS50YWJsZScpCmxpYnJhcnkoZGF0YS50YWJsZSkgCmxpYnJhcnkodGlkeXZlcnNlKSAgCiMgaW5zdGFsbC5wYWNrYWdlcygnaHR0cicpICMgd2UgZG9uJ3QgbmVlZCB0aGlzIGZvciBub3cgcmVxdWlyZShodHRyKQoKcmVxdWlyZSh4bWwyKQoKcmVxdWlyZShydmVzdCkKCnJlcXVpcmUoZGV2dG9vbHMpCiMgTm90ZSB3ZSdyZSBkb2luZyBzb21ldGhpbmcgZGlmZmVyZW50IGhlcmUuIFdlJ3JlIGluc3RhbGxpbmcgYSAqbGF0ZXN0KiB2ZXJzaW9uIGRpcmVjdGx5IGZyb20KIyBHaXRIdWIgVGhpcyBpcyBiZWNhdXNlIHRoZSByZWxlYXNlZCB2ZXJzaW9uIG9mIHRoaXMgcGFja2FnZXMgY29udGFpbnMgc29tZSBlcnJvcnMhCmRldnRvb2xzOjppbnN0YWxsX2dpdGh1YigiamtlaXJzdGVhZC9zY2hvbGFyIikKCnJlcXVpcmUoc2Nob2xhcikKCmxpYnJhcnkoa25pdHIpCgojIGRlZmluZSB3b3JrZGlyZWN0b3J5LCBub3RlIHRoZSBkb3VibGUgKmJhY2tzbGFzaGVzKiBpZiB5b3UncmUgb24gd2luZG93cyBzZXR3ZCgnL3lvdXJwYXRoaGVyZSknCgpzZXR3ZCgnL1VzZXJzL2doaXNsYWluZS9Eb3dubG9hZHMvR2l0aHViL1NvY2lhbCBOZXR3b3Jrcy9XZWJzY3JhcGluZyBmb3IgbGFiIDQnKQpgYGAKCmBgYHtyfQojIExldCdzIGZpcnN0IGdldCB0aGUgc3RhZmYgcGFnZSByZWFkX2h0bWwgaXMgYSBmdW5jdGlvbiB0aGF0IHNpbXBseSBleHRyYWN0cyBodG1sIHdlYnBhZ2VzIGFuZAojIHB1dHMgdGhlbSBpbiB4bWwgZm9ybWF0CgpSdnVfc3RhZmYgPC0gcmVhZF9odG1sKCJodHRwczovL3Z1Lm5sL2VuL2Fib3V0LXZ1L2ZhY3VsdGllcy9zY2hvb2wtb2Ytc29jaWFsLXNjaWVuY2VzL3RlYW1zL3N0YWZmLXNvY2lvbG9neSIpCgojPiBFcnJvciBpbiBvcGVuLmNvbm5lY3Rpb24oeCwgInJiIik6IEhUVFAgZXJyb3IgNDA0LgoKIyBzbyB3ZSBuZWVkIHRvIGZpbmQgV0hFUkUgdGhlIHRhYmxlIGlzIGxvY2F0ZWQgaW4gdGhlIGh0bWwgJ2luc3BlY3QgZWxlbWVudCcgaW4gbW96aWxsYSBmaXJlZm94IG9yCiMgJ3ZpZXcgcGFnZSBzb3VyY2UnIGFuZCB5b3Ugc2VlIHRoYXQgZXZlcnl0aGluZyBBRlRFUiAvdGQgaW4gdGhlICdib2R5JyBvZiB0aGUgcGFnZSBzZWVtcyB0byBiZQojIHRoZSB0YWJsZSB3ZSBkbyBuZWVkCgp2dV9zdGFmZiA8LSBSdnVfc3RhZmYgJT4lCiAgICBydmVzdDo6aHRtbF9ub2RlcygiYm9keSIpICU+JQogICAgeG1sMjo6eG1sX2ZpbmRfYWxsKCIvL3AiKSAlPiUKICAgIHJ2ZXN0OjpodG1sX3RleHQyKCkKCnZ1X3N0YWZmCgpsaWJyYXJ5KGRwbHlyKQoKdnVfc3RhZmYgPC0gYXMubGlzdCh2dV9zdGFmZikKCnZ1X3N0YWZmMiA8LSBhcy5kYXRhLmZyYW1lKHZ1X3N0YWZmKQoKdnVfc3RhZmYzIDwtIHZ1X3N0YWZmMlstYygxLCAxODY6MjAzKSwgXQoKdnVfc3RhZmY0IDwtIGFzLmxpc3QodnVfc3RhZmYzKSAKCnByaW50KHZ1X3N0YWZmNCkKCmZvZGQgPC0gZnVuY3Rpb24oeCkgeCUlMiAhPSAwCmZldmVuIDwtIGZ1bmN0aW9uKHgpIHglJTIgPT0gMAoKdnVfbmFtZXMgPC0gdnVfc3RhZmY0W2ZvZGQoMToxODQpXQoKdnVfZnVuY3Rpb24gPC0gdnVfc3RhZmY0W2ZldmVuKDE6MTg0KV0KCnZ1X2RmIDwtIGRhdGEuZnJhbWUoY2JpbmQodnVfbmFtZXMsIHZ1X2Z1bmN0aW9uKSkKCgpgYGAKCmBgYHtyfQpwYWNrYWdlcyA8LSBjKCJ0aWR5dmVyc2UiLCAic2Nob2xhciIsICJvcGVuYWxleFIiLCAicnZlc3QiLCAianNvbmxpdGUiKQoKZnBhY2thZ2UuY2hlY2sgPC0gZnVuY3Rpb24ocGFja2FnZXMpIHsKICAgIGxhcHBseShwYWNrYWdlcywgRlVOID0gZnVuY3Rpb24oeCkgewogICAgICAgIGlmICghcmVxdWlyZSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpKSB7CiAgICAgICAgICAgIGluc3RhbGwucGFja2FnZXMoeCwgZGVwZW5kZW5jaWVzID0gVFJVRSkKICAgICAgICAgICAgbGlicmFyeSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpCiAgICAgICAgfQogICAgfSkKfQoKZnNhdmUgPC0gZnVuY3Rpb24oeCwgZmlsZSA9IE5VTEwsIGxvY2F0aW9uID0gIi4vZGF0YS9wcm9jZXNzZWQvIikgewogICAgaWZlbHNlKCFkaXIuZXhpc3RzKCJkYXRhIiksIGRpci5jcmVhdGUoImRhdGEiKSwgRkFMU0UpCiAgICBpZmVsc2UoIWRpci5leGlzdHMoImRhdGEvcHJvY2Vzc2VkIiksIGRpci5jcmVhdGUoImRhdGEvcHJvY2Vzc2VkIiksIEZBTFNFKQogICAgaWYgKGlzLm51bGwoZmlsZSkpCiAgICAgICAgZmlsZSA9IGRlcGFyc2Uoc3Vic3RpdHV0ZSh4KSkKICAgIGRhdGVuYW1lIDwtIHN1YnN0cihnc3ViKCJbOi1dIiwgIiIsIFN5cy50aW1lKCkpLCAxLCA4KQogICAgdG90YWxuYW1lIDwtIHBhc3RlKGxvY2F0aW9uLCBmaWxlLCAiXyIsIGRhdGVuYW1lLCAiLnJkYSIsIHNlcCA9ICIiKQogICAgc2F2ZSh4LCBmaWxlID0gdG90YWxuYW1lKSAgI25lZWQgdG8gZml4IGlmIGZpbGUgaXMgcmVsb2FkZWQgYXMgaW5wdXQgbmFtZSwgbm90IGFzIHguIAp9CgpmbG9hZCA8LSBmdW5jdGlvbihmaWxlbmFtZSkgewogICAgbG9hZChmaWxlbmFtZSkKICAgIGdldChscygpW2xzKCkgIT0gImZpbGVuYW1lIl0pCn0KCmZzaG93ZGYgPC0gZnVuY3Rpb24oeCwgLi4uKSB7CiAgICBrbml0cjo6a2FibGUoeCwgZGlnaXRzID0gMiwgImh0bWwiLCAuLi4pICU+JQogICAgICAgIGthYmxlRXh0cmE6OmthYmxlX3N0eWxpbmcoYm9vdHN0cmFwX29wdGlvbnMgPSBjKCJzdHJpcGVkIiwgImhvdmVyIikpICU+JQogICAgICAgIGthYmxlRXh0cmE6OnNjcm9sbF9ib3god2lkdGggPSAiMTAwJSIsIGhlaWdodCA9ICIzMDBweCIpCn0KCgpmcGFja2FnZS5jaGVjayhwYWNrYWdlcykKCmxpYnJhcnkob3BlbmFsZXhSKQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShzY2hvbGFyKQpsaWJyYXJ5KHJ2ZXN0KQpsaWJyYXJ5KGpzb25saXRlKQoKCmBgYAoKYGBge3J9Cgpsd19qc29uIDwtIGZyb21KU09OKCJodHRwczovL2FwaS5vcGVuYWxleC5vcmcvcGVvcGxlL0E1MDA5Mzg5MTc5Iiwgc2ltcGxpZnlWZWN0b3IgPSBGQUxTRSkKCmdsaW1wc2UobHdfanNvbikKCmdsaW1wc2UobHdfanNvbiwgbWF4LmxldmVsID0gMSkKCmBgYApgYGB7cn0KCmx3X193b3Jrc19qc29uIDwtIGZyb21KU09OKCJodHRwczovL2FwaS5vcGVuYWxleC5vcmcvd29ya3M/cGFnZT0xJmZpbHRlcj1hdXRob3JzaGlwcy5hdXRob3IuaWQ6YTUwMDkzODkxNzksdHlwZTp0eXBlcy9hcnRpY2xlIiwgc2ltcGxpZnlWZWN0b3IgPSBGQUxTRSkKCiMgTGF0ZXIgSSB3YW50IHRvIG1ha2UgYSB0YWJsZSB3aXRoIHRoZSBhdXRob3IgbmFtZXMgKyBhZmZpbGlhdGlvbnMsIGNvbWJpbmVkIHdpdGggbWVhbiBjaXRhdGlvbiBpbmRleCBvZiB0aG9zZSA1IHdvcmtzICsgMl95cl9tZWFuY2l0ZWRuZXNzICsgaF9pbmRleAoKIyBCdXQgZm9yIG5vdyBJIHdpbGwgdXNlIHdvcmtzX2NvdW50IGFuZCBjaXRlZF9ieV9jb3VudCwgc28gSSB3aWxsIG9ubHkgdXNlIGx3X2pzb24uIE5hbWUsIGFmZmlsaWF0aW9uCgpsd19qc29uJGRpc3BsYXlfbmFtZSAKCmx3X2pzb24kbGFzdF9rbm93bl9pbnN0aXR1dGlvbnMkZGlzcGxheV9uYW1lCgpkZl9sdyA8LSBsd19qc29uICU+JQogICAgLiRsYXN0X2tub3duX2luc3RpdHV0aW9ucyAlPiUKICAgIC5bWzFdXSAlPiUKICAgIC4kZGlzcGxheV9uYW1lICU+JQogICAgZGlzY2FyZChpc19lbXB0eSkKCmx3X2pzb24kd29ya3NfY291bnQKCmx3X2pzb24kY2l0ZWRfYnlfY291bnQKCm5hbWUgPC0gbHdfanNvbiRkaXNwbGF5X25hbWUKY3VycmVudF91bml2ZXJzaXR5IDwtIGRmX2x3IDwtIGx3X2pzb24gJT4lCiAgICAuJGxhc3Rfa25vd25faW5zdGl0dXRpb25zICU+JQogICAgLltbMV1dICU+JQogICAgLiRkaXNwbGF5X25hbWUgJT4lCiAgICBkaXNjYXJkKGlzX2VtcHR5KQp3b3Jrc2NvdW50X2luZCA8LSBsd19qc29uJHdvcmtzX2NvdW50CnRvdGFsY2l0YXRpb25faW5kIDwtIGx3X2pzb24kY2l0ZWRfYnlfY291bnQKc29jaW9sb2dpc3RzIDwtIGRhdGEuZnJhbWUobmFtZSwgY3VycmVudF91bml2ZXJzaXR5LCB3b3Jrc2NvdW50X2luZCwgdG90YWxjaXRhdGlvbl9pbmQpCgpgYGA=</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("lab4.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

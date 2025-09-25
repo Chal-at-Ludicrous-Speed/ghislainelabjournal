@@ -2,7 +2,6 @@
 title: "lab4"
 author: "Ghislaine de Groot"
 date: "2025-09-24"
-output: html_document
 ---
 
 ```{r}
@@ -11,11 +10,11 @@ output: html_document
 library(data.table) 
 library(tidyverse)  
 # install.packages('httr') # we don't need this for now require(httr)
-install.packages("xml2")
+
 require(xml2)
-install.packages("rvest")
+
 require(rvest)
-install.packages("devtools")
+
 require(devtools)
 # Note we're doing something different here. We're installing a *latest* version directly from
 # GitHub This is because the released version of this packages contains some errors!
@@ -23,10 +22,13 @@ devtools::install_github("jkeirstead/scholar")
 
 require(scholar)
 
+library(knitr)
+
 # define workdirectory, note the double *backslashes* if you're on windows setwd('/yourpathhere)'
 
 setwd('/Users/ghislaine/Downloads/Github/Social Networks/Webscraping for lab 4')
 ```
+
 ```{r}
 # Let's first get the staff page read_html is a function that simply extracts html webpages and
 # puts them in xml format
@@ -52,9 +54,6 @@ vu_staff <- as.list(vu_staff)
 
 vu_staff2 <- as.data.frame(vu_staff)
 
-vu_staff3 <- vu_staff2[row(2:185)]
-
-# Remove the first and third rows from the mtcars dataset
 vu_staff3 <- vu_staff2[-c(1, 186:203), ]
 
 vu_staff4 <- as.list(vu_staff3) 
