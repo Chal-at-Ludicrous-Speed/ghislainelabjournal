@@ -19,6 +19,13 @@ For a measure of individual prestige, I went for the amount of works and the amo
 
 Operationalising departmental prestige as such will also include faculty size, which has been used as a measure for the same variable in literature (e.g. Burris, 2004).
 
+# Summary of the code
+
+Before seminar 4, I made a matrix of the VU sociologists. In class, I made a plot of the Zachary network, and I visualised the EUR department. Then, I created my dataset of all sociologists. At home, I made a collaboration matrix of all sociologists and a visualization of the matrix. I also tried to create a syntax to extract all the journal names ("so") from the "works" list, but have not been successful yet. My next step is trying to write a loop for getting the information I need. 
+
+
+Question: what is "trying to use CRAN without setting a mirror"?
+
 
 -----
 
@@ -176,5 +183,559 @@ current_university <- df_lw <- lw_json %>%
 workscount_ind <- lw_json$works_count
 totalcitation_ind <- lw_json$cited_by_count
 sociologists <- data.frame(name, current_university, workscount_ind, totalcitation_ind)
+
+```
+
+----
+
+# Seminar stuff
+
+```{r}
+
+require(sna)
+
+require(igraph)
+g <- make_graph("Zachary")
+plot(g)
+
+plot(g, vertex.size=8, vertex.color = rainbow(10, .8, .8, alpha= .8),
+vertex.label.color = "black", vertex.label.cex = 0.4, vertex.label.degree = -pi/2,
+edge.arrow.size = 0.3, edge.arrow.width = 0.4, edge.color = "black")
+
+set.seed(2345)
+l <- layout_with_mds(g)  #https://igraph.org/r/doc/layout_with_mds.html
+plot(g, layout = l)
+
+l  #let us take a look at the coordinates
+l[1, 1] <- 4
+l[34, 1] <- -3.5
+plot(g, layout = l)
+
+```
+
+```{r}
+rm(list = ls())
+
+
+fpackage.check <- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave <- function(x, file = NULL, location = "./data/processed/") {
+    ifelse(!dir.exists("data"), dir.create("data"), FALSE)
+    ifelse(!dir.exists("data/processed"), dir.create("data/processed"), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename <- substr(gsub("[:-]", "", Sys.time()), 1, 8)
+    totalname <- paste(location, file, "_", datename, ".rda", sep = "")
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload <- function(filename) {
+    load(filename)
+    get(ls()[ls() != "filename"])
+}
+
+fshowdf <- function(x, ...) {
+    knitr::kable(x, digits = 2, "html", ...) %>%
+        kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+        kableExtra::scroll_box(width = "100%", height = "300px")
+}
+
+packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
+fpackage.check(packages)
+```
+
+
+```{r}
+scholars <- fload("./data/processed/scholars_20240924.rda")
+```
+
+
+```{r}
+str(scholars$demographics[[1]])
+```
+
+
+
+```{r}
+demographics <- do.call(rbind.data.frame, scholars$demographics)
+```
+
+
+```{r}
+fcolnet <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
+    2018), c(2019, 2023)), type = c("first")) {
+
+    # step 1
+    demographics <- do.call(rbind.data.frame, data$demographics)
+    demographics <- demographics %>%
+        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), ""), Universiteit2.22 = replace(Universiteit2.22,
+            is.na(Universiteit2.22), ""), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+            ""), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), ""), discipline.22 = replace(discipline.22,
+            is.na(discipline.22), ""), discipline.24 = replace(discipline.24, is.na(discipline.24), ""))
+
+    sample <- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
+        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
+        university) & (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% discipline))
+
+    demographics_soc <- demographics[sample, ]
+    scholars_sel <- lapply(scholars, "[", sample)
+
+    # step 2
+    ids <- demographics_soc$au_id
+    nwaves <- length(waves)
+    nets <- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works <- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = unlist(lapply(scholars_sel$work,
+        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) l$publication_year),
+        recursive = FALSE))
+
+    df_works <- df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == "first") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- df_works_w$works_author[i][[1]]$au_id[1]
+                alters <- df_works_w$works_author[i][[1]]$au_id[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+                }
+            }
+        }
+    }
+
+    if (type == "last") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+                alters <- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+                }
+            }
+        }
+    }
+
+    if (type == "all") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos <- df_works_w$works_author[i][[1]]$au_id
+                if (sum(ids %in% egos) > 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] <- 1
+                }
+            }
+        }
+    }
+    output <- list()
+    output$data <- scholars_sel
+    output$nets <- nets
+    return(output)
+}
+
+```
+
+```{r}
+eursoc <- fcolnet(data = scholars, university = "EUR", discipline = "sociology", type = "first", waves = list(c(2015, 2018), c(2019, 2023)))
+
+df <- eursoc$data
+
+#same complicated structure as 'scholars' thus first make a dataframe from the list in which all info was saved. 
+df_ego <- do.call(rbind.data.frame, df$demographics)
+
+
+eurnet <- as.matrix(eursoc$nets[2,,], names=null)
+
+eursoc_igraph <- igraph::graph_from_adjacency_matrix(eurnet,
+  mode = c("directed"),
+  weighted = NULL,
+  diag = FALSE,
+  add.colnames = NULL,
+  add.rownames = NULL
+)
+
+plot(eursoc_igraph,
+  vertex.label = NA,
+  edge.width = 0.2,
+  edge.arrow.size =0.2)
+
+```
+
+```{r}
+
+# remove political scientists
+
+sample <- which(demographics$discipline.22 == "sociology" | demographics$discipline.24 == "sociology")
+
+demographics_soc <- demographics[sample,]
+sociologists <- lapply(scholars, "[",sample)
+
+
+```
+
+```{r}
+
+frequency(demographics_soc$Universiteit.22)
+
+table1 <- table(demographics_soc$Universiteit.22, useNA = "always")
+table2 <- table(demographics_soc$Universiteit.24, useNA = "always")
+
+table_so <- table(sociologists$works$so)
+
+# so_sample <- which(sociologists$works)
+
+```
+-----
+
+# At home stuff
+
+-----
+
+```{r}
+
+sociologists$scholars_oa[[1]]$works_api_url
+
+# I need to make a list of journals from the dataset. These need to form a list, which will be sorted by Q1 or not Q1 as of 2022 and 2024. Then I add the Q1 journal count to demographic_soc. Once that is done, the Q1 journal count per department will be calculated. 
+
+# Association matrix of alters 
+
+```
+
+```{r}
+
+ids <- demographics_soc$au_id
+wave2 <- wave1 <- matrix(0, nrow = length(ids), ncol = length(ids), dimnames = list(ids, ids))
+
+worksobject <- sociologists$works
+
+works_id <- unlist(lapply(worksobject, function(l) l$id))
+works_author <- unlist(lapply(worksobject, function(l) l$author), recursive = FALSE)
+works_year <- unlist(lapply(worksobject, function(l) l$publication_year), recursive = FALSE)
+
+df_works <- tibble(works_id, works_author, works_year)
+
+dups <- which(duplicated(works_id))
+# why are there so many papers of Batenburg duplicates
+
+df_works <- df_works[-dups, ]
+df_works_w2 <- df_works[df_works$works_year > 2019, ]
+
+```
+
+```{r}
+
+# first to others
+for (i in 1:nrow(df_works_w2)) {
+    ego <- df_works_w2$works_author[i][[1]]$au_id[1]
+    alters <- df_works_w2$works_author[i][[1]]$au_id[-1]
+
+    if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+        wave2[which(ids %in% ego), which(ids %in% alters)] <- 1
+    }
+}
+
+# last to others
+for (i in 1:nrow(df_works_w2)) {
+    ego <- rev(df_works_w2$works_author[i][[1]]$au_id)[1]
+    alters <- rev(df_works_w2$works_author[i][[1]]$au_id)[-1]
+
+    if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+        wave2[which(ids %in% ego), which(ids %in% alters)] <- 1
+    }
+}
+
+# undirected
+for (i in 1:nrow(df_works_w2)) {
+    egos <- df_works_w2$works_author[i][[1]]$au_id
+
+    if (sum(ids %in% egos) > 0) {
+        wave2[which(ids %in% egos), which(ids %in% egos)] <- 1
+    }
+}
+
+```
+
+```{r}
+
+# Old code
+
+# fcolnet <- function(data = scholars, waves = list(c(2015, 2018), c(2019, 2023)), type = c("first")) {
+
+    # step 1
+#    demographics <- do.call(rbind.data.frame, data$demographics)
+#    demographics <- demographics %>%
+#        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), ""), Universiteit2.22 = #replace(Universiteit2.22,
+#            is.na(Universiteit2.22), ""), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+#            ""), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), ""), discipline.22 = #replace(discipline.22,
+#            is.na(discipline.22), ""), discipline.24 = replace(discipline.24, is.na(discipline.24), ""))
+
+#    sample <- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
+#        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
+#        university) & (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% #discipline))
+
+#    demographics_soc <- demographics[sample, ]
+#    scholars_sel <- lapply(scholars, "[", sample)
+#
+    # step 2
+#    ids <- demographics_soc$au_id
+#    nwaves <- length(waves)
+#    nets <- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+#        ids))
+#    dimnames(nets)
+
+    # step 3
+#    df_works <- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = #unlist(lapply(scholars_sel$work,
+#        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) #l$publication_year),
+#        recursive = FALSE))
+
+#    df_works <- df_works[!duplicated(df_works), ]
+
+    # step 4
+#    if (type == "first") {
+#        for (j in 1:nwaves) {
+#            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+#                ]
+#            for (i in 1:nrow(df_works_w)) {
+#                ego <- df_works_w$works_author[i][[1]]$au_id[1]
+#                alters <- df_works_w$works_author[i][[1]]$au_id[-1]
+#                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+#                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+#               }
+#            }
+#        }
+#    }
+
+#    if (type == "last") {
+#        for (j in 1:nwaves) {
+#            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+#                ]
+#            for (i in 1:nrow(df_works_w)) {
+#                ego <- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+#                alters <- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+#                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+#                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+#                }
+#            }
+#        }
+#    }
+#
+#    if (type == "all") {
+#        for (j in 1:nwaves) {
+#            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+#              ]
+#            for (i in 1:nrow(df_works_w)) {
+#                egos <- df_works_w$works_author[i][[1]]$au_id
+#                if (sum(ids %in% egos) > 0) {
+#                  nets[j, which(ids %in% egos), which(ids %in% egos)] <- 1
+#                }
+#            }
+#        }
+#    }
+#    output <- list()
+#    output$data <- scholars_sel
+#    output$nets <- nets
+#    return(output)
+# }
+
+```
+
+```{r}
+# fcolnet(data = sociologists, waves = list(c(2015, 2018), c(2019, 2023)), type = c("first"))
+
+```
+
+```{r}
+
+# fcolnet
+
+```
+
+
+```{r}
+
+# Working code
+
+fcolnet <- function(data = scholars, discipline = "sociology", waves = list(c(2015,2018), c(2019, 2023)), type = c("first")) {
+  
+  # step 1
+  demographics <- do.call(rbind.data.frame, data$demographics)
+  demographics <- demographics %>%
+    mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), ""), Universiteit2.22 = replace(Universiteit2.22,
+                                                                                                                 is.na(Universiteit2.22), ""), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+                                                                                                                                                                          ""), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), ""), discipline.22 = replace(discipline.22,
+                                                                                                                                                                                                                                                                                  is.na(discipline.22), ""), discipline.24 = replace(discipline.24, is.na(discipline.24), ""))
+  
+  sample <- which(demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% discipline)
+  
+  demographics_soc <- demographics[sample, ]
+  scholars_sel <- lapply(scholars, "[", sample)
+  
+  # step 2
+  ids <- demographics_soc$au_id
+  nwaves <- length(waves)
+  nets <- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+                                                                              ids))
+  dimnames(nets)
+  
+  # step 3
+  df_works <- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = unlist(lapply(scholars_sel$work,
+                                                                                                                  function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) l$publication_year),
+                                                                                                                                                                                 recursive = FALSE))
+  
+  df_works <- df_works[!duplicated(df_works), ]
+  
+  # step 4
+  if (type == "first") {
+    for (j in 1:nwaves) {
+      df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+      ]
+      for (i in 1:nrow(df_works_w)) {
+        ego <- df_works_w$works_author[i][[1]]$au_id[1]
+        alters <- df_works_w$works_author[i][[1]]$au_id[-1]
+        if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+          nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+        }
+      }
+    }
+  }
+  
+  if (type == "last") {
+    for (j in 1:nwaves) {
+      df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+      ]
+      for (i in 1:nrow(df_works_w)) {
+        ego <- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+        alters <- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+        if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+          nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+        }
+      }
+    }
+  }
+  
+  if (type == "all") {
+    for (j in 1:nwaves) {
+      df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+      ]
+      for (i in 1:nrow(df_works_w)) {
+        egos <- df_works_w$works_author[i][[1]]$au_id
+        if (sum(ids %in% egos) > 0) {
+          nets[j, which(ids %in% egos), which(ids %in% egos)] <- 1
+        }
+      }
+    }
+  }
+  output <- list()
+  output$data <- scholars_sel
+  output$nets <- nets
+  return(output)
+}
+
+
+#save the output of your function
+test_all <- fcolnet(data = scholars, 
+                    discipline = "sociology", 
+                    waves = list(c(2015, 2018), c(2019, 2023)), 
+                    type = c("first"))
+
+
+test_w1 <- igraph::graph_from_adjacency_matrix(
+  test_all$nets[1,,], #for this example I take the first wave of data. (thus I select the array of networks and take the first matrix)
+  mode = c("directed"),
+  weighted = NULL,
+  diag = FALSE,
+  add.colnames = NULL,
+  add.rownames = NULL
+)
+
+plot(test_w1,
+     vertex.label = NA,
+     vertex.size = 5,
+     edge.width = 0.2,
+     edge.arrow.size = 0.2)
+
+
+
+```
+
+```{r}
+
+# Trying to get the journals
+
+sociologists$scholars_oa[[1]]$works_api_url
+
+sociologists[["works"]][[1]][["so"]]
+
+# unname(unlist(allsum))
+
+# install.packages('listviewer')
+library(listviewer)
+
+# install.packages('purrr')
+library(purrr)
+# install.packages('repurrrsive')
+library(repurrrsive)
+
+map(sociologists[1:386], 3)
+
+map(sociologists[1:3], "so") 
+
+sociologists[[1]][c("id", "so")]
+
+
+str(sociologists[["works"]], list.len = 3)
+
+x <- map(sociologists, `[`, c("works"))
+str(x[1:5])
+
+
+```
+
+```{r}
+# Attempt number two for the journals
+
+
+journals <- sociologists[["works"]][[1]]
+
+so <- journals[["so"]]   # vector length 31
+
+pluck(sociologists, 1)
+
+sel_columns <- c("so")
+
+# journals[[i]][sel_columns]
+
+journals <- sociologists[["works"]]
+so <- journals[[1]][["so"]]
+
+sel_columns <- c("so")
+
+# journals[[i]][sel_columns]
+
+
+class(sociologists$works)
+
+soc2 = lapply(sociologists, unlist) # removed the list but that was a big mistake!
+
+toMatch = c("so")
+
+lapply(sociologists, function(x) all(toMatch %in% x))
+
+names(sociologists)[sapply(sociologists, function(x) all("so" %in% x))]
 
 ```
