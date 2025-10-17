@@ -225,7 +225,7 @@ df_pres_24 <- df_pres_24 %>%
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 #---- String Stripper ----
 str_strip <- function(input = "THIs StrïnG is ÑorMälìZed") {
 
