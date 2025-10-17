@@ -96,10 +96,12 @@ plot(test_w1,
      edge.width = 0.2,
      edge.arrow.size =0.2)
 
-fload <- function(filename) {
-  load(filename)
+fload <- function(x) {
+  load(x)
   get(ls()[ls() != "filename"])
 }
+
+fload
 
 fpackage.check <- function(packages) {
   lapply(packages, FUN = function(x) {

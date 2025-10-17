@@ -9,17 +9,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
 ### Functions
 
 These functions are empty again (9 Oct)! Tried running it in an .r file but it was still "empty"/just a save of the command rather than making an actual function.
@@ -73,15 +62,18 @@ colorize <- function(x, color) {
 
 packages = c("RSiena", "devtools", "igraph")
 # fpackage.check(packages)
-# devtools::install_github('JochemTolsma/RsienaTwoStep', build_vignettes=TRUE)
-# packages = c("RsienaTwoStep")
+#devtools::install_github('JochemTolsma/RsienaTwoStep', build_vignettes=TRUE)
+
+packages = c("RsienaTwoStep")
 
 # install.packages("RsienaTwoStep")
 
 
-# fpackage.check(packages)
+fpackage.check(packages)
 
-```
+``` 
+
+### Exercise in class
 
 ```{r eval=FALSE}
 set.seed(24553253)
@@ -90,15 +82,11 @@ ego
 
 ```
 
-### Exercise in class
-
 When trying at home, s501 was not found. 
 
-```{r, eval=FALSE}
+```{r}
 
-rm(list = ls())
-
-?s501
+#?s501
 
 s501
 s502
@@ -107,7 +95,7 @@ s502
 nets <- array(data = c(s501, s502), dim = c(dim(s501), 2))
 
 # dependent
-# net <- sienaDependent(nets)
+net <- sienaDependent(nets)
 
 ```
 ### Independent variable
@@ -147,28 +135,31 @@ print01report(mydata)
 
 ```{r, eval=FALSE}
 
-library(RSiena)
-
 myeff <- includeEffects(myeff, isolateNet, inPop, outAct)  #we know that quite a lot of staff has not published with someone else
 
 ```
 ## Step 5: estimation
 ```{r, eval=FALSE}
-
 myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init")
 ansM1 <- siena07(myAlgorithm, data = mydata, effects = myeff, returnDeps = TRUE)
 # if necessary estimate again!  ansM1 <- siena07(myAlgorithm, data = mydata, effects = myeff,
 # prevAns = ansM1, returnDeps=TRUE)
 ansM1
-
 ```
-```{r}
 
-library(openalexR)
-library(tidyverse)
-library(scholar)
-library(rvest)
-library(jsonlite)
+
+```{r, eval=FALSE, echo=FALSE}
+fsave(ansM1)
+```
+
+```{r, echo=FALSE}
+ansM1 <- fload("./data/processed/20251010ansM1.rda")
+ansM1
+```
+
+
+
+```{r}
 
 scholars <- fload("./data/processed/scholars_20240924.rda")
 
@@ -262,6 +253,21 @@ fcolnet <- function(data = scholars, university = "RU", discipline = "sociology"
 
 ```
 
+### works
+
+```{r}
+demographics_soc <- demographics[sample,]
+
+ids <- demographics_soc$au_id
+wave2 <- wave1 <- matrix(0, nrow = length(ids), ncol = length(ids), dimnames = list(ids, ids))
+
+worksobject <- sociologists$works
+
+works_id <- unlist(lapply(worksobject, function(l) l$id))
+works_author <- unlist(lapply(worksobject, function(l) l$author), recursive = FALSE)
+works_year <- unlist(lapply(worksobject, function(l) l$publication_year), recursive = FALSE)
+```
+
 ```{r}
 fcolnet_nouni <- function(data = scholars, discipline = "sociology", waves = list(c(2015,2018), c(2019, 2023)), type = c("first")) {
   
@@ -343,6 +349,8 @@ fcolnet_nouni <- function(data = scholars, discipline = "sociology", waves = lis
 ```
 
 
+# In class exercise
+
 ```{r}
 
 test_all <- fcolnet_nouni(data = scholars, 
@@ -410,7 +418,7 @@ ifelse(!dir.exists("results"), dir.create("results"), FALSE)
 ## step 4: results
 
 ```{r eval=FALSE}
-# myeff <- includeEffects(myeff, isolateNet, inPop, outAct)
+myeff <- includeEffects(myeff, isolateNet, inPop, outAct)
 
 ```
 
@@ -423,9 +431,18 @@ myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init")
 ansM1 <- siena07(myAlgorithm, data = mydata, effects = myeff, returnDeps = TRUE) # big output
 ansM1
 
-
-
 ```
+
+```{r, eval=FALSE, echo=FALSE}
+fsave(ansM1)
+```
+
+```{r, echo=FALSE}
+ansM1 <- fload("./data/processed/20251010ansM1.rda")
+ansM1
+```
+
+# Continuing with my own project
 
 ## getting journal quality
 
@@ -441,7 +458,7 @@ number_of_q1_articles = function(data, q1_journals = c("Nature")) {
 
 number_of_q1_articles(sociologists$works[[55]])
 
-do.call(number_of_q1_articles, sociologists$works)
+# do.call(number_of_q1_articles, sociologists$works)
 
 ```
 
@@ -457,18 +474,23 @@ sjr2024 <- read_csv2('/Users/ghislaine/Downloads/Github/Social Networks/scimagoj
 
 # Stealing niels vullings' code and linking the journals from SJR to the journals in the dataset
 
-df_works doesn't work yet
+df_works doesn't work yet, I copy pasted it 
 
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 
-df_works_dataframe <- do.call(rbind.data.frame, sociologists$works)  # put works in dataframe
+# df_works_dataframe <- do.call(rbind.data.frame, sociologists$works)  # put works in dataframe
 # head(df_works)
 
 # Error in (function (..., deparse.level = 1, make.row.names = TRUE, stringsAsFactors = FALSE,  : numbers of columns of arguments do not match
 
-df_works <- tibble(works_id, works_author, works_year)
+df_works_5 <- tibble(works_id, works_author, works_year)
 
-test1 <- df_works %>% select(id, so, issn_l, author) # test the works
+# test1 <- df_works %>% select(id, so, issn_l, author) # test the works
+```
+
+Also have this code below in lab 6, which *should* work.
+
+```{r, eval=FALSE}
 
 # Split the ISSN codes if 2 are available
 
@@ -497,12 +519,12 @@ df_pres_24 <- sjr2024 %>%
 
 df_pres_22
 
-# df_works %>% select(issn_l) df_pres %>% select(Issn_1, Issn_2)
-df_works$check <- ifelse(df_works$issn_l %in% df_pres_22$Issn_1 | df_works$issn_l %in% df_pres_22$Issn_2, 1,
-    0)
+# df_works_5 %>% select(issn_l) df_pres %>% select(Issn_1, Issn_2)
 
-mis_journal <- df_works %>%
-    filter(check == 0)
+# df_works_5$check <- ifelse(df_works_5$issn_l %in% df_pres_22$Issn_1 | df_works_5$issn_l %in% df_pres_22$Issn_2, 1,0)
+
+# mis_journal <- df_works_5 %>%
+#   filter(check == 0)
 
 # as.data.frame(unique(mis_journal$so))
 
@@ -510,7 +532,7 @@ mis_journal <- df_works %>%
 
 
 
-### Linking works, unfinished 
+### first try linking works, bad attempt 
 
 ```{r}
 
@@ -519,9 +541,7 @@ number_q1_articles = function(data, q1_journals = c("Annual Review of Sociology"
   return(n_q1)
 }
 
-number_q1_articles(sociologists$works[[55]])
-
-
+# number_q1_articles(sociologists$works[[55]])
 
 ```
 
@@ -531,5 +551,8 @@ number_q1_articles(sociologists$works[[55]])
 The statistic I chose to present is called "higher". 
 
 ![](images/Screenshot 2025-10-08 at 18.32.53.png)
+
+
+$$ \Sigma_j x_{ij}$$ 
 
 For my own purposes, I want to reverse the code, because I want to see whether the alter has a larger covariate than *i*. Within my theoretical framework, this means that ego wants to make a tie with alter because alter has more prestige than ego. 

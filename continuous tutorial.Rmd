@@ -1,0 +1,262 @@
+---
+title: | continuous variable
+  | Analyzing the dynamics of networks and continuous behavior with RSiena
+output: pdf_document
+author: |
+  | <br>
+  | Nynke M.D.\ Niezink 
+  | Carnegie Mellon University
+  | (version July 2022)
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\vspace{2mm}
+
+## Introduction
+
+This supplement presents a tutorial on how to use the \textsf{R} package \textsf{RSiena} to estimate a stochastic actor-oriented model for the co-evolution of a social network and the continuous behavior of network actors. More information on how to install and use this package can be found on <https://www.stats.ox.ac.uk/~snijders/siena/> and in the \textsf{RSiena} manual (Ripley et al. 2022). 
+
+In this tutorial, we study the co-evolution of friendship and self-esteem, while taking into account the effect of gender on the friendship dynamics. The data we study were collected as part of the Teenage Friends and Lifestyle Study (Pearson and Mitchell 2000; Pearson and West 2003). 
+
+To start with, we load the \textsf{RSiena} package and the data needed for this tutorial. Note that below we download the "Nynke branch" of the package on GitHub. This branch contains the latest developments on the SAOM for networks and continuous behavior. All changes in this branch will eventually also be incorporated in the main branch.
+
+```{r}
+# first install the package "remotes"
+remotes::install_github("snlab-nl/rsiena@nynke")
+library(RSiena)
+load("tutorial-data.RData")
+```
+
+In order to be able to reproduce our results, we set the random number generator seed.
+
+```{r}
+set.seed(0)
+```
+
+In the following, we discuss how to define the data in \textsf{RSiena}, how to specify and estimate a co-evolution model, how to check goodness of fit and how to compute the explained variance in a continuous dependent behavior variable.
+
+
+## Creating the variables
+
+For this analysis, we study the dynamics of the friendship networks among 160 students and their self-esteem scores at three measurements over a two-year period. Both of these variables have some missing values at each measurement. Missing data is imputed for simulation purposes, but disregarded for estimation (see Ripley et al. 2022).
+
+We first create a $160\times 160 \times 3$ array composed of the three adjacency matrices representing the friendship networks (1 = student marked his/her peer either as a 'best friend' or 'just a friend', 0 = otherwise), and give these data the role of a dependent variable.
+
+```{r}
+friendship <- sienaDependent(array(c(net1, net2, net3), dim = c(160, 160, 3)))
+```
+
+Self-esteem was measured by a 10 item scale, and the self-esteem score was calculated as the average over all items after reverse coding the negatively formulated items so that a high score corresponds to high self-esteem. We study self-esteem as a continuous co-evolving actor variable, and center the variable so we can meaningfully interpret the intercept in the stochastic differential equation for self-esteem evolution.
+
+```{r}
+selfesteem <- sienaDependent(esteem - mean(esteem, na.rm=TRUE), type = "continuous")
+```
+
+Finally, we include gender as a constant covariate in the analysis (0 = male, 1 = female), and combine all variables in one data object.
+
+```{r,  warning=FALSE}
+fem <- coCovar(female, center=FALSE)
+mydata_CT <- sienaDataCreate(friendship, selfesteem, fem)
+```
+
+
+## Model definition
+
+To set up the model specification we first need to create an effects object. This effects object automatically includes the basic effects for the friendship model component (rate parameters for the two periods, outdegree and reciprocity), and the basic effects for the stochastic differential equation model for self-esteem (scale parameters for the two periods, feedback and intercept).
+```{r, results = FALSE}
+myeff_CT <- getEffects(mydata_CT)
+```
+
+All effects available for the stochastic actor-oriented model for `mydata` are shown when running:
+```{r, eval=FALSE}
+effectsDocumentation(myeff_CT)
+```
+For a precise description of all effects, see Chapter 12 of the \textsf{RSiena} manual (Ripley et al, 2022). First, we include some basic structural effects in the model.
+
+```{r}
+myeff_CT <- includeEffects(myeff_CT, transTrip, transRecTrip, inPop, inAct, outAct)
+```
+
+Second, we add the effects of being female on the tendency to send friendship ties (`egoX`) and to receive friendship ties (`altX`), and the effect of the tendency for ties to form between students of the same gender (`sameX`).
+
+```{r, eval=TRUE}
+myeff_CT <- includeEffects(myeff_CT, egoX, altX, sameX, interaction1 = "fem")
+```
+
+Third, we model the effect of self-esteem on the friendship network dynamics.
+```{r}
+myeff_CT <- includeEffects(myeff_CT, egoX, altX, egoXaltX, interaction1 = "selfesteem")
+```
+Finally, we model the effect of the friendship network on students' self-esteem dynamics. We include an indegree effect (`indeg`) in the self-esteem model, motivated by the idea that students who are popular may get a higher self-esteem.
+
+```{r}
+myeff_CT <- includeEffects(myeff_CT, name = "selfesteem", indeg, interaction1 = "friendship")
+```
+
+
+## Model estimation
+
+To estimate the model, we first create a function that will return an estimation algorithm object (a `sienaAlgorithm`) with settings specified by the function arguments. The estimation consists of three phases. In Phase 2, provisional parameter values are updated iteratively: `nsub` indicates the number of subphases in Phase 2. The order of magnitude of the size of the parameter update steps is determined by `firstg`. In Phase 3, it is checked whether for the parameters estimated in Phase 2 the average statistics of the `n3` simulated data sets are close to their target (observed) value. Standard errors are also computed in Phase 3. The \textsf{RSiena} default value for the number of simulations `n3` is 1000, but here we select a larger number to obtain reliable standard error estimates for our fairly complex model. In the network simulations, we take into account that the students could nominate only up to six peers as friends by setting the friendship `MaxDegree` to six. See the \textsf{RSiena} manual for more information on estimation settings.
+
+```{r}
+myalg <- function(n3, nsub = 4, firstg = 0.2) {
+	sienaAlgorithmCreate(useStdInits = FALSE, 
+			projname = 'tutorial-output', nsub = nsub, n3 = n3, 
+			seed = 1, doubleAveraging = 0, firstg = firstg,
+			diagonalize = 0.9,
+			MaxDegree = c(friendship=6))
+}
+```
+
+We run the model, first getting approximate parameter estimates in `res`, and then use those estimates as a starting point for the estimation in `res1`.
+
+```{r}
+res <- siena07(myalg(3000, firstg = 0.1), data = mydata_CT, effects = myeff_CT,
+               batch = TRUE, returnDeps = FALSE, silent = TRUE) 
+# res1 <- siena07(myalg(20000, nsub = 5, firstg = 0.1), 
+#               data = mydata, effects = myeff, prevAns = res)
+```
+
+The overall maximum convergence ratio  `res$tconv.max` for the first result is `r round(res$tconv.max,4)`. This should be smaller than 0.25 for the convergence to be inadequate. The individual t-ratios for convergence in `res` should all be smaller than 0.1 in absolute value (see below) to we conclude that the estimation algorithm has converged. If a model has not converged yet, we can continue estimating starting from the previous estimates using the `prevAns` option in `siena07`. Here, for speed of running this example script, we continue with an unconverged model. 
+
+```{r}
+res
+```
+
+## Goodness of fit
+
+To check the goodness of fit of the model, we set up an algorithm to simulate 1000 friendship and self-esteem data sets, and use this algorithm to simulate data based on the estimated model `res1`.
+
+```{r}
+simAlgorithm <- sienaAlgorithmCreate(useStdInits = FALSE, 
+			projname = "simulations", n3 = 1000, simOnly = TRUE, 
+			nsub = 0, seed = 1, MaxDegree = c(friendship = 6))
+ansSim <- siena07(simAlgorithm, data = mydata_CT, effects = myeff_CT, 
+                  returnDeps = TRUE, prevAns = res, batch = TRUE, silent = TRUE)
+```
+
+Using the function `sienaGOF`, we can assess the fit of the estimated model with respect to auxiliary statistics of the data. Various auxiliary statistics are available directly, such as the `IndegreeDistribution`. Others, like `ContinuousBehaviorDistribution`, need to be implemented by the user. The following function is tailored to the self-esteem data (the overall self-esteem mean is approximately 1.7). 
+
+```{r, cache = TRUE}
+ContinuousBehaviorDistribution <- function (i, data, sims, period, groupName,
+					           varName, varName2, levls=seq(0, 3, 0.3), step = 0.3, ...)  
+{                                   
+  firstdiff <- function(x) {
+    shifted <- c(0, x[1:(length(x) - 1)])
+    x - shifted
+  }  
+  if (groupName != 'Data1') {
+    error("This GOF statistic will not work on multiple data sets")
+  }
+  z <- behaviorExtraction(i, data, sims, period, groupName, varName) + 1.7
+    
+  tab <- rep(0, length(levls))
+  for (i in 1:length(levls))
+    tab[i] <- length(which(z < levls[i]) + 0.5 * step)
+  tab <- firstdiff(tab)		
+  names(tab) <- as.character(levls)
+  tab
+}
+```
+
+```{r, cache = TRUE, eval = TRUE, results = FALSE}
+gofID <- sienaGOF(ansSim, verbose = FALSE, varName = "friendship",
+                  IndegreeDistribution)
+gofBD <- sienaGOF(ansSim, verbose = FALSE, varName = "selfesteem", 
+                  ContinuousBehaviorDistribution)
+```
+
+```{r,message = FALSE, out.width='.45\\linewidth', fig.width=4, fig.height=3.5,fig.show='hold',fig.align='center'}
+plot(gofID, main = "indegree distribution")
+plot(gofBD, main = "self-esteem distribution")
+```
+
+The above figures show that the model fit of the (cumulative) indegree distribution and the self-esteem is fairly good.
+
+## Explained variance
+
+To determine how much of the variance in self-esteem $z_i(t_{m+1})$ of actors $i$ in period $m$ is explained by the indegree effect, we evaluate the following expression
+
+\begin{equation} 
+R^2_m = 1 - \frac{\sum_{i=1}^n \big( z_i(t_{m+1}) - \text{E}_M \left(Z_i(t_{m+1}) \,|\, y(t_m) \right)\big)^2}{\sum_{i=1}^n \big( z_i(t_{m+1}) - \text{E}_{M_0} \left(Z_i(t_{m+1}) \,|\, y(t_m) \right)\big)^2},
+\end{equation}
+
+where $M_0$ denotes the null model containing only the feedback, intercept and scale parameters, and where $M$ denotes the model also including the indegree effect. The first step in the evaluation of (1) is estimating the parameters for the null model. We can estimate these outside the \textsf{RSiena} framework using maximum likelihood estimation and the exact discrete model.
+
+```{r, cache = TRUE}
+esteemLL <- esteem - mean(esteem, na.rm=TRUE)
+LL <- function(theta) {
+  a <- theta[1]
+  b0 <- theta[2]
+  tau1 <- theta[3]
+  tau2 <- theta[4]
+  mu1 <- exp(a*tau1) * esteemLL[,1] + (exp(a*tau1)-1) * b0/a
+  mu2 <- exp(a*tau2) * esteemLL[,2] + (exp(a*tau2)-1) * b0/a
+  sigma1 <- sqrt((exp(2*a*tau1) - 1) / (2*a))
+  sigma2 <- sqrt((exp(2*a*tau2) - 1) / (2*a))
+  R1 <- dnorm(esteemLL[!is.na(mu1), 2], mu1[!is.na(mu1)], sigma1)
+  R2 <- dnorm(esteemLL[!is.na(mu2), 3], mu2[!is.na(mu2)], sigma2)
+  -sum(log(R1), na.rm = TRUE) - sum(log(R2), na.rm = TRUE)
+}
+resMLE <- optim(c(-0.5,0.1,0.1,0.1), LL, hessian = TRUE, 
+               lower = c(-Inf, -Inf, 0, 0), upper = rep(Inf, 4),
+               method = "L-BFGS-B")
+```
+
+The parameter estimates are similar to those obtained in the stochastic actor-oriented model:
+
+```{r}
+restable <- round(cbind(resMLE$par, sqrt(diag(solve(resMLE$hessian)))), 3)
+rownames(restable) <- c("feedback", "intercept", "scale - period 1", "scale - period 2")
+colnames(restable) <- c("estimate", "s.e.")
+knitr::kable(restable)
+```
+
+Since we now have the parameter estimates for the null model, we can compute the expected self-esteem values at the end of each period given the students' values at the start. These same expected values for the stochastic actor-oriented model, containing an indegree effect on self-esteem, can be computed based on the simulations `ansSim`. The following function computes the explained variance (1).
+
+```{r, cache = TRUE}
+aa <- resMLE$par[1]       # feedback parameter
+bb <- resMLE$par[2]       # intercept parameter
+tau <- resMLE$par[3:4]    # scale parameters
+
+explvar <- function(period, ansSim) {
+  exclude <- is.na(esteem[,period]) | is.na(esteem[,period+1])
+  
+  # prediction given null model
+  pred0 <- exp(aa*tau[period]) * esteemLL[!exclude, period] + 
+           (exp(aa*tau[period])-1) * bb/aa
+  
+  # prediction given full model
+  zmat <- matrix(0, sum(!exclude), 1000)
+  for (i in 1:1000) {
+	  z2 <- ansSim$sims[[i]][[1]][[2]][[period]]
+	  zmat[,i] <- z2[!exclude]
+  }
+  pred1 <- rowMeans(zmat)
+
+  # explained variance
+  1 - sum((esteemLL[!exclude, period+1] - pred1)^2) / 
+      sum((esteemLL[!exclude, period+1] - pred0)^2)
+}
+```
+
+The variance in self-esteem explained by friendship indegree in periods 1 and 2 is
+
+```{r, cache = TRUE}
+explvar(1, ansSim)
+explvar(2, ansSim)
+```
+
+Students' popularity thus does not explain any variance in their self-esteem.
+
+## References
+
+Pearson, Michael and Lyann Mitchell. 2000. ``Smoke rings: Social network analysis of friendship groups, smoking, and drug-taking.'' *Drugs: Education, Prevention and Policy* 7:21--37.
+
+Pearson, Michael and Patrick West. 2003. ``Drifting smoke rings: Social network analysis and Markov processes in a longitudinal study of friendship groups and risk-taking.'' *Connections* 25:59--76.
+
+Ripley, Ruth M., Tom A. B. Snijders, Zs&oacute;fia Boda, Andr&aacute;s V&ouml;r&ouml;s, and Paulina Preciado.
+2022. *Manual for RSiena (version June 2022).* Oxford: University of Oxford, Department of Statistics, Nuffield College; Groningen: University of Groningen, Department of Sociology.

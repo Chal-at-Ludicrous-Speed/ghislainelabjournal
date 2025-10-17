@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ghislaine de Groot" />
+
+<meta name="date" content="2025-10-03" />
+
+<title>RSiena tutorial and Lab 5</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Ghislaine's Journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lab1.html">Page 1</a>
+    </li>
+    <li>
+      <a href="lab2.html">Page 2</a>
+    </li>
+    <li>
+      <a href="lab3.html">Page 3</a>
+    </li>
+    <li>
+      <a href="lab4.html">Page 4</a>
+    </li>
+    <li>
+      <a href="lab5.html">Page 5</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://chal-at-ludicrous-speed.github.io/ghislainelabjournal/">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">RSiena tutorial and Lab 5</h1>
+<h4 class="author">Ghislaine de Groot</h4>
+<h4 class="date">2025-10-03</h4>
+
+</div>
+
+
+<div id="functions" class="section level3" number="0.0.1">
+<h3><span class="header-section-number">0.0.1</span> Functions</h3>
+<p>These functions are empty again (9 Oct)! Tried running it in an .r
+file but it was still “empty”/just a save of the command rather than
+making an actual function.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ forcats   1.0.0     ✔ stringr   1.5.2
+## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+## ✔ purrr     1.1.0     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(scholar) 
+library(openalexR)</code></pre>
+<pre><code>## openalexR v2.0.0 introduces breaking changes.
+## See NEWS.md for details.
+## 
+## To suppress this message, add `openalexR.message = suppressed` to your .Renviron file.</code></pre>
+<pre class="r"><code>library(rvest) </code></pre>
+<pre><code>## 
+## Attaching package: &#39;rvest&#39;
+## 
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding</code></pre>
+<pre class="r"><code>library(jsonlite)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;jsonlite&#39;
+## 
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     flatten</code></pre>
+<pre class="r"><code>library(RSiena)
+
+# fpackage.check &lt;- function(packages) {
+#  lapply(packages, FUN = function(x) {
+#       if (!require(x, character.only = TRUE)) {
+#           install.packages(x, dependencies = TRUE)
+#           library(x, character.only = TRUE)
+#       }
+#   })
+# }
+
+fsave &lt;- function(x, file = NULL, location = &quot;./data/processed/&quot;) {
+    ifelse(!dir.exists(&quot;data&quot;), dir.create(&quot;data&quot;), FALSE)
+    ifelse(!dir.exists(&quot;data/processed&quot;), dir.create(&quot;data/processed&quot;), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename &lt;- substr(gsub(&quot;[:-]&quot;, &quot;&quot;, Sys.time()), 1, 8)
+    totalname &lt;- paste(location, datename, file, &quot;.rda&quot;, sep = &quot;&quot;)
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload &lt;- function(filename) {
+    load(filename)
+    get(ls()[ls() != &quot;filename&quot;])
+}
+
+fshowdf &lt;- function(x, ...) {
+    knitr::kable(x, digits = 2, &quot;html&quot;, ...) %&gt;%
+        kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
+        kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)
+}
+
+colorize &lt;- function(x, color) {
+    sprintf(&quot;&lt;span style=&#39;color: %s;&#39;&gt;%s&lt;/span&gt;&quot;, color, x)
+}</code></pre>
+</div>
+<div id="exercise-in-class" class="section level3" number="0.0.2">
+<h3><span class="header-section-number">0.0.2</span> Exercise in
+class</h3>
+<pre class="r"><code>set.seed(24553253)
+ego &lt;- ts_select(net = ts_net1)
+ego</code></pre>
+<p>When trying at home, s501 was not found.</p>
+<pre class="r"><code>#?s501
+
+s501</code></pre>
+<pre><code>##    V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21
+## 1   0  0  0  0  0  0  0  0  0   0   1   0   0   1   0   0   0   0   0   0   0
+## 2   0  0  0  0  0  0  1  0  0   0   1   0   0   0   0   0   0   0   0   0   0
+## 3   0  0  0  1  0  0  0  0  1   0   0   0   0   0   0   0   0   0   0   0   0
+## 4   0  0  1  0  0  0  0  0  1   0   0   0   0   0   0   0   0   0   0   0   0
+## 5   0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 6   0  0  0  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 7   0  1  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 8   0  0  0  0  0  1  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 9   0  0  1  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 10  0  0  0  0  0  0  0  0  0   0   1   0   0   0   1   0   0   0   0   0   0
+## 11  0  1  0  0  0  0  0  0  0   0   0   0   0   0   1   1   0   0   0   0   0
+## 12  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 13  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 14  1  0  0  0  0  0  0  0  0   1   1   0   0   0   0   0   0   0   0   0   0
+## 15  0  0  0  0  0  0  0  0  0   1   1   0   0   0   0   1   0   0   0   0   0
+## 16  0  0  0  0  0  0  0  0  0   0   1   0   0   0   1   0   0   0   0   0   0
+## 17  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   1   1   0   1
+## 18  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   1   0   0
+## 19  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0   0   0
+## 20  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 21  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 22  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   1   0   0   0   1
+## 23  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 24  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   1   0   1   0   1
+## 25  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 26  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 27  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 28  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 29  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 30  0  0  0  0  0  0  0  0  0   0   1   0   0   0   0   0   0   0   0   0   0
+## 31  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   1
+## 32  0  0  0  0  1  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   1
+## 33  0  0  0  0  0  0  0  0  0   1   0   0   0   0   0   0   0   0   0   0   0
+## 34  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 35  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   1   0   0   0
+## 36  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 37  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 38  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 39  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 40  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 41  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 42  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 43  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 44  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 45  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 46  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 47  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 48  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 49  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 50  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+##    V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38 V39 V40
+## 1    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 2    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 3    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 4    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 5    0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0
+## 6    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 7    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 8    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 9    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 10   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0
+## 11   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 12   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 13   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 14   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 15   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 16   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 17   1   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 18   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+## 19   0   0   1   0   1   0   0   0   1   0   0   0   0   0   0   0   0   0   0
+## 20   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 21   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 22   0   0   0   0   0   0   0   0   0   1   0   0   1   0   0   0   0   0   0
+## 23   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 24   1   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 25   1   0   0   0   0   0   0   0   0   1   1   0   0   0   0   0   0   0   0
+## 26   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0
+## 27   0   0   0   0   0   0   1   1   1   0   0   0   0   0   0   0   0   0   0
+## 28   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 29   0   0   0   0   1   0   0   0   1   0   0   1   0   0   0   0   0   0   0
+## 30   0   0   0   0   1   0   0   1   0   0   0   1   0   0   0   0   0   0   0
+## 31   0   0   0   1   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0
+## 32   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   1   0   0   0
+## 33   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0
+## 34   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   1   0   0   0
+## 35   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 36   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   0
+## 37   0   0   0   0   0   0   0   0   0   1   1   0   1   0   0   0   0   0   0
+## 38   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0
+## 39   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 40   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 41   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   1   0   0
+## 42   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 43   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0
+## 44   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 45   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1
+## 46   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1
+## 47   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 48   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 49   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 50   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+##    V41 V42 V43 V44 V45 V46 V47 V48 V49 V50
+## 1    0   0   0   0   0   0   0   0   0   0
+## 2    0   0   0   0   0   0   0   0   0   0
+## 3    0   0   0   0   0   0   0   0   0   0
+## 4    0   0   0   0   0   0   0   0   0   0
+## 5    0   0   0   0   0   0   0   0   0   0
+## 6    0   0   0   0   0   0   0   0   0   0
+## 7    0   1   0   1   0   0   0   0   0   0
+## 8    0   0   0   0   0   0   0   0   0   0
+## 9    0   0   0   0   0   0   0   0   0   0
+## 10   0   0   0   0   0   0   0   0   0   0
+## 11   0   0   0   0   0   0   0   0   0   0
+## 12   0   1   0   1   0   0   0   0   0   0
+## 13   0   0   0   0   0   0   0   0   0   0
+## 14   0   0   0   0   0   0   0   0   0   0
+## 15   0   0   0   0   0   0   0   0   0   0
+## 16   0   0   0   0   0   0   0   0   0   0
+## 17   0   0   0   0   0   0   0   0   0   0
+## 18   0   0   0   0   0   0   0   0   0   0
+## 19   0   0   0   0   0   0   0   0   0   0
+## 20   0   0   0   0   0   0   0   0   0   0
+## 21   0   0   0   0   0   0   0   0   0   0
+## 22   0   0   0   0   0   0   0   0   0   0
+## 23   0   0   0   0   0   0   0   0   0   0
+## 24   0   0   0   0   0   0   0   0   0   0
+## 25   0   0   0   0   0   0   0   0   0   0
+## 26   0   0   0   1   0   0   0   0   0   0
+## 27   0   0   0   0   0   0   0   0   0   0
+## 28   0   0   0   0   0   0   0   0   0   0
+## 29   0   0   0   0   0   0   0   0   0   0
+## 30   0   0   0   0   0   0   0   0   0   0
+## 31   0   0   0   0   0   0   0   0   0   0
+## 32   0   0   0   0   0   0   0   0   0   0
+## 33   0   0   0   0   0   0   0   0   0   0
+## 34   0   0   0   0   0   0   0   0   0   0
+## 35   0   0   0   0   0   0   0   0   0   0
+## 36   1   0   0   0   0   0   0   0   0   0
+## 37   0   0   0   0   0   0   0   0   0   0
+## 38   1   0   0   0   0   0   0   0   0   0
+## 39   0   0   1   0   0   0   0   0   0   0
+## 40   0   0   0   0   1   1   1   0   0   0
+## 41   0   0   0   0   0   0   0   0   0   0
+## 42   0   0   0   1   0   0   0   0   0   0
+## 43   0   0   0   0   0   0   0   0   0   0
+## 44   0   1   0   0   0   0   0   0   0   0
+## 45   0   0   0   0   0   1   1   0   0   0
+## 46   0   0   0   0   1   0   0   0   1   0
+## 47   0   0   0   0   0   0   0   0   0   0
+## 48   0   0   0   0   0   1   0   0   1   0
+## 49   0   0   0   0   0   1   0   1   0   0
+## 50   0   0   0   0   0   0   0   0   0   0</code></pre>
+<pre class="r"><code>s502</code></pre>
+<pre><code>##    V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21
+## 1   0  0  0  0  0  0  0  0  0   1   0   0   0   1   0   0   0   0   0   0   0
+## 2   0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 3   0  0  0  1  0  0  0  0  1   0   0   0   0   0   0   0   0   0   0   0   0
+## 4   0  0  1  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 5   0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   1   0   0   0   0
+## 6   0  0  0  0  0  0  0  1  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 7   0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 8   0  0  0  0  0  1  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 9   0  0  1  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 10  1  0  0  0  0  0  0  0  0   0   1   0   0   1   0   0   0   0   0   0   0
+## 11  1  0  0  0  0  0  0  0  0   1   0   0   0   0   0   0   0   0   1   0   0
+## 12  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1   0   0   0   0   0   0
+## 13  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 14  1  0  0  0  0  0  0  0  0   1   1   0   0   0   0   0   0   0   0   0   0
+## 15  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 16  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1   0   0   0   0   0   0
+## 17  0  0  0  1  1  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 18  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 19  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 20  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 21  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   1   0   0
+## 22  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   1   0   0   0   0
+## 23  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   1   0   0
+## 24  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   1   0   0   0   0
+## 25  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 26  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   1   0   0   0   0   0
+## 27  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   1   0   0   0   0
+## 28  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 29  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 30  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   1   0   0
+## 31  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 32  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 33  0  0  0  0  0  0  0  0  0   1   0   0   0   0   0   0   0   0   0   0   0
+## 34  0  0  0  1  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 35  0  0  0  0  0  1  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 36  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1   0   0   0   0   0   0
+## 37  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   1
+## 38  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 39  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 40  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 41  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   1   0   0
+## 42  0  0  0  0  0  0  0  0  0   0   0   0   0   0   1   0   0   0   0   0   0
+## 43  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 44  0  0  0  0  0  0  1  0  0   0   0   0   0   0   0   1   0   0   0   0   0
+## 45  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 46  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 47  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 48  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 49  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+## 50  0  0  0  0  0  0  0  0  0   0   0   0   0   0   0   0   0   0   0   0   0
+##    V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38 V39 V40
+## 1    0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0
+## 2    0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 3    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 4    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 5    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 6    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 7    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 8    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 9    0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 10   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0
+## 11   0   0   0   0   1   0   0   0   1   0   0   0   0   0   0   0   0   0   0
+## 12   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 13   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 14   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 15   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0
+## 16   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 17   1   0   1   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0
+## 18   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0
+## 19   0   0   0   0   0   0   0   0   1   0   0   0   0   0   1   0   0   0   0
+## 20   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 21   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   1
+## 22   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 23   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 24   1   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0
+## 25   0   0   1   0   0   1   1   0   0   0   1   0   0   0   0   0   0   0   0
+## 26   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 27   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0
+## 28   0   0   1   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 29   0   0   0   0   0   0   0   0   1   0   0   1   0   0   0   0   0   0   0
+## 30   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0
+## 31   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   1   0   0   0
+## 32   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   1   0   0   0
+## 33   0   0   0   0   0   0   0   1   1   0   0   0   0   0   0   0   0   0   0
+## 34   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0
+## 35   0   0   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0
+## 36   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0   0   1   0   0
+## 37   0   0   0   0   0   0   0   0   0   1   1   0   1   1   0   0   0   0   0
+## 38   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 39   0   0   0   0   0   0   0   0   0   0   0   0   1   0   0   0   0   0   0
+## 40   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 41   0   0   0   0   0   0   0   0   1   0   0   0   0   0   1   0   0   0   0
+## 42   0   0   0   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 43   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1   0
+## 44   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 45   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1
+## 46   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1
+## 47   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   1
+## 48   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 49   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+## 50   0   1   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+##    V41 V42 V43 V44 V45 V46 V47 V48 V49 V50
+## 1    0   0   0   0   0   0   0   0   0   0
+## 2    0   0   0   0   0   0   0   0   0   0
+## 3    0   0   0   0   0   0   0   0   0   0
+## 4    0   0   0   0   0   0   0   0   0   0
+## 5    0   0   0   0   0   0   0   0   0   0
+## 6    0   0   0   0   0   0   0   0   0   0
+## 7    0   0   0   0   0   0   0   0   0   0
+## 8    0   0   0   0   0   0   0   0   0   0
+## 9    0   0   0   0   0   0   0   0   0   0
+## 10   0   0   0   0   0   0   0   0   0   0
+## 11   0   0   0   0   0   0   0   0   0   0
+## 12   0   1   0   1   0   0   0   0   0   0
+## 13   0   0   0   0   0   0   0   0   0   0
+## 14   0   0   0   0   0   0   0   0   0   0
+## 15   0   0   0   0   0   0   0   0   0   0
+## 16   0   1   0   0   0   0   0   0   0   0
+## 17   0   0   0   0   0   0   0   0   0   0
+## 18   0   0   0   0   0   0   0   0   0   0
+## 19   1   0   0   0   0   0   0   0   0   0
+## 20   0   0   0   0   0   0   0   0   0   0
+## 21   0   0   0   0   0   0   0   0   0   0
+## 22   0   0   0   0   0   0   0   0   0   0
+## 23   0   0   0   0   0   0   0   0   0   0
+## 24   0   0   0   0   0   0   0   0   0   0
+## 25   0   0   0   0   0   0   0   0   0   0
+## 26   0   1   0   0   0   0   0   0   0   0
+## 27   0   0   0   0   0   0   0   0   0   0
+## 28   0   0   0   0   0   0   0   0   0   0
+## 29   0   1   0   0   0   0   0   0   0   0
+## 30   1   0   0   0   0   0   0   0   0   0
+## 31   0   0   0   0   0   0   0   0   0   0
+## 32   0   0   0   0   0   0   0   0   0   0
+## 33   0   0   0   0   0   0   0   0   0   0
+## 34   0   0   1   0   0   0   0   0   0   0
+## 35   0   0   0   0   0   0   0   0   0   0
+## 36   1   0   0   0   0   0   0   0   0   0
+## 37   0   0   0   0   0   0   0   0   0   0
+## 38   1   0   0   0   0   0   0   0   0   0
+## 39   0   0   1   0   0   0   0   0   0   0
+## 40   0   0   0   0   1   1   1   0   0   0
+## 41   0   0   0   0   0   0   0   0   0   0
+## 42   0   0   0   0   0   0   0   0   0   0
+## 43   0   0   0   0   0   0   0   0   0   0
+## 44   0   0   0   0   0   0   0   0   0   0
+## 45   0   0   0   0   0   1   1   0   0   0
+## 46   0   0   0   0   1   0   1   0   1   0
+## 47   0   0   0   0   1   1   0   0   0   0
+## 48   0   0   0   0   0   1   0   0   1   0
+## 49   0   0   0   0   0   1   0   1   0   0
+## 50   0   0   0   0   0   0   0   0   0   0</code></pre>
+<pre class="r"><code># put the nets in an array
+nets &lt;- array(data = c(s501, s502), dim = c(dim(s501), 2))
+
+# dependent
+net &lt;- sienaDependent(nets)</code></pre>
+</div>
+<div id="independent-variable" class="section level3" number="0.0.3">
+<h3><span class="header-section-number">0.0.3</span> Independent
+variable</h3>
+<pre class="r"><code>alcohol &lt;- s50a[,1]
+
+alcohol &lt;- coCovar(alcohol)</code></pre>
+<pre class="r"><code>mydata &lt;- sienaDataCreate(net, alcohol)</code></pre>
+</div>
+<div id="step-2-effects" class="section level2" number="0.1">
+<h2><span class="header-section-number">0.1</span> Step 2: effects</h2>
+<pre class="r"><code>myeff &lt;- getEffects(mydata)</code></pre>
+</div>
+<div id="step-3-look-at-the-initial-data" class="section level2"
+number="0.2">
+<h2><span class="header-section-number">0.2</span> Step 3: look at the
+initial data</h2>
+<pre class="r"><code>print01report(mydata)</code></pre>
+</div>
+<div id="step-4-add-effects" class="section level2" number="0.3">
+<h2><span class="header-section-number">0.3</span> Step 4: add
+effects</h2>
+<pre class="r"><code>myeff &lt;- includeEffects(myeff, isolateNet, inPop, outAct)  #we know that quite a lot of staff has not published with someone else</code></pre>
+</div>
+<div id="step-5-estimation" class="section level2" number="0.4">
+<h2><span class="header-section-number">0.4</span> Step 5:
+estimation</h2>
+<pre class="r"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;soc_init&quot;)
+ansM1 &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, returnDeps = TRUE)
+# if necessary estimate again!  ansM1 &lt;- siena07(myAlgorithm, data = mydata, effects = myeff,
+# prevAns = ansM1, returnDeps=TRUE)
+ansM1</code></pre>
+<pre><code>## Estimates, standard errors and convergence t-ratios
+## 
+##                                 Estimate   Standard   Convergence 
+##                                              Error      t-ratio   
+## 
+## Rate parameters: 
+##   0       Rate parameter         5.6664  ( 0.9057   )             
+## 
+## Other parameters: 
+##   1. eval outdegree (density)   -2.1235  ( 0.4279   )   -0.1029   
+##   2. eval reciprocity            2.4398  ( 0.2504   )   -0.0370   
+##   3. eval indegree - popularity  0.0686  ( 0.0657   )   -0.1079   
+##   4. eval outdegree - activity  -0.0605  ( 0.0730   )   -0.0905   
+##   5. eval network-isolate        1.8389  ( 2.8083   )    0.0222   
+## 
+## Overall maximum convergence ratio:    0.1480 
+## 
+## 
+## Total of 2420 iteration steps.</code></pre>
+<pre class="r"><code>scholars &lt;- fload(&quot;./data/processed/scholars_20240924.rda&quot;)
+
+demographics &lt;- do.call(rbind.data.frame, scholars$demographics)
+
+sample &lt;- which(demographics$discipline.22 == &quot;sociology&quot; | demographics$discipline.24 == &quot;sociology&quot;)
+
+demographics_soc &lt;- demographics[sample,]
+sociologists &lt;- lapply(scholars, &quot;[&quot;,sample)</code></pre>
+<pre class="r"><code>fcolnet &lt;- function(data = scholars, university = &quot;RU&quot;, discipline = &quot;sociology&quot;, waves = list(c(2015,
+    2018), c(2019, 2023)), type = c(&quot;first&quot;)) {
+
+    # step 1
+    demographics &lt;- do.call(rbind.data.frame, data$demographics)
+    demographics &lt;- demographics %&gt;%
+        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), &quot;&quot;), Universiteit2.22 = replace(Universiteit2.22,
+            is.na(Universiteit2.22), &quot;&quot;), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+            &quot;&quot;), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), &quot;&quot;), discipline.22 = replace(discipline.22,
+            is.na(discipline.22), &quot;&quot;), discipline.24 = replace(discipline.24, is.na(discipline.24), &quot;&quot;))
+
+    sample &lt;- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
+        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
+        university) &amp; (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% discipline))
+
+    demographics_soc &lt;- demographics[sample, ]
+    scholars_sel &lt;- lapply(scholars, &quot;[&quot;, sample)
+
+    # step 2
+    ids &lt;- demographics_soc$au_id
+    nwaves &lt;- length(waves)
+    nets &lt;- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works &lt;- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = unlist(lapply(scholars_sel$work,
+        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) l$publication_year),
+        recursive = FALSE))
+
+    df_works &lt;- df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == &quot;first&quot;) {
+        for (j in 1:nwaves) {
+            df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego &lt;- df_works_w$works_author[i][[1]]$au_id[1]
+                alters &lt;- df_works_w$works_author[i][[1]]$au_id[-1]
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] &lt;- 1
+                }
+            }
+        }
+    }
+
+    if (type == &quot;last&quot;) {
+        for (j in 1:nwaves) {
+            df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego &lt;- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+                alters &lt;- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] &lt;- 1
+                }
+            }
+        }
+    }
+
+    if (type == &quot;all&quot;) {
+        for (j in 1:nwaves) {
+            df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos &lt;- df_works_w$works_author[i][[1]]$au_id
+                if (sum(ids %in% egos) &gt; 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] &lt;- 1
+                }
+            }
+        }
+    }
+    output &lt;- list()
+    output$data &lt;- scholars_sel
+    output$nets &lt;- nets
+    return(output)
+}</code></pre>
+<div id="works" class="section level3" number="0.4.1">
+<h3><span class="header-section-number">0.4.1</span> works</h3>
+<pre class="r"><code>demographics_soc &lt;- demographics[sample,]
+
+ids &lt;- demographics_soc$au_id
+wave2 &lt;- wave1 &lt;- matrix(0, nrow = length(ids), ncol = length(ids), dimnames = list(ids, ids))
+
+worksobject &lt;- sociologists$works
+
+works_id &lt;- unlist(lapply(worksobject, function(l) l$id))
+works_author &lt;- unlist(lapply(worksobject, function(l) l$author), recursive = FALSE)
+works_year &lt;- unlist(lapply(worksobject, function(l) l$publication_year), recursive = FALSE)</code></pre>
+<pre class="r"><code>fcolnet_nouni &lt;- function(data = scholars, discipline = &quot;sociology&quot;, waves = list(c(2015,2018), c(2019, 2023)), type = c(&quot;first&quot;)) {
+  
+  # step 1
+  demographics &lt;- do.call(rbind.data.frame, data$demographics)
+  demographics &lt;- demographics %&gt;%
+    mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), &quot;&quot;), Universiteit2.22 = replace(Universiteit2.22,
+                                                                                                                 is.na(Universiteit2.22), &quot;&quot;), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+                                                                                                                                                                          &quot;&quot;), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), &quot;&quot;), discipline.22 = replace(discipline.22,
+                                                                                                                                                                                                                                                                                  is.na(discipline.22), &quot;&quot;), discipline.24 = replace(discipline.24, is.na(discipline.24), &quot;&quot;))
+  
+  sample &lt;- which(demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% discipline)
+  
+  demographics_soc &lt;- demographics[sample, ]
+  scholars_sel &lt;- lapply(scholars, &quot;[&quot;, sample)
+  
+  # step 2
+  ids &lt;- demographics_soc$au_id
+  nwaves &lt;- length(waves)
+  nets &lt;- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+                                                                              ids))
+  dimnames(nets)
+  
+  # step 3
+  df_works &lt;- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = unlist(lapply(scholars_sel$work,
+                                                                                                                  function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) l$publication_year),
+                                                                                                                                                                                 recursive = FALSE))
+  
+  df_works &lt;- df_works[!duplicated(df_works), ]
+  
+  # step 4
+  if (type == &quot;first&quot;) {
+    for (j in 1:nwaves) {
+      df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+      ]
+      for (i in 1:nrow(df_works_w)) {
+        ego &lt;- df_works_w$works_author[i][[1]]$au_id[1]
+        alters &lt;- df_works_w$works_author[i][[1]]$au_id[-1]
+        if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+          nets[j, which(ids %in% ego), which(ids %in% alters)] &lt;- 1
+        }
+      }
+    }
+  }
+  
+  if (type == &quot;last&quot;) {
+    for (j in 1:nwaves) {
+      df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+      ]
+      for (i in 1:nrow(df_works_w)) {
+        ego &lt;- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+        alters &lt;- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+        if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+          nets[j, which(ids %in% ego), which(ids %in% alters)] &lt;- 1
+        }
+      }
+    }
+  }
+  
+  if (type == &quot;all&quot;) {
+    for (j in 1:nwaves) {
+      df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+      ]
+      for (i in 1:nrow(df_works_w)) {
+        egos &lt;- df_works_w$works_author[i][[1]]$au_id
+        if (sum(ids %in% egos) &gt; 0) {
+          nets[j, which(ids %in% egos), which(ids %in% egos)] &lt;- 1
+        }
+      }
+    }
+  }
+  output &lt;- list()
+  output$data &lt;- scholars_sel
+  output$nets &lt;- nets
+  return(output)
+}</code></pre>
+</div>
+</div>
+<div id="in-class-exercise" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> In class exercise</h1>
+<pre class="r"><code>test_all &lt;- fcolnet_nouni(data = scholars, 
+                    discipline = &quot;sociology&quot;,
+                    waves = list(c(2015, 2018), c(2019, 2023)), 
+                    type = c(&quot;first&quot;))
+
+test_RU &lt;- fcolnet(data = scholars, 
+                    university = &quot;RU&quot;,
+                    discipline = &quot;sociology&quot;, 
+                    waves = list(c(2015, 2018), c(2019, 2023)), 
+                    type = c(&quot;first&quot;))
+
+test_UvT &lt;- fcolnet(data = scholars, 
+                    university = &quot;UvT&quot;,
+                    discipline = &quot;sociology&quot;, 
+                    waves = list(c(2015, 2018), c(2019, 2023)), 
+                    type = c(&quot;first&quot;))
+
+
+wave1RU &lt;- test_RU$nets[1,,]
+wave2RU &lt;- test_RU$nets[2,,]
+
+
+df &lt;- test_RU$data
+
+#same complicated structure as &#39;scholars&#39; thus first make a dataframe from the list in which all info was saved. 
+df_ego &lt;- do.call(rbind.data.frame, df$demographics)
+
+RUnet &lt;- as.matrix(test_RU$nets[2,,], names=null)
+
+array_RU &lt;- array(data = c(wave1RU, wave2RU), dim = c(dim(wave1RU), 2))
+# net_RU &lt;- sienaDependent(array_RU)
+
+#variables
+
+df &lt;- test_RU$data
+df_ego &lt;- do.call(rbind.data.frame, df$demographics)
+
+
+#replacing missing values
+df_ego$Functie.22[is.na(df_ego$Functie.22)] &lt;- &quot;&quot;
+df_ego$Functie.24[is.na(df_ego$Functie.24)] &lt;- &quot;&quot;
+
+
+df_ego$functie&lt;-ifelse(df_ego$Functie.22==&quot;Hoogleraar&quot;,1,0)
+df_ego$functie&lt;-ifelse(df_ego$Functie.24==&quot;Hoogleraar&quot;,1,df_ego$functie)
+
+
+table(df_ego$functie, useNA=&quot;always&quot;)</code></pre>
+<pre><code>## 
+##    0    1 &lt;NA&gt; 
+##   42    8    0</code></pre>
+<pre class="r"><code>functie &lt;- coCovar(df_ego$functie)
+
+# RUtestdata &lt;- sienaDataCreate(net_RU, functie)
+# RUtesteff &lt;- getEffects(RUtestdata)
+
+
+
+# RUtesteff</code></pre>
+<pre class="r"><code>ifelse(!dir.exists(&quot;results&quot;), dir.create(&quot;results&quot;), FALSE)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<div id="step-4-results" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> step 4: results</h2>
+<pre class="r"><code>myeff &lt;- includeEffects(myeff, isolateNet, inPop, outAct)</code></pre>
+</div>
+<div id="step-5-estimation-1" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> step 5:
+estimation</h2>
+<pre class="r"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;soc_init&quot;)
+ansM1 &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, returnDeps = TRUE) # big output
+ansM1</code></pre>
+<pre><code>## Estimates, standard errors and convergence t-ratios
+## 
+##                                 Estimate   Standard   Convergence 
+##                                              Error      t-ratio   
+## 
+## Rate parameters: 
+##   0       Rate parameter         5.6664  ( 0.9057   )             
+## 
+## Other parameters: 
+##   1. eval outdegree (density)   -2.1235  ( 0.4279   )   -0.1029   
+##   2. eval reciprocity            2.4398  ( 0.2504   )   -0.0370   
+##   3. eval indegree - popularity  0.0686  ( 0.0657   )   -0.1079   
+##   4. eval outdegree - activity  -0.0605  ( 0.0730   )   -0.0905   
+##   5. eval network-isolate        1.8389  ( 2.8083   )    0.0222   
+## 
+## Overall maximum convergence ratio:    0.1480 
+## 
+## 
+## Total of 2420 iteration steps.</code></pre>
+</div>
+</div>
+<div id="continuing-with-my-own-project" class="section level1"
+number="2">
+<h1><span class="header-section-number">2</span> Continuing with my own
+project</h1>
+<div id="getting-journal-quality" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> getting journal
+quality</h2>
+<pre class="r"><code>data = sociologists$works[[1]]
+
+q1_journals = c(&#39;Annual Review of Sociology&#39;)
+
+number_of_q1_articles = function(data, q1_journals = c(&quot;Nature&quot;)) {
+  n_q1 = sum(data$so[!is.na(data$so)] %in% q1_journals)
+  return(n_q1)
+}
+
+number_of_q1_articles(sociologists$works[[55]])</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code># do.call(number_of_q1_articles, sociologists$works)</code></pre>
+<div id="loading-the-journal-dataset" class="section level3"
+number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Loading the journal
+dataset</h3>
+<pre class="r"><code>sjr2022 &lt;- read_csv2(&#39;/Users/ghislaine/Downloads/Github/Social Networks/scimagojr 2022 Subject Category - Sociology and Political Science.csv&#39;)</code></pre>
+<pre><code>## ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.</code></pre>
+<pre><code>## New names:
+## Rows: 1484 Columns: 27
+## ── Column specification
+## ──────────────────────────────────────────────────────── Delimiter: &quot;;&quot; chr
+## (13): Title, Type, Issn, Publisher...6, Open Access, Open Access Diamond... dbl
+## (14): Rank, Sourceid, SJR, H index, Total Docs. (2022), Total Docs. (3ye...
+## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## • `Publisher` -&gt; `Publisher...6`
+## • `Publisher` -&gt; `Publisher...24`</code></pre>
+<pre class="r"><code>sjr2024 &lt;- read_csv2(&#39;/Users/ghislaine/Downloads/Github/Social Networks/scimagojr 2024 Subject Category - Sociology and Political Science.csv&#39;)</code></pre>
+<pre><code>## ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.
+## New names:Rows: 1461 Columns: 27── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;;&quot;
+## chr (13): Title, Type, Issn, Publisher...6, Open Access, Open Access Diamond...
+## dbl (14): Rank, Sourceid, SJR, H index, Total Docs. (2024), Total Docs. (3ye...
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+</div>
+<div
+id="stealing-niels-vullings-code-and-linking-the-journals-from-sjr-to-the-journals-in-the-dataset"
+class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Stealing niels
+vullings’ code and linking the journals from SJR to the journals in the
+dataset</h1>
+<p>df_works doesn’t work yet, I copy pasted it</p>
+<pre class="r"><code># df_works_dataframe &lt;- do.call(rbind.data.frame, sociologists$works)  # put works in dataframe
+# head(df_works)
+
+# Error in (function (..., deparse.level = 1, make.row.names = TRUE, stringsAsFactors = FALSE,  : numbers of columns of arguments do not match
+
+df_works_5 &lt;- tibble(works_id, works_author, works_year)
+
+# test1 &lt;- df_works %&gt;% select(id, so, issn_l, author) # test the works</code></pre>
+<p>Also have this code below in lab 6, which <em>should</em> work.</p>
+<pre class="r"><code># Split the ISSN codes if 2 are available
+
+sjr2022$Issn_1 &lt;- sapply(strsplit(sjr2022$Issn, &quot;, &quot;), `[`, 1)  # This code should work as a way to split the two issn codes
+sjr2022$Issn_2 &lt;- sapply(strsplit(sjr2022$Issn, &quot;, &quot;), `[`, 2)
+
+sjr2024$Issn_1 &lt;- sapply(strsplit(sjr2024$Issn, &quot;, &quot;), `[`, 1)  # This code should work as a way to split the two issn codes
+sjr2024$Issn_2 &lt;- sapply(strsplit(sjr2024$Issn, &quot;, &quot;), `[`, 2)
+
+# dat$Issn_1[1] str_length(dat$Issn_1[1])
+
+sjr2022$Issn_1 &lt;- paste0(substr(sjr2022$Issn_1, 1, 4), &quot;-&quot;, substr(sjr2022$Issn_1, 5, 8))  # Hyphenate the codes to match the target df 
+sjr2022$Issn_2 &lt;- ifelse(is.na(sjr2022$Issn_2) == TRUE, NA, paste0(substr(sjr2022$Issn_2, 1, 4), &quot;-&quot;, substr(sjr2022$Issn_2,
+    5, 8)))  # Hyphenate the codes, but make non-existing second codes NA
+
+sjr2024$Issn_1 &lt;- paste0(substr(sjr2024$Issn_1, 1, 4), &quot;-&quot;, substr(sjr2024$Issn_1, 5, 8))  # Hyphenate the codes to match the target df 
+sjr2024$Issn_2 &lt;- ifelse(is.na(sjr2024$Issn_2) == TRUE, NA, paste0(substr(sjr2024$Issn_2, 1, 4), &quot;-&quot;, substr(sjr2024$Issn_2,
+    5, 8)))  # Hyphenate the codes, but make non-existing second codes NA
+
+
+df_pres_22 &lt;- sjr2022 %&gt;%
+    select(Rank, Title, Issn_1, Issn_2, SJR, `SJR Quartile`, `H index`, `%Female`)  # Make a set that will be joined with df_works
+
+df_pres_24 &lt;- sjr2024 %&gt;%
+    select(Rank, Title, Issn_1, Issn_2, SJR, `SJR Quartile`, `H index`, `%Female`)  # Make a set that will be joined with df_works
+
+df_pres_22
+
+# df_works_5 %&gt;% select(issn_l) df_pres %&gt;% select(Issn_1, Issn_2)
+
+# df_works_5$check &lt;- ifelse(df_works_5$issn_l %in% df_pres_22$Issn_1 | df_works_5$issn_l %in% df_pres_22$Issn_2, 1,0)
+
+# mis_journal &lt;- df_works_5 %&gt;%
+#   filter(check == 0)
+
+# as.data.frame(unique(mis_journal$so))</code></pre>
+<div id="first-try-linking-works-bad-attempt" class="section level3"
+number="3.0.1">
+<h3><span class="header-section-number">3.0.1</span> first try linking
+works, bad attempt</h3>
+<pre class="r"><code>number_q1_articles = function(data, q1_journals = c(&quot;Annual Review of Sociology&quot;)) {
+  n_q1 = sum(data$so[!is.na(data$so)] %in% q1_journals)
+  return(n_q1)
+}
+
+# number_q1_articles(sociologists$works[[55]])</code></pre>
+</div>
+<div id="statistics-in-rsiena" class="section level3" number="3.0.2">
+<h3><span class="header-section-number">3.0.2</span> Statistics in
+RSiena</h3>
+<p>The statistic I chose to present is called “higher”.</p>
+<p><img src="images/Screenshot%202025-10-08%20at%2018.32.53.png" /></p>
+<p><span class="math display">\[ \Sigma_j x_{ij}\]</span></p>
+<p>For my own purposes, I want to reverse the code, because I want to
+see whether the alter has a larger covariate than <em>i</em>. Within my
+theoretical framework, this means that ego wants to make a tie with
+alter because alter has more prestige than ego.</p>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUlNpZW5hIHR1dG9yaWFsIGFuZCBMYWIgNSIKYXV0aG9yOiAiR2hpc2xhaW5lIGRlIEdyb290IgpkYXRlOiAiMjAyNS0xMC0wMyIKb3V0cHV0OiBodG1sX2RvY3VtZW50Ci0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9CmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkKYGBgCgojIyMgRnVuY3Rpb25zCgpUaGVzZSBmdW5jdGlvbnMgYXJlIGVtcHR5IGFnYWluICg5IE9jdCkhIFRyaWVkIHJ1bm5pbmcgaXQgaW4gYW4gLnIgZmlsZSBidXQgaXQgd2FzIHN0aWxsICJlbXB0eSIvanVzdCBhIHNhdmUgb2YgdGhlIGNvbW1hbmQgcmF0aGVyIHRoYW4gbWFraW5nIGFuIGFjdHVhbCBmdW5jdGlvbi4KCmBgYHtyfQoKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoc2Nob2xhcikgCmxpYnJhcnkob3BlbmFsZXhSKQpsaWJyYXJ5KHJ2ZXN0KSAKbGlicmFyeShqc29ubGl0ZSkKbGlicmFyeShSU2llbmEpCgojIGZwYWNrYWdlLmNoZWNrIDwtIGZ1bmN0aW9uKHBhY2thZ2VzKSB7CiMgIGxhcHBseShwYWNrYWdlcywgRlVOID0gZnVuY3Rpb24oeCkgewojICAgICAgIGlmICghcmVxdWlyZSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpKSB7CiMgICAgICAgICAgIGluc3RhbGwucGFja2FnZXMoeCwgZGVwZW5kZW5jaWVzID0gVFJVRSkKIyAgICAgICAgICAgbGlicmFyeSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpCiMgICAgICAgfQojICAgfSkKIyB9Cgpmc2F2ZSA8LSBmdW5jdGlvbih4LCBmaWxlID0gTlVMTCwgbG9jYXRpb24gPSAiLi9kYXRhL3Byb2Nlc3NlZC8iKSB7CiAgICBpZmVsc2UoIWRpci5leGlzdHMoImRhdGEiKSwgZGlyLmNyZWF0ZSgiZGF0YSIpLCBGQUxTRSkKICAgIGlmZWxzZSghZGlyLmV4aXN0cygiZGF0YS9wcm9jZXNzZWQiKSwgZGlyLmNyZWF0ZSgiZGF0YS9wcm9jZXNzZWQiKSwgRkFMU0UpCiAgICBpZiAoaXMubnVsbChmaWxlKSkKICAgICAgICBmaWxlID0gZGVwYXJzZShzdWJzdGl0dXRlKHgpKQogICAgZGF0ZW5hbWUgPC0gc3Vic3RyKGdzdWIoIls6LV0iLCAiIiwgU3lzLnRpbWUoKSksIDEsIDgpCiAgICB0b3RhbG5hbWUgPC0gcGFzdGUobG9jYXRpb24sIGRhdGVuYW1lLCBmaWxlLCAiLnJkYSIsIHNlcCA9ICIiKQogICAgc2F2ZSh4LCBmaWxlID0gdG90YWxuYW1lKSAgI25lZWQgdG8gZml4IGlmIGZpbGUgaXMgcmVsb2FkZWQgYXMgaW5wdXQgbmFtZSwgbm90IGFzIHguIAp9CgpmbG9hZCA8LSBmdW5jdGlvbihmaWxlbmFtZSkgewogICAgbG9hZChmaWxlbmFtZSkKICAgIGdldChscygpW2xzKCkgIT0gImZpbGVuYW1lIl0pCn0KCmZzaG93ZGYgPC0gZnVuY3Rpb24oeCwgLi4uKSB7CiAgICBrbml0cjo6a2FibGUoeCwgZGlnaXRzID0gMiwgImh0bWwiLCAuLi4pICU+JQogICAgICAgIGthYmxlRXh0cmE6OmthYmxlX3N0eWxpbmcoYm9vdHN0cmFwX29wdGlvbnMgPSBjKCJzdHJpcGVkIiwgImhvdmVyIikpICU+JQogICAgICAgIGthYmxlRXh0cmE6OnNjcm9sbF9ib3god2lkdGggPSAiMTAwJSIsIGhlaWdodCA9ICIzMDBweCIpCn0KCmNvbG9yaXplIDwtIGZ1bmN0aW9uKHgsIGNvbG9yKSB7CiAgICBzcHJpbnRmKCI8c3BhbiBzdHlsZT0nY29sb3I6ICVzOyc+JXM8L3NwYW4+IiwgY29sb3IsIHgpCn0KCmBgYAoKYGBge3IgZXZhbD1GQUxTRSwgaW5jbHVkZT1GQUxTRX0KCnBhY2thZ2VzID0gYygiUlNpZW5hIiwgImRldnRvb2xzIiwgImlncmFwaCIpCiMgZnBhY2thZ2UuY2hlY2socGFja2FnZXMpCiNkZXZ0b29sczo6aW5zdGFsbF9naXRodWIoJ0pvY2hlbVRvbHNtYS9Sc2llbmFUd29TdGVwJywgYnVpbGRfdmlnbmV0dGVzPVRSVUUpCgpwYWNrYWdlcyA9IGMoIlJzaWVuYVR3b1N0ZXAiKQoKIyBpbnN0YWxsLnBhY2thZ2VzKCJSc2llbmFUd29TdGVwIikKCgpmcGFja2FnZS5jaGVjayhwYWNrYWdlcykKCmBgYCAKCiMjIyBFeGVyY2lzZSBpbiBjbGFzcwoKYGBge3IgZXZhbD1GQUxTRX0Kc2V0LnNlZWQoMjQ1NTMyNTMpCmVnbyA8LSB0c19zZWxlY3QobmV0ID0gdHNfbmV0MSkKZWdvCgpgYGAKCldoZW4gdHJ5aW5nIGF0IGhvbWUsIHM1MDEgd2FzIG5vdCBmb3VuZC4gCgpgYGB7cn0KCiM/czUwMQoKczUwMQpzNTAyCgojIHB1dCB0aGUgbmV0cyBpbiBhbiBhcnJheQpuZXRzIDwtIGFycmF5KGRhdGEgPSBjKHM1MDEsIHM1MDIpLCBkaW0gPSBjKGRpbShzNTAxKSwgMikpCgojIGRlcGVuZGVudApuZXQgPC0gc2llbmFEZXBlbmRlbnQobmV0cykKCmBgYAojIyMgSW5kZXBlbmRlbnQgdmFyaWFibGUKCmBgYHtyLCBldmFsPUZBTFNFfQoKYWxjb2hvbCA8LSBzNTBhWywxXQoKYWxjb2hvbCA8LSBjb0NvdmFyKGFsY29ob2wpCiAgCmBgYAoKYGBge3IsIGV2YWw9RkFMU0V9CgpteWRhdGEgPC0gc2llbmFEYXRhQ3JlYXRlKG5ldCwgYWxjb2hvbCkKCmBgYAoKIyMgU3RlcCAyOiBlZmZlY3RzCgpgYGB7ciwgZXZhbD1GQUxTRX0KCm15ZWZmIDwtIGdldEVmZmVjdHMobXlkYXRhKQoKCmBgYAoKIyMgU3RlcCAzOiBsb29rIGF0IHRoZSBpbml0aWFsIGRhdGEKCmBgYHtyLCBldmFsPUZBTFNFfQoKcHJpbnQwMXJlcG9ydChteWRhdGEpCgpgYGAKCiMjIFN0ZXAgNDogYWRkIGVmZmVjdHMKCmBgYHtyLCBldmFsPUZBTFNFfQoKbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGlzb2xhdGVOZXQsIGluUG9wLCBvdXRBY3QpICAjd2Uga25vdyB0aGF0IHF1aXRlIGEgbG90IG9mIHN0YWZmIGhhcyBub3QgcHVibGlzaGVkIHdpdGggc29tZW9uZSBlbHNlCgpgYGAKIyMgU3RlcCA1OiBlc3RpbWF0aW9uCmBgYHtyLCBldmFsPUZBTFNFfQpteUFsZ29yaXRobSA8LSBzaWVuYUFsZ29yaXRobUNyZWF0ZShwcm9qbmFtZSA9ICJzb2NfaW5pdCIpCmFuc00xIDwtIHNpZW5hMDcobXlBbGdvcml0aG0sIGRhdGEgPSBteWRhdGEsIGVmZmVjdHMgPSBteWVmZiwgcmV0dXJuRGVwcyA9IFRSVUUpCiMgaWYgbmVjZXNzYXJ5IGVzdGltYXRlIGFnYWluISAgYW5zTTEgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmLAojIHByZXZBbnMgPSBhbnNNMSwgcmV0dXJuRGVwcz1UUlVFKQphbnNNMQpgYGAKCgpgYGB7ciwgZXZhbD1GQUxTRSwgZWNobz1GQUxTRX0KZnNhdmUoYW5zTTEpCmBgYAoKYGBge3IsIGVjaG89RkFMU0V9CmFuc00xIDwtIGZsb2FkKCIuL2RhdGEvcHJvY2Vzc2VkLzIwMjUxMDEwYW5zTTEucmRhIikKYW5zTTEKYGBgCgoKCmBgYHtyfQoKc2Nob2xhcnMgPC0gZmxvYWQoIi4vZGF0YS9wcm9jZXNzZWQvc2Nob2xhcnNfMjAyNDA5MjQucmRhIikKCmRlbW9ncmFwaGljcyA8LSBkby5jYWxsKHJiaW5kLmRhdGEuZnJhbWUsIHNjaG9sYXJzJGRlbW9ncmFwaGljcykKCnNhbXBsZSA8LSB3aGljaChkZW1vZ3JhcGhpY3MkZGlzY2lwbGluZS4yMiA9PSAic29jaW9sb2d5IiB8IGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjI0ID09ICJzb2Npb2xvZ3kiKQoKZGVtb2dyYXBoaWNzX3NvYyA8LSBkZW1vZ3JhcGhpY3Nbc2FtcGxlLF0Kc29jaW9sb2dpc3RzIDwtIGxhcHBseShzY2hvbGFycywgIlsiLHNhbXBsZSkKYGBgCgpgYGB7cn0KZmNvbG5ldCA8LSBmdW5jdGlvbihkYXRhID0gc2Nob2xhcnMsIHVuaXZlcnNpdHkgPSAiUlUiLCBkaXNjaXBsaW5lID0gInNvY2lvbG9neSIsIHdhdmVzID0gbGlzdChjKDIwMTUsCiAgICAyMDE4KSwgYygyMDE5LCAyMDIzKSksIHR5cGUgPSBjKCJmaXJzdCIpKSB7CgogICAgIyBzdGVwIDEKICAgIGRlbW9ncmFwaGljcyA8LSBkby5jYWxsKHJiaW5kLmRhdGEuZnJhbWUsIGRhdGEkZGVtb2dyYXBoaWNzKQogICAgZGVtb2dyYXBoaWNzIDwtIGRlbW9ncmFwaGljcyAlPiUKICAgICAgICBtdXRhdGUoVW5pdmVyc2l0ZWl0MS4yMiA9IHJlcGxhY2UoVW5pdmVyc2l0ZWl0MS4yMiwgaXMubmEoVW5pdmVyc2l0ZWl0MS4yMiksICIiKSwgVW5pdmVyc2l0ZWl0Mi4yMiA9IHJlcGxhY2UoVW5pdmVyc2l0ZWl0Mi4yMiwKICAgICAgICAgICAgaXMubmEoVW5pdmVyc2l0ZWl0Mi4yMiksICIiKSwgVW5pdmVyc2l0ZWl0MS4yNCA9IHJlcGxhY2UoVW5pdmVyc2l0ZWl0MS4yNCwgaXMubmEoVW5pdmVyc2l0ZWl0MS4yNCksCiAgICAgICAgICAgICIiKSwgVW5pdmVyc2l0ZWl0Mi4yNCA9IHJlcGxhY2UoVW5pdmVyc2l0ZWl0Mi4yNCwgaXMubmEoVW5pdmVyc2l0ZWl0Mi4yNCksICIiKSwgZGlzY2lwbGluZS4yMiA9IHJlcGxhY2UoZGlzY2lwbGluZS4yMiwKICAgICAgICAgICAgaXMubmEoZGlzY2lwbGluZS4yMiksICIiKSwgZGlzY2lwbGluZS4yNCA9IHJlcGxhY2UoZGlzY2lwbGluZS4yNCwgaXMubmEoZGlzY2lwbGluZS4yNCksICIiKSkKCiAgICBzYW1wbGUgPC0gd2hpY2goKGRlbW9ncmFwaGljcyRVbml2ZXJzaXRlaXQxLjIyICVpbiUgdW5pdmVyc2l0eSB8IGRlbW9ncmFwaGljcyRVbml2ZXJzaXRlaXQyLjIyICVpbiUKICAgICAgICB1bml2ZXJzaXR5IHwgZGVtb2dyYXBoaWNzJFVuaXZlcnNpdGVpdDEuMjQgJWluJSB1bml2ZXJzaXR5IHwgZGVtb2dyYXBoaWNzJFVuaXZlcnNpdGVpdDIuMjQgJWluJQogICAgICAgIHVuaXZlcnNpdHkpICYgKGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjIyICVpbiUgZGlzY2lwbGluZSB8IGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjI0ICVpbiUgZGlzY2lwbGluZSkpCgogICAgZGVtb2dyYXBoaWNzX3NvYyA8LSBkZW1vZ3JhcGhpY3Nbc2FtcGxlLCBdCiAgICBzY2hvbGFyc19zZWwgPC0gbGFwcGx5KHNjaG9sYXJzLCAiWyIsIHNhbXBsZSkKCiAgICAjIHN0ZXAgMgogICAgaWRzIDwtIGRlbW9ncmFwaGljc19zb2MkYXVfaWQKICAgIG53YXZlcyA8LSBsZW5ndGgod2F2ZXMpCiAgICBuZXRzIDwtIGFycmF5KDAsIGRpbSA9IGMobndhdmVzLCBsZW5ndGgoaWRzKSwgbGVuZ3RoKGlkcykpLCBkaW1uYW1lcyA9IGxpc3Qod2F2ZSA9IDE6bndhdmVzLCBpZHMsCiAgICAgICAgaWRzKSkKICAgIGRpbW5hbWVzKG5ldHMpCgogICAgIyBzdGVwIDMKICAgIGRmX3dvcmtzIDwtIHRpYmJsZSh3b3Jrc19pZCA9IHVubGlzdChsYXBwbHkoc2Nob2xhcnNfc2VsJHdvcmssIGZ1bmN0aW9uKGwpIGwkaWQpKSwgd29ya3NfYXV0aG9yID0gdW5saXN0KGxhcHBseShzY2hvbGFyc19zZWwkd29yaywKICAgICAgICBmdW5jdGlvbihsKSBsJGF1dGhvciksIHJlY3Vyc2l2ZSA9IEZBTFNFKSwgd29ya3NfeWVhciA9IHVubGlzdChsYXBwbHkoc2Nob2xhcnNfc2VsJHdvcmssIGZ1bmN0aW9uKGwpIGwkcHVibGljYXRpb25feWVhciksCiAgICAgICAgcmVjdXJzaXZlID0gRkFMU0UpKQoKICAgIGRmX3dvcmtzIDwtIGRmX3dvcmtzWyFkdXBsaWNhdGVkKGRmX3dvcmtzKSwgXQoKICAgICMgc3RlcCA0CiAgICBpZiAodHlwZSA9PSAiZmlyc3QiKSB7CiAgICAgICAgZm9yIChqIGluIDE6bndhdmVzKSB7CiAgICAgICAgICAgIGRmX3dvcmtzX3cgPC0gZGZfd29ya3NbZGZfd29ya3Mkd29ya3NfeWVhciA+PSB3YXZlc1tbal1dWzFdICYgZGZfd29ya3Mkd29ya3NfeWVhciA8PSB3YXZlc1tbal1dWzJdLAogICAgICAgICAgICAgICAgXQogICAgICAgICAgICBmb3IgKGkgaW4gMTpucm93KGRmX3dvcmtzX3cpKSB7CiAgICAgICAgICAgICAgICBlZ28gPC0gZGZfd29ya3NfdyR3b3Jrc19hdXRob3JbaV1bWzFdXSRhdV9pZFsxXQogICAgICAgICAgICAgICAgYWx0ZXJzIDwtIGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kYXVfaWRbLTFdCiAgICAgICAgICAgICAgICBpZiAoc3VtKGlkcyAlaW4lIGVnbykgPiAwICYgc3VtKGlkcyAlaW4lIGFsdGVycykgPiAwKSB7CiAgICAgICAgICAgICAgICAgIG5ldHNbaiwgd2hpY2goaWRzICVpbiUgZWdvKSwgd2hpY2goaWRzICVpbiUgYWx0ZXJzKV0gPC0gMQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQoKICAgIGlmICh0eXBlID09ICJsYXN0IikgewogICAgICAgIGZvciAoaiBpbiAxOm53YXZlcykgewogICAgICAgICAgICBkZl93b3Jrc193IDwtIGRmX3dvcmtzW2RmX3dvcmtzJHdvcmtzX3llYXIgPj0gd2F2ZXNbW2pdXVsxXSAmIGRmX3dvcmtzJHdvcmtzX3llYXIgPD0gd2F2ZXNbW2pdXVsyXSwKICAgICAgICAgICAgICAgIF0KICAgICAgICAgICAgZm9yIChpIGluIDE6bnJvdyhkZl93b3Jrc193KSkgewogICAgICAgICAgICAgICAgZWdvIDwtIHJldihkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGF1X2lkKVsxXQogICAgICAgICAgICAgICAgYWx0ZXJzIDwtIHJldihkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGF1X2lkKVstMV0KICAgICAgICAgICAgICAgIGlmIChzdW0oaWRzICVpbiUgZWdvKSA+IDAgJiBzdW0oaWRzICVpbiUgYWx0ZXJzKSA+IDApIHsKICAgICAgICAgICAgICAgICAgbmV0c1tqLCB3aGljaChpZHMgJWluJSBlZ28pLCB3aGljaChpZHMgJWluJSBhbHRlcnMpXSA8LSAxCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9CgogICAgaWYgKHR5cGUgPT0gImFsbCIpIHsKICAgICAgICBmb3IgKGogaW4gMTpud2F2ZXMpIHsKICAgICAgICAgICAgZGZfd29ya3NfdyA8LSBkZl93b3Jrc1tkZl93b3JrcyR3b3Jrc195ZWFyID49IHdhdmVzW1tqXV1bMV0gJiBkZl93b3JrcyR3b3Jrc195ZWFyIDw9IHdhdmVzW1tqXV1bMl0sCiAgICAgICAgICAgICAgICBdCiAgICAgICAgICAgIGZvciAoaSBpbiAxOm5yb3coZGZfd29ya3NfdykpIHsKICAgICAgICAgICAgICAgIGVnb3MgPC0gZGZfd29ya3NfdyR3b3Jrc19hdXRob3JbaV1bWzFdXSRhdV9pZAogICAgICAgICAgICAgICAgaWYgKHN1bShpZHMgJWluJSBlZ29zKSA+IDApIHsKICAgICAgICAgICAgICAgICAgbmV0c1tqLCB3aGljaChpZHMgJWluJSBlZ29zKSwgd2hpY2goaWRzICVpbiUgZWdvcyldIDwtIDEKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KICAgIG91dHB1dCA8LSBsaXN0KCkKICAgIG91dHB1dCRkYXRhIDwtIHNjaG9sYXJzX3NlbAogICAgb3V0cHV0JG5ldHMgPC0gbmV0cwogICAgcmV0dXJuKG91dHB1dCkKfQoKYGBgCgojIyMgd29ya3MKCmBgYHtyfQpkZW1vZ3JhcGhpY3Nfc29jIDwtIGRlbW9ncmFwaGljc1tzYW1wbGUsXQoKaWRzIDwtIGRlbW9ncmFwaGljc19zb2MkYXVfaWQKd2F2ZTIgPC0gd2F2ZTEgPC0gbWF0cml4KDAsIG5yb3cgPSBsZW5ndGgoaWRzKSwgbmNvbCA9IGxlbmd0aChpZHMpLCBkaW1uYW1lcyA9IGxpc3QoaWRzLCBpZHMpKQoKd29ya3NvYmplY3QgPC0gc29jaW9sb2dpc3RzJHdvcmtzCgp3b3Jrc19pZCA8LSB1bmxpc3QobGFwcGx5KHdvcmtzb2JqZWN0LCBmdW5jdGlvbihsKSBsJGlkKSkKd29ya3NfYXV0aG9yIDwtIHVubGlzdChsYXBwbHkod29ya3NvYmplY3QsIGZ1bmN0aW9uKGwpIGwkYXV0aG9yKSwgcmVjdXJzaXZlID0gRkFMU0UpCndvcmtzX3llYXIgPC0gdW5saXN0KGxhcHBseSh3b3Jrc29iamVjdCwgZnVuY3Rpb24obCkgbCRwdWJsaWNhdGlvbl95ZWFyKSwgcmVjdXJzaXZlID0gRkFMU0UpCmBgYAoKYGBge3J9CmZjb2xuZXRfbm91bmkgPC0gZnVuY3Rpb24oZGF0YSA9IHNjaG9sYXJzLCBkaXNjaXBsaW5lID0gInNvY2lvbG9neSIsIHdhdmVzID0gbGlzdChjKDIwMTUsMjAxOCksIGMoMjAxOSwgMjAyMykpLCB0eXBlID0gYygiZmlyc3QiKSkgewogIAogICMgc3RlcCAxCiAgZGVtb2dyYXBoaWNzIDwtIGRvLmNhbGwocmJpbmQuZGF0YS5mcmFtZSwgZGF0YSRkZW1vZ3JhcGhpY3MpCiAgZGVtb2dyYXBoaWNzIDwtIGRlbW9ncmFwaGljcyAlPiUKICAgIG11dGF0ZShVbml2ZXJzaXRlaXQxLjIyID0gcmVwbGFjZShVbml2ZXJzaXRlaXQxLjIyLCBpcy5uYShVbml2ZXJzaXRlaXQxLjIyKSwgIiIpLCBVbml2ZXJzaXRlaXQyLjIyID0gcmVwbGFjZShVbml2ZXJzaXRlaXQyLjIyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlzLm5hKFVuaXZlcnNpdGVpdDIuMjIpLCAiIiksIFVuaXZlcnNpdGVpdDEuMjQgPSByZXBsYWNlKFVuaXZlcnNpdGVpdDEuMjQsIGlzLm5hKFVuaXZlcnNpdGVpdDEuMjQpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICIiKSwgVW5pdmVyc2l0ZWl0Mi4yNCA9IHJlcGxhY2UoVW5pdmVyc2l0ZWl0Mi4yNCwgaXMubmEoVW5pdmVyc2l0ZWl0Mi4yNCksICIiKSwgZGlzY2lwbGluZS4yMiA9IHJlcGxhY2UoZGlzY2lwbGluZS4yMiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlzLm5hKGRpc2NpcGxpbmUuMjIpLCAiIiksIGRpc2NpcGxpbmUuMjQgPSByZXBsYWNlKGRpc2NpcGxpbmUuMjQsIGlzLm5hKGRpc2NpcGxpbmUuMjQpLCAiIikpCiAgCiAgc2FtcGxlIDwtIHdoaWNoKGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjIyICVpbiUgZGlzY2lwbGluZSB8IGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjI0ICVpbiUgZGlzY2lwbGluZSkKICAKICBkZW1vZ3JhcGhpY3Nfc29jIDwtIGRlbW9ncmFwaGljc1tzYW1wbGUsIF0KICBzY2hvbGFyc19zZWwgPC0gbGFwcGx5KHNjaG9sYXJzLCAiWyIsIHNhbXBsZSkKICAKICAjIHN0ZXAgMgogIGlkcyA8LSBkZW1vZ3JhcGhpY3Nfc29jJGF1X2lkCiAgbndhdmVzIDwtIGxlbmd0aCh3YXZlcykKICBuZXRzIDwtIGFycmF5KDAsIGRpbSA9IGMobndhdmVzLCBsZW5ndGgoaWRzKSwgbGVuZ3RoKGlkcykpLCBkaW1uYW1lcyA9IGxpc3Qod2F2ZSA9IDE6bndhdmVzLCBpZHMsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlkcykpCiAgZGltbmFtZXMobmV0cykKICAKICAjIHN0ZXAgMwogIGRmX3dvcmtzIDwtIHRpYmJsZSh3b3Jrc19pZCA9IHVubGlzdChsYXBwbHkoc2Nob2xhcnNfc2VsJHdvcmssIGZ1bmN0aW9uKGwpIGwkaWQpKSwgd29ya3NfYXV0aG9yID0gdW5saXN0KGxhcHBseShzY2hvbGFyc19zZWwkd29yaywKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZnVuY3Rpb24obCkgbCRhdXRob3IpLCByZWN1cnNpdmUgPSBGQUxTRSksIHdvcmtzX3llYXIgPSB1bmxpc3QobGFwcGx5KHNjaG9sYXJzX3NlbCR3b3JrLCBmdW5jdGlvbihsKSBsJHB1YmxpY2F0aW9uX3llYXIpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWN1cnNpdmUgPSBGQUxTRSkpCiAgCiAgZGZfd29ya3MgPC0gZGZfd29ya3NbIWR1cGxpY2F0ZWQoZGZfd29ya3MpLCBdCiAgCiAgIyBzdGVwIDQKICBpZiAodHlwZSA9PSAiZmlyc3QiKSB7CiAgICBmb3IgKGogaW4gMTpud2F2ZXMpIHsKICAgICAgZGZfd29ya3NfdyA8LSBkZl93b3Jrc1tkZl93b3JrcyR3b3Jrc195ZWFyID49IHdhdmVzW1tqXV1bMV0gJiBkZl93b3JrcyR3b3Jrc195ZWFyIDw9IHdhdmVzW1tqXV1bMl0sCiAgICAgIF0KICAgICAgZm9yIChpIGluIDE6bnJvdyhkZl93b3Jrc193KSkgewogICAgICAgIGVnbyA8LSBkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGF1X2lkWzFdCiAgICAgICAgYWx0ZXJzIDwtIGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kYXVfaWRbLTFdCiAgICAgICAgaWYgKHN1bShpZHMgJWluJSBlZ28pID4gMCAmIHN1bShpZHMgJWluJSBhbHRlcnMpID4gMCkgewogICAgICAgICAgbmV0c1tqLCB3aGljaChpZHMgJWluJSBlZ28pLCB3aGljaChpZHMgJWluJSBhbHRlcnMpXSA8LSAxCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQogIAogIGlmICh0eXBlID09ICJsYXN0IikgewogICAgZm9yIChqIGluIDE6bndhdmVzKSB7CiAgICAgIGRmX3dvcmtzX3cgPC0gZGZfd29ya3NbZGZfd29ya3Mkd29ya3NfeWVhciA+PSB3YXZlc1tbal1dWzFdICYgZGZfd29ya3Mkd29ya3NfeWVhciA8PSB3YXZlc1tbal1dWzJdLAogICAgICBdCiAgICAgIGZvciAoaSBpbiAxOm5yb3coZGZfd29ya3NfdykpIHsKICAgICAgICBlZ28gPC0gcmV2KGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kYXVfaWQpWzFdCiAgICAgICAgYWx0ZXJzIDwtIHJldihkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGF1X2lkKVstMV0KICAgICAgICBpZiAoc3VtKGlkcyAlaW4lIGVnbykgPiAwICYgc3VtKGlkcyAlaW4lIGFsdGVycykgPiAwKSB7CiAgICAgICAgICBuZXRzW2osIHdoaWNoKGlkcyAlaW4lIGVnbyksIHdoaWNoKGlkcyAlaW4lIGFsdGVycyldIDwtIDEKICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9CiAgCiAgaWYgKHR5cGUgPT0gImFsbCIpIHsKICAgIGZvciAoaiBpbiAxOm53YXZlcykgewogICAgICBkZl93b3Jrc193IDwtIGRmX3dvcmtzW2RmX3dvcmtzJHdvcmtzX3llYXIgPj0gd2F2ZXNbW2pdXVsxXSAmIGRmX3dvcmtzJHdvcmtzX3llYXIgPD0gd2F2ZXNbW2pdXVsyXSwKICAgICAgXQogICAgICBmb3IgKGkgaW4gMTpucm93KGRmX3dvcmtzX3cpKSB7CiAgICAgICAgZWdvcyA8LSBkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGF1X2lkCiAgICAgICAgaWYgKHN1bShpZHMgJWluJSBlZ29zKSA+IDApIHsKICAgICAgICAgIG5ldHNbaiwgd2hpY2goaWRzICVpbiUgZWdvcyksIHdoaWNoKGlkcyAlaW4lIGVnb3MpXSA8LSAxCiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQogIG91dHB1dCA8LSBsaXN0KCkKICBvdXRwdXQkZGF0YSA8LSBzY2hvbGFyc19zZWwKICBvdXRwdXQkbmV0cyA8LSBuZXRzCiAgcmV0dXJuKG91dHB1dCkKfQoKCmBgYAoKCiMgSW4gY2xhc3MgZXhlcmNpc2UKCmBgYHtyfQoKdGVzdF9hbGwgPC0gZmNvbG5ldF9ub3VuaShkYXRhID0gc2Nob2xhcnMsIAogICAgICAgICAgICAgICAgICAgIGRpc2NpcGxpbmUgPSAic29jaW9sb2d5IiwKICAgICAgICAgICAgICAgICAgICB3YXZlcyA9IGxpc3QoYygyMDE1LCAyMDE4KSwgYygyMDE5LCAyMDIzKSksIAogICAgICAgICAgICAgICAgICAgIHR5cGUgPSBjKCJmaXJzdCIpKQoKdGVzdF9SVSA8LSBmY29sbmV0KGRhdGEgPSBzY2hvbGFycywgCiAgICAgICAgICAgICAgICAgICAgdW5pdmVyc2l0eSA9ICJSVSIsCiAgICAgICAgICAgICAgICAgICAgZGlzY2lwbGluZSA9ICJzb2Npb2xvZ3kiLCAKICAgICAgICAgICAgICAgICAgICB3YXZlcyA9IGxpc3QoYygyMDE1LCAyMDE4KSwgYygyMDE5LCAyMDIzKSksIAogICAgICAgICAgICAgICAgICAgIHR5cGUgPSBjKCJmaXJzdCIpKQoKdGVzdF9VdlQgPC0gZmNvbG5ldChkYXRhID0gc2Nob2xhcnMsIAogICAgICAgICAgICAgICAgICAgIHVuaXZlcnNpdHkgPSAiVXZUIiwKICAgICAgICAgICAgICAgICAgICBkaXNjaXBsaW5lID0gInNvY2lvbG9neSIsIAogICAgICAgICAgICAgICAgICAgIHdhdmVzID0gbGlzdChjKDIwMTUsIDIwMTgpLCBjKDIwMTksIDIwMjMpKSwgCiAgICAgICAgICAgICAgICAgICAgdHlwZSA9IGMoImZpcnN0IikpCgoKd2F2ZTFSVSA8LSB0ZXN0X1JVJG5ldHNbMSwsXQp3YXZlMlJVIDwtIHRlc3RfUlUkbmV0c1syLCxdCgoKZGYgPC0gdGVzdF9SVSRkYXRhCgojc2FtZSBjb21wbGljYXRlZCBzdHJ1Y3R1cmUgYXMgJ3NjaG9sYXJzJyB0aHVzIGZpcnN0IG1ha2UgYSBkYXRhZnJhbWUgZnJvbSB0aGUgbGlzdCBpbiB3aGljaCBhbGwgaW5mbyB3YXMgc2F2ZWQuIApkZl9lZ28gPC0gZG8uY2FsbChyYmluZC5kYXRhLmZyYW1lLCBkZiRkZW1vZ3JhcGhpY3MpCgpSVW5ldCA8LSBhcy5tYXRyaXgodGVzdF9SVSRuZXRzWzIsLF0sIG5hbWVzPW51bGwpCgphcnJheV9SVSA8LSBhcnJheShkYXRhID0gYyh3YXZlMVJVLCB3YXZlMlJVKSwgZGltID0gYyhkaW0od2F2ZTFSVSksIDIpKQojIG5ldF9SVSA8LSBzaWVuYURlcGVuZGVudChhcnJheV9SVSkKCiN2YXJpYWJsZXMKCmRmIDwtIHRlc3RfUlUkZGF0YQpkZl9lZ28gPC0gZG8uY2FsbChyYmluZC5kYXRhLmZyYW1lLCBkZiRkZW1vZ3JhcGhpY3MpCgoKI3JlcGxhY2luZyBtaXNzaW5nIHZhbHVlcwpkZl9lZ28kRnVuY3RpZS4yMltpcy5uYShkZl9lZ28kRnVuY3RpZS4yMildIDwtICIiCmRmX2VnbyRGdW5jdGllLjI0W2lzLm5hKGRmX2VnbyRGdW5jdGllLjI0KV0gPC0gIiIKCgpkZl9lZ28kZnVuY3RpZTwtaWZlbHNlKGRmX2VnbyRGdW5jdGllLjIyPT0iSG9vZ2xlcmFhciIsMSwwKQpkZl9lZ28kZnVuY3RpZTwtaWZlbHNlKGRmX2VnbyRGdW5jdGllLjI0PT0iSG9vZ2xlcmFhciIsMSxkZl9lZ28kZnVuY3RpZSkKCgp0YWJsZShkZl9lZ28kZnVuY3RpZSwgdXNlTkE9ImFsd2F5cyIpCmZ1bmN0aWUgPC0gY29Db3ZhcihkZl9lZ28kZnVuY3RpZSkKCiMgUlV0ZXN0ZGF0YSA8LSBzaWVuYURhdGFDcmVhdGUobmV0X1JVLCBmdW5jdGllKQojIFJVdGVzdGVmZiA8LSBnZXRFZmZlY3RzKFJVdGVzdGRhdGEpCgoKCiMgUlV0ZXN0ZWZmCgpgYGAKYGBge3J9CmlmZWxzZSghZGlyLmV4aXN0cygicmVzdWx0cyIpLCBkaXIuY3JlYXRlKCJyZXN1bHRzIiksIEZBTFNFKQpgYGAKCiMjIHN0ZXAgNDogcmVzdWx0cwoKYGBge3IgZXZhbD1GQUxTRX0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGlzb2xhdGVOZXQsIGluUG9wLCBvdXRBY3QpCgpgYGAKCgojIyBzdGVwIDU6IGVzdGltYXRpb24KCmBgYHtyLCBldmFsPUZBTFNFfQoKbXlBbGdvcml0aG0gPC0gc2llbmFBbGdvcml0aG1DcmVhdGUocHJvam5hbWUgPSAic29jX2luaXQiKQphbnNNMSA8LSBzaWVuYTA3KG15QWxnb3JpdGhtLCBkYXRhID0gbXlkYXRhLCBlZmZlY3RzID0gbXllZmYsIHJldHVybkRlcHMgPSBUUlVFKSAjIGJpZyBvdXRwdXQKYW5zTTEKCmBgYAoKYGBge3IsIGV2YWw9RkFMU0UsIGVjaG89RkFMU0V9CmZzYXZlKGFuc00xKQpgYGAKCmBgYHtyLCBlY2hvPUZBTFNFfQphbnNNMSA8LSBmbG9hZCgiLi9kYXRhL3Byb2Nlc3NlZC8yMDI1MTAxMGFuc00xLnJkYSIpCmFuc00xCmBgYAoKIyBDb250aW51aW5nIHdpdGggbXkgb3duIHByb2plY3QKCiMjIGdldHRpbmcgam91cm5hbCBxdWFsaXR5CgpgYGB7cn0KZGF0YSA9IHNvY2lvbG9naXN0cyR3b3Jrc1tbMV1dCgpxMV9qb3VybmFscyA9IGMoJ0FubnVhbCBSZXZpZXcgb2YgU29jaW9sb2d5JykKCm51bWJlcl9vZl9xMV9hcnRpY2xlcyA9IGZ1bmN0aW9uKGRhdGEsIHExX2pvdXJuYWxzID0gYygiTmF0dXJlIikpIHsKICBuX3ExID0gc3VtKGRhdGEkc29bIWlzLm5hKGRhdGEkc28pXSAlaW4lIHExX2pvdXJuYWxzKQogIHJldHVybihuX3ExKQp9CgpudW1iZXJfb2ZfcTFfYXJ0aWNsZXMoc29jaW9sb2dpc3RzJHdvcmtzW1s1NV1dKQoKIyBkby5jYWxsKG51bWJlcl9vZl9xMV9hcnRpY2xlcywgc29jaW9sb2dpc3RzJHdvcmtzKQoKYGBgCgojIyMgTG9hZGluZyB0aGUgam91cm5hbCBkYXRhc2V0CgpgYGB7cn0KCnNqcjIwMjIgPC0gcmVhZF9jc3YyKCcvVXNlcnMvZ2hpc2xhaW5lL0Rvd25sb2Fkcy9HaXRodWIvU29jaWFsIE5ldHdvcmtzL3NjaW1hZ29qciAyMDIyIFN1YmplY3QgQ2F0ZWdvcnkgLSBTb2Npb2xvZ3kgYW5kIFBvbGl0aWNhbCBTY2llbmNlLmNzdicpCgpzanIyMDI0IDwtIHJlYWRfY3N2MignL1VzZXJzL2doaXNsYWluZS9Eb3dubG9hZHMvR2l0aHViL1NvY2lhbCBOZXR3b3Jrcy9zY2ltYWdvanIgMjAyNCBTdWJqZWN0IENhdGVnb3J5IC0gU29jaW9sb2d5IGFuZCBQb2xpdGljYWwgU2NpZW5jZS5jc3YnKQoKYGBgCgojIFN0ZWFsaW5nIG5pZWxzIHZ1bGxpbmdzJyBjb2RlIGFuZCBsaW5raW5nIHRoZSBqb3VybmFscyBmcm9tIFNKUiB0byB0aGUgam91cm5hbHMgaW4gdGhlIGRhdGFzZXQKCmRmX3dvcmtzIGRvZXNuJ3Qgd29yayB5ZXQsIEkgY29weSBwYXN0ZWQgaXQgCgpgYGB7ciwgZXZhbD1GQUxTRX0KCiMgZGZfd29ya3NfZGF0YWZyYW1lIDwtIGRvLmNhbGwocmJpbmQuZGF0YS5mcmFtZSwgc29jaW9sb2dpc3RzJHdvcmtzKSAgIyBwdXQgd29ya3MgaW4gZGF0YWZyYW1lCiMgaGVhZChkZl93b3JrcykKCiMgRXJyb3IgaW4gKGZ1bmN0aW9uICguLi4sIGRlcGFyc2UubGV2ZWwgPSAxLCBtYWtlLnJvdy5uYW1lcyA9IFRSVUUsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSwgIDogbnVtYmVycyBvZiBjb2x1bW5zIG9mIGFyZ3VtZW50cyBkbyBub3QgbWF0Y2gKCmRmX3dvcmtzXzUgPC0gdGliYmxlKHdvcmtzX2lkLCB3b3Jrc19hdXRob3IsIHdvcmtzX3llYXIpCgojIHRlc3QxIDwtIGRmX3dvcmtzICU+JSBzZWxlY3QoaWQsIHNvLCBpc3NuX2wsIGF1dGhvcikgIyB0ZXN0IHRoZSB3b3JrcwpgYGAKCkFsc28gaGF2ZSB0aGlzIGNvZGUgYmVsb3cgaW4gbGFiIDYsIHdoaWNoICpzaG91bGQqIHdvcmsuCgpgYGB7ciwgZXZhbD1GQUxTRX0KCiMgU3BsaXQgdGhlIElTU04gY29kZXMgaWYgMiBhcmUgYXZhaWxhYmxlCgpzanIyMDIyJElzc25fMSA8LSBzYXBwbHkoc3Ryc3BsaXQoc2pyMjAyMiRJc3NuLCAiLCAiKSwgYFtgLCAxKSAgIyBUaGlzIGNvZGUgc2hvdWxkIHdvcmsgYXMgYSB3YXkgdG8gc3BsaXQgdGhlIHR3byBpc3NuIGNvZGVzCnNqcjIwMjIkSXNzbl8yIDwtIHNhcHBseShzdHJzcGxpdChzanIyMDIyJElzc24sICIsICIpLCBgW2AsIDIpCgpzanIyMDI0JElzc25fMSA8LSBzYXBwbHkoc3Ryc3BsaXQoc2pyMjAyNCRJc3NuLCAiLCAiKSwgYFtgLCAxKSAgIyBUaGlzIGNvZGUgc2hvdWxkIHdvcmsgYXMgYSB3YXkgdG8gc3BsaXQgdGhlIHR3byBpc3NuIGNvZGVzCnNqcjIwMjQkSXNzbl8yIDwtIHNhcHBseShzdHJzcGxpdChzanIyMDI0JElzc24sICIsICIpLCBgW2AsIDIpCgojIGRhdCRJc3NuXzFbMV0gc3RyX2xlbmd0aChkYXQkSXNzbl8xWzFdKQoKc2pyMjAyMiRJc3NuXzEgPC0gcGFzdGUwKHN1YnN0cihzanIyMDIyJElzc25fMSwgMSwgNCksICItIiwgc3Vic3RyKHNqcjIwMjIkSXNzbl8xLCA1LCA4KSkgICMgSHlwaGVuYXRlIHRoZSBjb2RlcyB0byBtYXRjaCB0aGUgdGFyZ2V0IGRmIApzanIyMDIyJElzc25fMiA8LSBpZmVsc2UoaXMubmEoc2pyMjAyMiRJc3NuXzIpID09IFRSVUUsIE5BLCBwYXN0ZTAoc3Vic3RyKHNqcjIwMjIkSXNzbl8yLCAxLCA0KSwgIi0iLCBzdWJzdHIoc2pyMjAyMiRJc3NuXzIsCiAgICA1LCA4KSkpICAjIEh5cGhlbmF0ZSB0aGUgY29kZXMsIGJ1dCBtYWtlIG5vbi1leGlzdGluZyBzZWNvbmQgY29kZXMgTkEKCnNqcjIwMjQkSXNzbl8xIDwtIHBhc3RlMChzdWJzdHIoc2pyMjAyNCRJc3NuXzEsIDEsIDQpLCAiLSIsIHN1YnN0cihzanIyMDI0JElzc25fMSwgNSwgOCkpICAjIEh5cGhlbmF0ZSB0aGUgY29kZXMgdG8gbWF0Y2ggdGhlIHRhcmdldCBkZiAKc2pyMjAyNCRJc3NuXzIgPC0gaWZlbHNlKGlzLm5hKHNqcjIwMjQkSXNzbl8yKSA9PSBUUlVFLCBOQSwgcGFzdGUwKHN1YnN0cihzanIyMDI0JElzc25fMiwgMSwgNCksICItIiwgc3Vic3RyKHNqcjIwMjQkSXNzbl8yLAogICAgNSwgOCkpKSAgIyBIeXBoZW5hdGUgdGhlIGNvZGVzLCBidXQgbWFrZSBub24tZXhpc3Rpbmcgc2Vjb25kIGNvZGVzIE5BCgoKZGZfcHJlc18yMiA8LSBzanIyMDIyICU+JQogICAgc2VsZWN0KFJhbmssIFRpdGxlLCBJc3NuXzEsIElzc25fMiwgU0pSLCBgU0pSIFF1YXJ0aWxlYCwgYEggaW5kZXhgLCBgJUZlbWFsZWApICAjIE1ha2UgYSBzZXQgdGhhdCB3aWxsIGJlIGpvaW5lZCB3aXRoIGRmX3dvcmtzCgpkZl9wcmVzXzI0IDwtIHNqcjIwMjQgJT4lCiAgICBzZWxlY3QoUmFuaywgVGl0bGUsIElzc25fMSwgSXNzbl8yLCBTSlIsIGBTSlIgUXVhcnRpbGVgLCBgSCBpbmRleGAsIGAlRmVtYWxlYCkgICMgTWFrZSBhIHNldCB0aGF0IHdpbGwgYmUgam9pbmVkIHdpdGggZGZfd29ya3MKCmRmX3ByZXNfMjIKCiMgZGZfd29ya3NfNSAlPiUgc2VsZWN0KGlzc25fbCkgZGZfcHJlcyAlPiUgc2VsZWN0KElzc25fMSwgSXNzbl8yKQoKIyBkZl93b3Jrc181JGNoZWNrIDwtIGlmZWxzZShkZl93b3Jrc181JGlzc25fbCAlaW4lIGRmX3ByZXNfMjIkSXNzbl8xIHwgZGZfd29ya3NfNSRpc3NuX2wgJWluJSBkZl9wcmVzXzIyJElzc25fMiwgMSwwKQoKIyBtaXNfam91cm5hbCA8LSBkZl93b3Jrc181ICU+JQojICAgZmlsdGVyKGNoZWNrID09IDApCgojIGFzLmRhdGEuZnJhbWUodW5pcXVlKG1pc19qb3VybmFsJHNvKSkKCmBgYAoKCgojIyMgZmlyc3QgdHJ5IGxpbmtpbmcgd29ya3MsIGJhZCBhdHRlbXB0IAoKYGBge3J9CgpudW1iZXJfcTFfYXJ0aWNsZXMgPSBmdW5jdGlvbihkYXRhLCBxMV9qb3VybmFscyA9IGMoIkFubnVhbCBSZXZpZXcgb2YgU29jaW9sb2d5IikpIHsKICBuX3ExID0gc3VtKGRhdGEkc29bIWlzLm5hKGRhdGEkc28pXSAlaW4lIHExX2pvdXJuYWxzKQogIHJldHVybihuX3ExKQp9CgojIG51bWJlcl9xMV9hcnRpY2xlcyhzb2Npb2xvZ2lzdHMkd29ya3NbWzU1XV0pCgpgYGAKCgojIyMgU3RhdGlzdGljcyBpbiBSU2llbmEKClRoZSBzdGF0aXN0aWMgSSBjaG9zZSB0byBwcmVzZW50IGlzIGNhbGxlZCAiaGlnaGVyIi4gCgohW10oaW1hZ2VzL1NjcmVlbnNob3QgMjAyNS0xMC0wOCBhdCAxOC4zMi41My5wbmcpCgoKJCQgXFNpZ21hX2ogeF97aWp9JCQgCgpGb3IgbXkgb3duIHB1cnBvc2VzLCBJIHdhbnQgdG8gcmV2ZXJzZSB0aGUgY29kZSwgYmVjYXVzZSBJIHdhbnQgdG8gc2VlIHdoZXRoZXIgdGhlIGFsdGVyIGhhcyBhIGxhcmdlciBjb3ZhcmlhdGUgdGhhbiAqaSouIFdpdGhpbiBteSB0aGVvcmV0aWNhbCBmcmFtZXdvcmssIHRoaXMgbWVhbnMgdGhhdCBlZ28gd2FudHMgdG8gbWFrZSBhIHRpZSB3aXRoIGFsdGVyIGJlY2F1c2UgYWx0ZXIgaGFzIG1vcmUgcHJlc3RpZ2UgdGhhbiBlZ28uIAo=</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("lab5.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

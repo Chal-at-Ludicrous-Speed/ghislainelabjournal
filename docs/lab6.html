@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ghislaine de Groot" />
+
+<meta name="date" content="2025-10-10" />
+
+<title>lab6</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Ghislaine's Journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lab1.html">Page 1</a>
+    </li>
+    <li>
+      <a href="lab2.html">Page 2</a>
+    </li>
+    <li>
+      <a href="lab3.html">Page 3</a>
+    </li>
+    <li>
+      <a href="lab4.html">Page 4</a>
+    </li>
+    <li>
+      <a href="lab5.html">Page 5</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://chal-at-ludicrous-speed.github.io/ghislainelabjournal/">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">lab6</h1>
+<h4 class="author">Ghislaine de Groot</h4>
+<h4 class="date">2025-10-10</h4>
+
+</div>
+
+
+<div id="packages" class="section level3" number="0.0.1">
+<h3><span class="header-section-number">0.0.1</span> Packages</h3>
+<p>```{r. eval=FALSE} library(foreign) library(tidyverse)
+library(scholar) library(openalexR) library(rvest) library(jsonlite)
+library(RSiena)</p>
+<pre><code>
+
+### Loading the journal dataset
+
+
+``` r
+sjr2022 &lt;- read_csv2(&#39;/Users/ghislaine/Downloads/Github/Social Networks/scimagojr 2022 Subject Category - Sociology and Political Science.csv&#39;)
+
+sjr2024 &lt;- read_csv2(&#39;/Users/ghislaine/Downloads/Github/Social Networks/scimagojr 2024 Subject Category - Sociology and Political Science.csv&#39;)</code></pre>
+</div>
+<div
+id="stealing-niels-vullings-code-and-linking-the-journals-from-sjr-to-the-journals-in-the-dataset"
+class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Stealing niels
+vullings’ code and linking the journals from SJR to the journals in the
+dataset</h1>
+<p>df_works doesn’t work yet</p>
+<div id="debugging" class="section level3" number="1.0.1">
+<h3><span class="header-section-number">1.0.1</span> debugging</h3>
+<pre class="r"><code>fcolnet_n &lt;- function(data = scholars, university = &quot;RU&quot;, discipline = &quot;sociology&quot;, waves = list(c(2015,
+    2018), c(2019, 2023)), type = c(&quot;first&quot;)) {
+
+    # step 1
+    demographics &lt;- do.call(rbind.data.frame, data$demographics)
+    demographics &lt;- demographics %&gt;%
+        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), &quot;&quot;), Universiteit2.22 = replace(Universiteit2.22,
+            is.na(Universiteit2.22), &quot;&quot;), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+            &quot;&quot;), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), &quot;&quot;), discipline.22 = replace(discipline.22,
+            is.na(discipline.22), &quot;&quot;), discipline.24 = replace(discipline.24, is.na(discipline.24), &quot;&quot;))
+
+    sample &lt;- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
+        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
+        university) &amp; (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% discipline))
+
+    demographics_soc &lt;- demographics[sample, ]
+    scholars_sel &lt;- lapply(scholars, &quot;[&quot;, sample)
+
+    # step 2
+    ids &lt;- demographics_soc$au_id
+    nwaves &lt;- length(waves)
+    nets &lt;- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works &lt;- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = unlist(lapply(scholars_sel$work,
+        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) l$publication_year),
+        recursive = FALSE))
+
+    df_works &lt;- df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == &quot;first&quot;) {
+        for (j in 1:nwaves) {
+            df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego &lt;- df_works_w$works_author[i][[1]]$au_id[1]
+                alters &lt;- df_works_w$works_author[i][[1]]$au_id[-1]
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] &lt;- 1
+                }
+            }
+        }
+    }
+
+    if (type == &quot;last&quot;) {
+        for (j in 1:nwaves) {
+            df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego &lt;- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+                alters &lt;- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] &lt;- 1
+                }
+            }
+        }
+    }
+
+    if (type == &quot;all&quot;) {
+        for (j in 1:nwaves) {
+            df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos &lt;- df_works_w$works_author[i][[1]]$au_id
+                if (sum(ids %in% egos) &gt; 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] &lt;- 1
+                }
+            }
+        }
+    }
+    output &lt;- list()
+    output$data &lt;- scholars_sel
+    output$nets &lt;- nets
+    return(output)
+}</code></pre>
+<pre class="r"><code>scholars &lt;- fload(&quot;./data/processed/scholars_20240924.rda&quot;)</code></pre>
+<pre class="r"><code>soc_data &lt;- fcolnet_n(data = scholars, university = c(&quot;RU&quot;, &quot;UU&quot;), discipline = c(&quot;sociology&quot;), waves = list(c(2015,
+    2019), c(2020, 2024)), type = c(&quot;first&quot;))
+
+
+df_ego &lt;- do.call(rbind.data.frame, soc_data$data$demographics)
+
+df_works &lt;- do.call(rbind.data.frame, soc_data$data$works)  # put works in dataframe
+# head(df_works)
+
+test1 &lt;- df_works %&gt;% select(id, so, issn_l, author) # test the works
+
+soc_data$nets[2,,] # How to call a specific network</code></pre>
+<pre class="r"><code>df_works &lt;- tibble(works_id, works_author, works_year)</code></pre>
+<pre class="r"><code>df_works_dataframe &lt;- as.data.frame(unique(sociologists$works))
+
+sociologists2 &lt;- sociologists
+
+require(reshape2)
+install.packages(&quot;reshape2&quot;)</code></pre>
+<pre class="r"><code>test1 &lt;- df_works %&gt;% select(id, so, issn_l, author) # test the works</code></pre>
+<pre class="r"><code># Split the ISSN codes if 2 are available
+
+sjr2022$Issn_1 &lt;- sapply(strsplit(sjr2022$Issn, &quot;, &quot;), `[`, 1)  # This code should work as a way to split the two issn codes
+sjr2022$Issn_2 &lt;- sapply(strsplit(sjr2022$Issn, &quot;, &quot;), `[`, 2)
+
+sjr2024$Issn_1 &lt;- sapply(strsplit(sjr2024$Issn, &quot;, &quot;), `[`, 1)  # This code should work as a way to split the two issn codes
+sjr2024$Issn_2 &lt;- sapply(strsplit(sjr2024$Issn, &quot;, &quot;), `[`, 2)
+
+# dat$Issn_1[1] str_length(dat$Issn_1[1])
+
+sjr2022$Issn_1 &lt;- paste0(substr(sjr2022$Issn_1, 1, 4), &quot;-&quot;, substr(sjr2022$Issn_1, 5, 8))  # Hyphenate the codes to match the target df 
+sjr2022$Issn_2 &lt;- ifelse(is.na(sjr2022$Issn_2) == TRUE, NA, paste0(substr(sjr2022$Issn_2, 1, 4), &quot;-&quot;, substr(sjr2022$Issn_2,
+    5, 8)))  # Hyphenate the codes, but make non-existing second codes NA
+
+sjr2024$Issn_1 &lt;- paste0(substr(sjr2024$Issn_1, 1, 4), &quot;-&quot;, substr(sjr2024$Issn_1, 5, 8))  # Hyphenate the codes to match the target df 
+sjr2024$Issn_2 &lt;- ifelse(is.na(sjr2024$Issn_2) == TRUE, NA, paste0(substr(sjr2024$Issn_2, 1, 4), &quot;-&quot;, substr(sjr2024$Issn_2,
+    5, 8)))  # Hyphenate the codes, but make non-existing second codes NA
+
+
+df_pres_22 &lt;- sjr2022 %&gt;%
+    select(Rank, Title, Issn_1, Issn_2, SJR, `SJR Quartile`, `H index`, `%Female`)  # Make a set that will be joined with df_works
+
+df_pres_24 &lt;- sjr2024 %&gt;%
+    select(Rank, Title, Issn_1, Issn_2, SJR, `SJR Quartile`, `H index`, `%Female`)  # Make a set that will be joined with df_works
+
+df_pres_22
+
+# df_works %&gt;% select(issn_l) df_pres %&gt;% select(Issn_1, Issn_2)
+df_works$check &lt;- ifelse(df_works$issn_l %in% df_pres_22$Issn_1 | df_works$issn_l %in% df_pres_22$Issn_2, 1,
+    0)
+
+mis_journal &lt;- df_works %&gt;%
+    filter(check == 0)
+
+as.data.frame(unique(mis_journal$so))</code></pre>
+</div>
+<div id="create-id-variable" class="section level3" number="1.0.2">
+<h3><span class="header-section-number">1.0.2</span> Create ID
+variable</h3>
+<pre class="r"><code>df_pres_22 &lt;- df_pres_22 %&gt;%
+    mutate(issn_l = case_when(Issn_1 %in% df_works$issn_l == TRUE ~ Issn_1, Issn_2 %in% df_works$issn_l ==
+        TRUE ~ Issn_2, .default = NA)) %&gt;%
+    filter(!is.na(issn_l))
+
+df_pres_24 &lt;- df_pres_24 %&gt;%
+    mutate(issn_l = case_when(Issn_1 %in% df_works$issn_l == TRUE ~ Issn_1, Issn_2 %in% df_works$issn_l ==
+        TRUE ~ Issn_2, .default = NA)) %&gt;%
+    filter(!is.na(issn_l))</code></pre>
+<pre class="r"><code>#---- String Stripper ----
+str_strip &lt;- function(input = &quot;THIs StrïnG is ÑorMälìZed&quot;) {
+
+    string &lt;- tolower(input)
+    string &lt;- iconv(string, from = &quot;UTF-8&quot;, to = &quot;ASCII//TRANSLIT&quot;)
+    string &lt;- sub(&quot;.* &quot;, &quot;&quot;, string)
+
+    # string &lt;- gsub(&#39;[[:punct:]]&#39;, &#39; &#39;, string)
+
+    return(string)
+}</code></pre>
+</div>
+<div id="looping-algorithm-logic" class="section level3" number="1.0.3">
+<h3><span class="header-section-number">1.0.3</span> Looping algorithm
+logic</h3>
+<pre class="r"><code>list_works &lt;- soc_data$data$works
+
+df_ego$Q1.W1 &lt;- 0
+df_ego$Q1.W2 &lt;- 0
+
+for (i in 1:length(list_works)) {
+
+    wave1s &lt;- 2015
+    wave1e &lt;- 2019
+    wave2s &lt;- 2020
+    wave2e &lt;- 2024
+
+    works &lt;- list_works[[i]]
+
+    works &lt;- works %&gt;%
+        left_join(df_pres_24, by = &quot;issn_l&quot;, multiple = &quot;all&quot;)
+    works$`SJR Quartile` &lt;- ifelse(is.na(works$`SJR Quartile`), &quot;No Rank&quot;, works$`SJR Quartile`)
+
+    au &lt;- works %&gt;%
+        unnest(author) %&gt;%
+        mutate(check_id = au_id %in% df_ego$au_id) %&gt;%
+        mutate(check_nam = str_strip(au_display_name) %in% str_strip(df_ego$Naam)) %&gt;%
+        filter(check_id == TRUE &amp; check_nam == TRUE)
+
+    works &lt;- works %&gt;%
+        mutate(waves = case_when(publication_year &gt;= wave1s &amp; publication_year &lt;= wave1e ~ &quot;Wave 1&quot;,
+            publication_year &gt;= wave2s &amp; publication_year &lt;= wave2e ~ &quot;Wave 2&quot;, .default = &quot;NA&quot;)) %&gt;%
+        filter(waves != &quot;NA&quot;)
+    if (nrow(works) == 0) {
+
+        next
+
+    } else {
+
+        for (x in 1:nrow(works)) {
+
+            if (works$waves[x] == &quot;Wave 1&quot;) {
+
+                if (works$`SJR Quartile`[x] == &quot;Q1&quot;) {
+
+                  naam &lt;- works$author[[x]]$au_display_name
+                  df_ego[str_strip(df_ego$Naam) %in% str_strip(naam), ]$Q1.W1 &lt;- df_ego[str_strip(df_ego$Naam) %in%
+                    str_strip(naam), ]$Q1.W1 + 1
+
+                }
+            } else {
+
+                if (works$`SJR Quartile`[x] == &quot;Q1&quot;) {
+
+                  naam &lt;- works$author[[x]]$au_display_name
+                  df_ego[str_strip(df_ego$Naam) %in% str_strip(naam), ]$Q1.W2 &lt;- df_ego[str_strip(df_ego$Naam) %in%
+                    str_strip(naam), ]$Q1.W2 + 1
+
+                }
+            }
+
+        }
+
+    }
+
+}</code></pre>
+</div>
+<div id="career-age" class="section level3" number="1.0.4">
+<h3><span class="header-section-number">1.0.4</span> Career age</h3>
+<pre class="r"><code>df_career_age &lt;- df_works %&gt;%
+  unnest(author) %&gt;% # unnesting the tibble from the tibble
+  filter(au_id %in% df_ego$au_id == TRUE) %&gt;% # authors in df_works should match authors in df_ego
+  group_by(au_id) %&gt;%
+  mutate(min_year_pub = min(publication_year, na.rm = TRUE), # initial calculation of minimum year
+         count_pub = n()) %&gt;%  # count number of publications
+  mutate(first_year_pub = ifelse(count_pub == 1, min_year_pub, # if number of publications is 1, score is min_year_pub
+                                 {
+                                   filter_year = publication_year[publication_year != min_year_pub] # filter minimum year
+                                   mean_pubyear = mean(filter_year, na.rm = TRUE) # calculate mean without min score
+                                   valid_year = min(filter_year[filter_year &gt;= (mean_pubyear - 25)], na.rm = TRUE) # minimum year -&gt; range mean-25
+                                   valid_year # if number of publications is not 1, than score minimum year with first year removed within range mean-25
+                                 })) %&gt;% 
+  
+  # this line corrects for the warning of returning infinites that for some reason were not filtered through the first ifelse command
+  mutate(first_year_pub = ifelse(is.infinite(first_year_pub), min_year_pub, first_year_pub)) %&gt;% #adjusting infinite scores to minimum year
+  
+  select(au_id, first_year_pub) %&gt;% # selecting variables
+  distinct(au_id, first_year_pub, .keep_all = TRUE) # making sure only distinct authors are in data frame  
+  
+
+df_ego &lt;- df_ego %&gt;% left_join(df_career_age, by = &quot;au_id&quot;)</code></pre>
+</div>
+<div id="practicing-with-rsiena-without-prestige" class="section level2"
+number="1.1">
+<h2><span class="header-section-number">1.1</span> Practicing with
+RSiena without prestige</h2>
+<div id="own-fcolnet-different-from-niels" class="section level3"
+number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> own fcolnet,
+different from niels</h3>
+<pre class="r"><code>fcolnet_25 &lt;- function(data = scholars, university = &quot;RU&quot;, discipline = &quot;sociology&quot;, waves = list(c(2015,
+    2018), c(2019, 2023)), type = c(&quot;first&quot;)) {
+
+    # step 1
+    demographics &lt;- do.call(rbind.data.frame, data$demographics)
+    demographics &lt;- demographics %&gt;%
+        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), &quot;&quot;), Universiteit2.22 = replace(Universiteit2.22,
+            is.na(Universiteit2.22), &quot;&quot;), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+            &quot;&quot;), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), &quot;&quot;), discipline.22 = replace(discipline.22,
+            is.na(discipline.22), &quot;&quot;), discipline.24 = replace(discipline.24, is.na(discipline.24), &quot;&quot;))
+
+    sample &lt;- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
+        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
+        university) &amp; (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% discipline))
+
+    demographics_soc &lt;- demographics[sample, ]
+    scholars_sel &lt;- lapply(scholars, &quot;[&quot;, sample)
+
+    # step 2
+    ids &lt;- demographics_soc$au_id
+    nwaves &lt;- length(waves)
+    nets &lt;- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works &lt;- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = unlist(lapply(scholars_sel$work,
+        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) l$publication_year),
+        recursive = FALSE))
+
+    df_works &lt;- df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == &quot;first&quot;) {
+        for (j in 1:nwaves) {
+            df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego &lt;- df_works_w$works_author[i][[1]]$au_id[1]
+                alters &lt;- df_works_w$works_author[i][[1]]$au_id[-1]
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] &lt;- 1
+                }
+            }
+        }
+    }
+
+    if (type == &quot;last&quot;) {
+        for (j in 1:nwaves) {
+            df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego &lt;- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+                alters &lt;- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] &lt;- 1
+                }
+            }
+        }
+    }
+
+    if (type == &quot;all&quot;) {
+        for (j in 1:nwaves) {
+            df_works_w &lt;- df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos &lt;- df_works_w$works_author[i][[1]]$au_id
+                if (sum(ids %in% egos) &gt; 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] &lt;- 1
+                }
+            }
+        }
+    }
+    output &lt;- list()
+    output$data &lt;- scholars_sel
+    output$nets &lt;- nets
+    return(output)
+}</code></pre>
+<pre class="r"><code># soc_test_data &lt;- sienaDataCreate(wave1, wave2)
+
+soc_test_data &lt;- sienaDependent(array(c(wave1, wave2), dim = c(386, 386)))</code></pre>
+<p>Trying to get a network for RSiena</p>
+<pre class="r"><code>test_RU &lt;- fcolnet_25(data = scholars, 
+                    university = &quot;RU&quot;,
+                    discipline = &quot;sociology&quot;, 
+                    waves = list(c(2015, 2018), c(2019, 2023)), 
+                    type = c(&quot;first&quot;))
+
+test_UvT &lt;- fcolnet_25(data = scholars, 
+                    university = &quot;UvT&quot;,
+                    discipline = &quot;sociology&quot;, 
+                    waves = list(c(2015, 2018), c(2019, 2023)), 
+                    type = c(&quot;first&quot;))
+
+soc_test_data &lt;- sienaDataCreate(test_RU, test_UvT)
+
+soc_test_data &lt;- sienaDependent(array(c(test_RU, test_UvT, dim = c(386, 386)))</code></pre>
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAibGFiNiIKYXV0aG9yOiAiR2hpc2xhaW5lIGRlIEdyb290IgpkYXRlOiAiMjAyNS0xMC0xMCIKb3V0cHV0OiBodG1sX2RvY3VtZW50Ci0tLQoKIyMjIFBhY2thZ2VzCgpgYGB7ci4gZXZhbD1GQUxTRX0KbGlicmFyeShmb3JlaWduKQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShzY2hvbGFyKSAKbGlicmFyeShvcGVuYWxleFIpCmxpYnJhcnkocnZlc3QpIApsaWJyYXJ5KGpzb25saXRlKQpsaWJyYXJ5KFJTaWVuYSkKCmBgYAoKCiMjIyBMb2FkaW5nIHRoZSBqb3VybmFsIGRhdGFzZXQKCmBgYHtyLCBldmFsPUZBTFNFfQoKc2pyMjAyMiA8LSByZWFkX2NzdjIoJy9Vc2Vycy9naGlzbGFpbmUvRG93bmxvYWRzL0dpdGh1Yi9Tb2NpYWwgTmV0d29ya3Mvc2NpbWFnb2pyIDIwMjIgU3ViamVjdCBDYXRlZ29yeSAtIFNvY2lvbG9neSBhbmQgUG9saXRpY2FsIFNjaWVuY2UuY3N2JykKCnNqcjIwMjQgPC0gcmVhZF9jc3YyKCcvVXNlcnMvZ2hpc2xhaW5lL0Rvd25sb2Fkcy9HaXRodWIvU29jaWFsIE5ldHdvcmtzL3NjaW1hZ29qciAyMDI0IFN1YmplY3QgQ2F0ZWdvcnkgLSBTb2Npb2xvZ3kgYW5kIFBvbGl0aWNhbCBTY2llbmNlLmNzdicpCgpgYGAKCiMgU3RlYWxpbmcgbmllbHMgdnVsbGluZ3MnIGNvZGUgYW5kIGxpbmtpbmcgdGhlIGpvdXJuYWxzIGZyb20gU0pSIHRvIHRoZSBqb3VybmFscyBpbiB0aGUgZGF0YXNldAoKZGZfd29ya3MgZG9lc24ndCB3b3JrIHlldAoKYGBge3IsIGVjaG89RkFMU0UsIGV2YWw9RkFMU0V9CgpkZl93b3Jrc19kYXRhZnJhbWUgPC0gZG8uY2FsbChyYmluZC5kYXRhLmZyYW1lLCBzb2Npb2xvZ2lzdHMkd29ya3MpICAjIHB1dCB3b3JrcyBpbiBkYXRhZnJhbWUKIyBoZWFkKGRmX3dvcmtzKQoKZGZfd29ya3NfZGF0YWZyYW1lIDwtIGRvLmNhbGwocmJpbmQuZGF0YS5mcmFtZSwgc29jaW9sb2dpc3RzJHdvcmtzKQoKYGBgCgojIyMgZGVidWdnaW5nCgpgYGB7ciwgZXZhbD1GQUxTRX0KZmNvbG5ldF9uIDwtIGZ1bmN0aW9uKGRhdGEgPSBzY2hvbGFycywgdW5pdmVyc2l0eSA9ICJSVSIsIGRpc2NpcGxpbmUgPSAic29jaW9sb2d5Iiwgd2F2ZXMgPSBsaXN0KGMoMjAxNSwKICAgIDIwMTgpLCBjKDIwMTksIDIwMjMpKSwgdHlwZSA9IGMoImZpcnN0IikpIHsKCiAgICAjIHN0ZXAgMQogICAgZGVtb2dyYXBoaWNzIDwtIGRvLmNhbGwocmJpbmQuZGF0YS5mcmFtZSwgZGF0YSRkZW1vZ3JhcGhpY3MpCiAgICBkZW1vZ3JhcGhpY3MgPC0gZGVtb2dyYXBoaWNzICU+JQogICAgICAgIG11dGF0ZShVbml2ZXJzaXRlaXQxLjIyID0gcmVwbGFjZShVbml2ZXJzaXRlaXQxLjIyLCBpcy5uYShVbml2ZXJzaXRlaXQxLjIyKSwgIiIpLCBVbml2ZXJzaXRlaXQyLjIyID0gcmVwbGFjZShVbml2ZXJzaXRlaXQyLjIyLAogICAgICAgICAgICBpcy5uYShVbml2ZXJzaXRlaXQyLjIyKSwgIiIpLCBVbml2ZXJzaXRlaXQxLjI0ID0gcmVwbGFjZShVbml2ZXJzaXRlaXQxLjI0LCBpcy5uYShVbml2ZXJzaXRlaXQxLjI0KSwKICAgICAgICAgICAgIiIpLCBVbml2ZXJzaXRlaXQyLjI0ID0gcmVwbGFjZShVbml2ZXJzaXRlaXQyLjI0LCBpcy5uYShVbml2ZXJzaXRlaXQyLjI0KSwgIiIpLCBkaXNjaXBsaW5lLjIyID0gcmVwbGFjZShkaXNjaXBsaW5lLjIyLAogICAgICAgICAgICBpcy5uYShkaXNjaXBsaW5lLjIyKSwgIiIpLCBkaXNjaXBsaW5lLjI0ID0gcmVwbGFjZShkaXNjaXBsaW5lLjI0LCBpcy5uYShkaXNjaXBsaW5lLjI0KSwgIiIpKQoKICAgIHNhbXBsZSA8LSB3aGljaCgoZGVtb2dyYXBoaWNzJFVuaXZlcnNpdGVpdDEuMjIgJWluJSB1bml2ZXJzaXR5IHwgZGVtb2dyYXBoaWNzJFVuaXZlcnNpdGVpdDIuMjIgJWluJQogICAgICAgIHVuaXZlcnNpdHkgfCBkZW1vZ3JhcGhpY3MkVW5pdmVyc2l0ZWl0MS4yNCAlaW4lIHVuaXZlcnNpdHkgfCBkZW1vZ3JhcGhpY3MkVW5pdmVyc2l0ZWl0Mi4yNCAlaW4lCiAgICAgICAgdW5pdmVyc2l0eSkgJiAoZGVtb2dyYXBoaWNzJGRpc2NpcGxpbmUuMjIgJWluJSBkaXNjaXBsaW5lIHwgZGVtb2dyYXBoaWNzJGRpc2NpcGxpbmUuMjQgJWluJSBkaXNjaXBsaW5lKSkKCiAgICBkZW1vZ3JhcGhpY3Nfc29jIDwtIGRlbW9ncmFwaGljc1tzYW1wbGUsIF0KICAgIHNjaG9sYXJzX3NlbCA8LSBsYXBwbHkoc2Nob2xhcnMsICJbIiwgc2FtcGxlKQoKICAgICMgc3RlcCAyCiAgICBpZHMgPC0gZGVtb2dyYXBoaWNzX3NvYyRhdV9pZAogICAgbndhdmVzIDwtIGxlbmd0aCh3YXZlcykKICAgIG5ldHMgPC0gYXJyYXkoMCwgZGltID0gYyhud2F2ZXMsIGxlbmd0aChpZHMpLCBsZW5ndGgoaWRzKSksIGRpbW5hbWVzID0gbGlzdCh3YXZlID0gMTpud2F2ZXMsIGlkcywKICAgICAgICBpZHMpKQogICAgZGltbmFtZXMobmV0cykKCiAgICAjIHN0ZXAgMwogICAgZGZfd29ya3MgPC0gdGliYmxlKHdvcmtzX2lkID0gdW5saXN0KGxhcHBseShzY2hvbGFyc19zZWwkd29yaywgZnVuY3Rpb24obCkgbCRpZCkpLCB3b3Jrc19hdXRob3IgPSB1bmxpc3QobGFwcGx5KHNjaG9sYXJzX3NlbCR3b3JrLAogICAgICAgIGZ1bmN0aW9uKGwpIGwkYXV0aG9yKSwgcmVjdXJzaXZlID0gRkFMU0UpLCB3b3Jrc195ZWFyID0gdW5saXN0KGxhcHBseShzY2hvbGFyc19zZWwkd29yaywgZnVuY3Rpb24obCkgbCRwdWJsaWNhdGlvbl95ZWFyKSwKICAgICAgICByZWN1cnNpdmUgPSBGQUxTRSkpCgogICAgZGZfd29ya3MgPC0gZGZfd29ya3NbIWR1cGxpY2F0ZWQoZGZfd29ya3MpLCBdCgogICAgIyBzdGVwIDQKICAgIGlmICh0eXBlID09ICJmaXJzdCIpIHsKICAgICAgICBmb3IgKGogaW4gMTpud2F2ZXMpIHsKICAgICAgICAgICAgZGZfd29ya3NfdyA8LSBkZl93b3Jrc1tkZl93b3JrcyR3b3Jrc195ZWFyID49IHdhdmVzW1tqXV1bMV0gJiBkZl93b3JrcyR3b3Jrc195ZWFyIDw9IHdhdmVzW1tqXV1bMl0sCiAgICAgICAgICAgICAgICBdCiAgICAgICAgICAgIGZvciAoaSBpbiAxOm5yb3coZGZfd29ya3NfdykpIHsKICAgICAgICAgICAgICAgIGVnbyA8LSBkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGF1X2lkWzFdCiAgICAgICAgICAgICAgICBhbHRlcnMgPC0gZGZfd29ya3NfdyR3b3Jrc19hdXRob3JbaV1bWzFdXSRhdV9pZFstMV0KICAgICAgICAgICAgICAgIGlmIChzdW0oaWRzICVpbiUgZWdvKSA+IDAgJiBzdW0oaWRzICVpbiUgYWx0ZXJzKSA+IDApIHsKICAgICAgICAgICAgICAgICAgbmV0c1tqLCB3aGljaChpZHMgJWluJSBlZ28pLCB3aGljaChpZHMgJWluJSBhbHRlcnMpXSA8LSAxCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9CgogICAgaWYgKHR5cGUgPT0gImxhc3QiKSB7CiAgICAgICAgZm9yIChqIGluIDE6bndhdmVzKSB7CiAgICAgICAgICAgIGRmX3dvcmtzX3cgPC0gZGZfd29ya3NbZGZfd29ya3Mkd29ya3NfeWVhciA+PSB3YXZlc1tbal1dWzFdICYgZGZfd29ya3Mkd29ya3NfeWVhciA8PSB3YXZlc1tbal1dWzJdLAogICAgICAgICAgICAgICAgXQogICAgICAgICAgICBmb3IgKGkgaW4gMTpucm93KGRmX3dvcmtzX3cpKSB7CiAgICAgICAgICAgICAgICBlZ28gPC0gcmV2KGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kYXVfaWQpWzFdCiAgICAgICAgICAgICAgICBhbHRlcnMgPC0gcmV2KGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kYXVfaWQpWy0xXQogICAgICAgICAgICAgICAgaWYgKHN1bShpZHMgJWluJSBlZ28pID4gMCAmIHN1bShpZHMgJWluJSBhbHRlcnMpID4gMCkgewogICAgICAgICAgICAgICAgICBuZXRzW2osIHdoaWNoKGlkcyAlaW4lIGVnbyksIHdoaWNoKGlkcyAlaW4lIGFsdGVycyldIDwtIDEKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KCiAgICBpZiAodHlwZSA9PSAiYWxsIikgewogICAgICAgIGZvciAoaiBpbiAxOm53YXZlcykgewogICAgICAgICAgICBkZl93b3Jrc193IDwtIGRmX3dvcmtzW2RmX3dvcmtzJHdvcmtzX3llYXIgPj0gd2F2ZXNbW2pdXVsxXSAmIGRmX3dvcmtzJHdvcmtzX3llYXIgPD0gd2F2ZXNbW2pdXVsyXSwKICAgICAgICAgICAgICAgIF0KICAgICAgICAgICAgZm9yIChpIGluIDE6bnJvdyhkZl93b3Jrc193KSkgewogICAgICAgICAgICAgICAgZWdvcyA8LSBkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGF1X2lkCiAgICAgICAgICAgICAgICBpZiAoc3VtKGlkcyAlaW4lIGVnb3MpID4gMCkgewogICAgICAgICAgICAgICAgICBuZXRzW2osIHdoaWNoKGlkcyAlaW4lIGVnb3MpLCB3aGljaChpZHMgJWluJSBlZ29zKV0gPC0gMQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQogICAgb3V0cHV0IDwtIGxpc3QoKQogICAgb3V0cHV0JGRhdGEgPC0gc2Nob2xhcnNfc2VsCiAgICBvdXRwdXQkbmV0cyA8LSBuZXRzCiAgICByZXR1cm4ob3V0cHV0KQp9CmBgYAoKCgoKYGBge3IsIGV2YWw9RkFMU0V9CnNjaG9sYXJzIDwtIGZsb2FkKCIuL2RhdGEvcHJvY2Vzc2VkL3NjaG9sYXJzXzIwMjQwOTI0LnJkYSIpCmBgYAoKCmBgYHtyLCBldmFsPUZBTFNFfQpzb2NfZGF0YSA8LSBmY29sbmV0X24oZGF0YSA9IHNjaG9sYXJzLCB1bml2ZXJzaXR5ID0gYygiUlUiLCAiVVUiKSwgZGlzY2lwbGluZSA9IGMoInNvY2lvbG9neSIpLCB3YXZlcyA9IGxpc3QoYygyMDE1LAogICAgMjAxOSksIGMoMjAyMCwgMjAyNCkpLCB0eXBlID0gYygiZmlyc3QiKSkKCgpkZl9lZ28gPC0gZG8uY2FsbChyYmluZC5kYXRhLmZyYW1lLCBzb2NfZGF0YSRkYXRhJGRlbW9ncmFwaGljcykKCmRmX3dvcmtzIDwtIGRvLmNhbGwocmJpbmQuZGF0YS5mcmFtZSwgc29jX2RhdGEkZGF0YSR3b3JrcykgICMgcHV0IHdvcmtzIGluIGRhdGFmcmFtZQojIGhlYWQoZGZfd29ya3MpCgp0ZXN0MSA8LSBkZl93b3JrcyAlPiUgc2VsZWN0KGlkLCBzbywgaXNzbl9sLCBhdXRob3IpICMgdGVzdCB0aGUgd29ya3MKCnNvY19kYXRhJG5ldHNbMiwsXSAjIEhvdyB0byBjYWxsIGEgc3BlY2lmaWMgbmV0d29yawoKYGBgCgpgYGB7ciwgZXZhbD1GQUxTRX0KZGZfd29ya3MgPC0gdGliYmxlKHdvcmtzX2lkLCB3b3Jrc19hdXRob3IsIHdvcmtzX3llYXIpCmBgYAoKCmBgYHtyLCBldmFsPUZBTFNFfQpkZl93b3Jrc19kYXRhZnJhbWUgPC0gYXMuZGF0YS5mcmFtZSh1bmlxdWUoc29jaW9sb2dpc3RzJHdvcmtzKSkKCnNvY2lvbG9naXN0czIgPC0gc29jaW9sb2dpc3RzCgpyZXF1aXJlKHJlc2hhcGUyKQppbnN0YWxsLnBhY2thZ2VzKCJyZXNoYXBlMiIpCgoKYGBgCgoKYGBge3IsIGV2YWw9RkFMU0V9CnRlc3QxIDwtIGRmX3dvcmtzICU+JSBzZWxlY3QoaWQsIHNvLCBpc3NuX2wsIGF1dGhvcikgIyB0ZXN0IHRoZSB3b3JrcwpgYGAKCmBgYHtyLCBldmFsPUZBTFNFfQojIFNwbGl0IHRoZSBJU1NOIGNvZGVzIGlmIDIgYXJlIGF2YWlsYWJsZQoKc2pyMjAyMiRJc3NuXzEgPC0gc2FwcGx5KHN0cnNwbGl0KHNqcjIwMjIkSXNzbiwgIiwgIiksIGBbYCwgMSkgICMgVGhpcyBjb2RlIHNob3VsZCB3b3JrIGFzIGEgd2F5IHRvIHNwbGl0IHRoZSB0d28gaXNzbiBjb2RlcwpzanIyMDIyJElzc25fMiA8LSBzYXBwbHkoc3Ryc3BsaXQoc2pyMjAyMiRJc3NuLCAiLCAiKSwgYFtgLCAyKQoKc2pyMjAyNCRJc3NuXzEgPC0gc2FwcGx5KHN0cnNwbGl0KHNqcjIwMjQkSXNzbiwgIiwgIiksIGBbYCwgMSkgICMgVGhpcyBjb2RlIHNob3VsZCB3b3JrIGFzIGEgd2F5IHRvIHNwbGl0IHRoZSB0d28gaXNzbiBjb2RlcwpzanIyMDI0JElzc25fMiA8LSBzYXBwbHkoc3Ryc3BsaXQoc2pyMjAyNCRJc3NuLCAiLCAiKSwgYFtgLCAyKQoKIyBkYXQkSXNzbl8xWzFdIHN0cl9sZW5ndGgoZGF0JElzc25fMVsxXSkKCnNqcjIwMjIkSXNzbl8xIDwtIHBhc3RlMChzdWJzdHIoc2pyMjAyMiRJc3NuXzEsIDEsIDQpLCAiLSIsIHN1YnN0cihzanIyMDIyJElzc25fMSwgNSwgOCkpICAjIEh5cGhlbmF0ZSB0aGUgY29kZXMgdG8gbWF0Y2ggdGhlIHRhcmdldCBkZiAKc2pyMjAyMiRJc3NuXzIgPC0gaWZlbHNlKGlzLm5hKHNqcjIwMjIkSXNzbl8yKSA9PSBUUlVFLCBOQSwgcGFzdGUwKHN1YnN0cihzanIyMDIyJElzc25fMiwgMSwgNCksICItIiwgc3Vic3RyKHNqcjIwMjIkSXNzbl8yLAogICAgNSwgOCkpKSAgIyBIeXBoZW5hdGUgdGhlIGNvZGVzLCBidXQgbWFrZSBub24tZXhpc3Rpbmcgc2Vjb25kIGNvZGVzIE5BCgpzanIyMDI0JElzc25fMSA8LSBwYXN0ZTAoc3Vic3RyKHNqcjIwMjQkSXNzbl8xLCAxLCA0KSwgIi0iLCBzdWJzdHIoc2pyMjAyNCRJc3NuXzEsIDUsIDgpKSAgIyBIeXBoZW5hdGUgdGhlIGNvZGVzIHRvIG1hdGNoIHRoZSB0YXJnZXQgZGYgCnNqcjIwMjQkSXNzbl8yIDwtIGlmZWxzZShpcy5uYShzanIyMDI0JElzc25fMikgPT0gVFJVRSwgTkEsIHBhc3RlMChzdWJzdHIoc2pyMjAyNCRJc3NuXzIsIDEsIDQpLCAiLSIsIHN1YnN0cihzanIyMDI0JElzc25fMiwKICAgIDUsIDgpKSkgICMgSHlwaGVuYXRlIHRoZSBjb2RlcywgYnV0IG1ha2Ugbm9uLWV4aXN0aW5nIHNlY29uZCBjb2RlcyBOQQoKCmRmX3ByZXNfMjIgPC0gc2pyMjAyMiAlPiUKICAgIHNlbGVjdChSYW5rLCBUaXRsZSwgSXNzbl8xLCBJc3NuXzIsIFNKUiwgYFNKUiBRdWFydGlsZWAsIGBIIGluZGV4YCwgYCVGZW1hbGVgKSAgIyBNYWtlIGEgc2V0IHRoYXQgd2lsbCBiZSBqb2luZWQgd2l0aCBkZl93b3JrcwoKZGZfcHJlc18yNCA8LSBzanIyMDI0ICU+JQogICAgc2VsZWN0KFJhbmssIFRpdGxlLCBJc3NuXzEsIElzc25fMiwgU0pSLCBgU0pSIFF1YXJ0aWxlYCwgYEggaW5kZXhgLCBgJUZlbWFsZWApICAjIE1ha2UgYSBzZXQgdGhhdCB3aWxsIGJlIGpvaW5lZCB3aXRoIGRmX3dvcmtzCgpkZl9wcmVzXzIyCgojIGRmX3dvcmtzICU+JSBzZWxlY3QoaXNzbl9sKSBkZl9wcmVzICU+JSBzZWxlY3QoSXNzbl8xLCBJc3NuXzIpCmRmX3dvcmtzJGNoZWNrIDwtIGlmZWxzZShkZl93b3JrcyRpc3NuX2wgJWluJSBkZl9wcmVzXzIyJElzc25fMSB8IGRmX3dvcmtzJGlzc25fbCAlaW4lIGRmX3ByZXNfMjIkSXNzbl8yLCAxLAogICAgMCkKCm1pc19qb3VybmFsIDwtIGRmX3dvcmtzICU+JQogICAgZmlsdGVyKGNoZWNrID09IDApCgphcy5kYXRhLmZyYW1lKHVuaXF1ZShtaXNfam91cm5hbCRzbykpCgpgYGAKCiMjIyBDcmVhdGUgSUQgdmFyaWFibGUKCmBgYHtyLCBldmFsPUZBTFNFfQoKZGZfcHJlc18yMiA8LSBkZl9wcmVzXzIyICU+JQogICAgbXV0YXRlKGlzc25fbCA9IGNhc2Vfd2hlbihJc3NuXzEgJWluJSBkZl93b3JrcyRpc3NuX2wgPT0gVFJVRSB+IElzc25fMSwgSXNzbl8yICVpbiUgZGZfd29ya3MkaXNzbl9sID09CiAgICAgICAgVFJVRSB+IElzc25fMiwgLmRlZmF1bHQgPSBOQSkpICU+JQogICAgZmlsdGVyKCFpcy5uYShpc3NuX2wpKQoKZGZfcHJlc18yNCA8LSBkZl9wcmVzXzI0ICU+JQogICAgbXV0YXRlKGlzc25fbCA9IGNhc2Vfd2hlbihJc3NuXzEgJWluJSBkZl93b3JrcyRpc3NuX2wgPT0gVFJVRSB+IElzc25fMSwgSXNzbl8yICVpbiUgZGZfd29ya3MkaXNzbl9sID09CiAgICAgICAgVFJVRSB+IElzc25fMiwgLmRlZmF1bHQgPSBOQSkpICU+JQogICAgZmlsdGVyKCFpcy5uYShpc3NuX2wpKQoKYGBgCgpgYGB7cn0KIy0tLS0gU3RyaW5nIFN0cmlwcGVyIC0tLS0Kc3RyX3N0cmlwIDwtIGZ1bmN0aW9uKGlucHV0ID0gIlRISXMgU3Ryw69uRyBpcyDDkW9yTcOkbMOsWmVkIikgewoKICAgIHN0cmluZyA8LSB0b2xvd2VyKGlucHV0KQogICAgc3RyaW5nIDwtIGljb252KHN0cmluZywgZnJvbSA9ICJVVEYtOCIsIHRvID0gIkFTQ0lJLy9UUkFOU0xJVCIpCiAgICBzdHJpbmcgPC0gc3ViKCIuKiAiLCAiIiwgc3RyaW5nKQoKICAgICMgc3RyaW5nIDwtIGdzdWIoJ1tbOnB1bmN0Ol1dJywgJyAnLCBzdHJpbmcpCgogICAgcmV0dXJuKHN0cmluZykKfQoKYGBgCgoKCiMjIyBMb29waW5nIGFsZ29yaXRobSBsb2dpYyAKCmBgYHtyLCBldmFsPUZBTFNFfQpsaXN0X3dvcmtzIDwtIHNvY19kYXRhJGRhdGEkd29ya3MKCmRmX2VnbyRRMS5XMSA8LSAwCmRmX2VnbyRRMS5XMiA8LSAwCgpmb3IgKGkgaW4gMTpsZW5ndGgobGlzdF93b3JrcykpIHsKCiAgICB3YXZlMXMgPC0gMjAxNQogICAgd2F2ZTFlIDwtIDIwMTkKICAgIHdhdmUycyA8LSAyMDIwCiAgICB3YXZlMmUgPC0gMjAyNAoKICAgIHdvcmtzIDwtIGxpc3Rfd29ya3NbW2ldXQoKICAgIHdvcmtzIDwtIHdvcmtzICU+JQogICAgICAgIGxlZnRfam9pbihkZl9wcmVzXzI0LCBieSA9ICJpc3NuX2wiLCBtdWx0aXBsZSA9ICJhbGwiKQogICAgd29ya3MkYFNKUiBRdWFydGlsZWAgPC0gaWZlbHNlKGlzLm5hKHdvcmtzJGBTSlIgUXVhcnRpbGVgKSwgIk5vIFJhbmsiLCB3b3JrcyRgU0pSIFF1YXJ0aWxlYCkKCiAgICBhdSA8LSB3b3JrcyAlPiUKICAgICAgICB1bm5lc3QoYXV0aG9yKSAlPiUKICAgICAgICBtdXRhdGUoY2hlY2tfaWQgPSBhdV9pZCAlaW4lIGRmX2VnbyRhdV9pZCkgJT4lCiAgICAgICAgbXV0YXRlKGNoZWNrX25hbSA9IHN0cl9zdHJpcChhdV9kaXNwbGF5X25hbWUpICVpbiUgc3RyX3N0cmlwKGRmX2VnbyROYWFtKSkgJT4lCiAgICAgICAgZmlsdGVyKGNoZWNrX2lkID09IFRSVUUgJiBjaGVja19uYW0gPT0gVFJVRSkKCiAgICB3b3JrcyA8LSB3b3JrcyAlPiUKICAgICAgICBtdXRhdGUod2F2ZXMgPSBjYXNlX3doZW4ocHVibGljYXRpb25feWVhciA+PSB3YXZlMXMgJiBwdWJsaWNhdGlvbl95ZWFyIDw9IHdhdmUxZSB+ICJXYXZlIDEiLAogICAgICAgICAgICBwdWJsaWNhdGlvbl95ZWFyID49IHdhdmUycyAmIHB1YmxpY2F0aW9uX3llYXIgPD0gd2F2ZTJlIH4gIldhdmUgMiIsIC5kZWZhdWx0ID0gIk5BIikpICU+JQogICAgICAgIGZpbHRlcih3YXZlcyAhPSAiTkEiKQogICAgaWYgKG5yb3cod29ya3MpID09IDApIHsKCiAgICAgICAgbmV4dAoKICAgIH0gZWxzZSB7CgogICAgICAgIGZvciAoeCBpbiAxOm5yb3cod29ya3MpKSB7CgogICAgICAgICAgICBpZiAod29ya3Mkd2F2ZXNbeF0gPT0gIldhdmUgMSIpIHsKCiAgICAgICAgICAgICAgICBpZiAod29ya3MkYFNKUiBRdWFydGlsZWBbeF0gPT0gIlExIikgewoKICAgICAgICAgICAgICAgICAgbmFhbSA8LSB3b3JrcyRhdXRob3JbW3hdXSRhdV9kaXNwbGF5X25hbWUKICAgICAgICAgICAgICAgICAgZGZfZWdvW3N0cl9zdHJpcChkZl9lZ28kTmFhbSkgJWluJSBzdHJfc3RyaXAobmFhbSksIF0kUTEuVzEgPC0gZGZfZWdvW3N0cl9zdHJpcChkZl9lZ28kTmFhbSkgJWluJQogICAgICAgICAgICAgICAgICAgIHN0cl9zdHJpcChuYWFtKSwgXSRRMS5XMSArIDEKCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0gZWxzZSB7CgogICAgICAgICAgICAgICAgaWYgKHdvcmtzJGBTSlIgUXVhcnRpbGVgW3hdID09ICJRMSIpIHsKCiAgICAgICAgICAgICAgICAgIG5hYW0gPC0gd29ya3MkYXV0aG9yW1t4XV0kYXVfZGlzcGxheV9uYW1lCiAgICAgICAgICAgICAgICAgIGRmX2Vnb1tzdHJfc3RyaXAoZGZfZWdvJE5hYW0pICVpbiUgc3RyX3N0cmlwKG5hYW0pLCBdJFExLlcyIDwtIGRmX2Vnb1tzdHJfc3RyaXAoZGZfZWdvJE5hYW0pICVpbiUKICAgICAgICAgICAgICAgICAgICBzdHJfc3RyaXAobmFhbSksIF0kUTEuVzIgKyAxCgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CgogICAgICAgIH0KCiAgICB9Cgp9CmBgYAoKCiMjIyBDYXJlZXIgYWdlCgpgYGB7ciwgZXZhbD1GQUxTRX0KCmRmX2NhcmVlcl9hZ2UgPC0gZGZfd29ya3MgJT4lCiAgdW5uZXN0KGF1dGhvcikgJT4lICMgdW5uZXN0aW5nIHRoZSB0aWJibGUgZnJvbSB0aGUgdGliYmxlCiAgZmlsdGVyKGF1X2lkICVpbiUgZGZfZWdvJGF1X2lkID09IFRSVUUpICU+JSAjIGF1dGhvcnMgaW4gZGZfd29ya3Mgc2hvdWxkIG1hdGNoIGF1dGhvcnMgaW4gZGZfZWdvCiAgZ3JvdXBfYnkoYXVfaWQpICU+JQogIG11dGF0ZShtaW5feWVhcl9wdWIgPSBtaW4ocHVibGljYXRpb25feWVhciwgbmEucm0gPSBUUlVFKSwgIyBpbml0aWFsIGNhbGN1bGF0aW9uIG9mIG1pbmltdW0geWVhcgogICAgICAgICBjb3VudF9wdWIgPSBuKCkpICU+JSAgIyBjb3VudCBudW1iZXIgb2YgcHVibGljYXRpb25zCiAgbXV0YXRlKGZpcnN0X3llYXJfcHViID0gaWZlbHNlKGNvdW50X3B1YiA9PSAxLCBtaW5feWVhcl9wdWIsICMgaWYgbnVtYmVyIG9mIHB1YmxpY2F0aW9ucyBpcyAxLCBzY29yZSBpcyBtaW5feWVhcl9wdWIKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZpbHRlcl95ZWFyID0gcHVibGljYXRpb25feWVhcltwdWJsaWNhdGlvbl95ZWFyICE9IG1pbl95ZWFyX3B1Yl0gIyBmaWx0ZXIgbWluaW11bSB5ZWFyCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbWVhbl9wdWJ5ZWFyID0gbWVhbihmaWx0ZXJfeWVhciwgbmEucm0gPSBUUlVFKSAjIGNhbGN1bGF0ZSBtZWFuIHdpdGhvdXQgbWluIHNjb3JlCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsaWRfeWVhciA9IG1pbihmaWx0ZXJfeWVhcltmaWx0ZXJfeWVhciA+PSAobWVhbl9wdWJ5ZWFyIC0gMjUpXSwgbmEucm0gPSBUUlVFKSAjIG1pbmltdW0geWVhciAtPiByYW5nZSBtZWFuLTI1CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsaWRfeWVhciAjIGlmIG51bWJlciBvZiBwdWJsaWNhdGlvbnMgaXMgbm90IDEsIHRoYW4gc2NvcmUgbWluaW11bSB5ZWFyIHdpdGggZmlyc3QgeWVhciByZW1vdmVkIHdpdGhpbiByYW5nZSBtZWFuLTI1CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pKSAlPiUgCiAgCiAgIyB0aGlzIGxpbmUgY29ycmVjdHMgZm9yIHRoZSB3YXJuaW5nIG9mIHJldHVybmluZyBpbmZpbml0ZXMgdGhhdCBmb3Igc29tZSByZWFzb24gd2VyZSBub3QgZmlsdGVyZWQgdGhyb3VnaCB0aGUgZmlyc3QgaWZlbHNlIGNvbW1hbmQKICBtdXRhdGUoZmlyc3RfeWVhcl9wdWIgPSBpZmVsc2UoaXMuaW5maW5pdGUoZmlyc3RfeWVhcl9wdWIpLCBtaW5feWVhcl9wdWIsIGZpcnN0X3llYXJfcHViKSkgJT4lICNhZGp1c3RpbmcgaW5maW5pdGUgc2NvcmVzIHRvIG1pbmltdW0geWVhcgogIAogIHNlbGVjdChhdV9pZCwgZmlyc3RfeWVhcl9wdWIpICU+JSAjIHNlbGVjdGluZyB2YXJpYWJsZXMKICBkaXN0aW5jdChhdV9pZCwgZmlyc3RfeWVhcl9wdWIsIC5rZWVwX2FsbCA9IFRSVUUpICMgbWFraW5nIHN1cmUgb25seSBkaXN0aW5jdCBhdXRob3JzIGFyZSBpbiBkYXRhIGZyYW1lICAKICAKCmRmX2VnbyA8LSBkZl9lZ28gJT4lIGxlZnRfam9pbihkZl9jYXJlZXJfYWdlLCBieSA9ICJhdV9pZCIpCgoKYGBgCgojIyBQcmFjdGljaW5nIHdpdGggUlNpZW5hIHdpdGhvdXQgcHJlc3RpZ2UKCiMjIyBvd24gZmNvbG5ldCwgZGlmZmVyZW50IGZyb20gbmllbHMKCmBgYHtyLCBldmFsPUZBTFNFfQoKZmNvbG5ldF8yNSA8LSBmdW5jdGlvbihkYXRhID0gc2Nob2xhcnMsIHVuaXZlcnNpdHkgPSAiUlUiLCBkaXNjaXBsaW5lID0gInNvY2lvbG9neSIsIHdhdmVzID0gbGlzdChjKDIwMTUsCiAgICAyMDE4KSwgYygyMDE5LCAyMDIzKSksIHR5cGUgPSBjKCJmaXJzdCIpKSB7CgogICAgIyBzdGVwIDEKICAgIGRlbW9ncmFwaGljcyA8LSBkby5jYWxsKHJiaW5kLmRhdGEuZnJhbWUsIGRhdGEkZGVtb2dyYXBoaWNzKQogICAgZGVtb2dyYXBoaWNzIDwtIGRlbW9ncmFwaGljcyAlPiUKICAgICAgICBtdXRhdGUoVW5pdmVyc2l0ZWl0MS4yMiA9IHJlcGxhY2UoVW5pdmVyc2l0ZWl0MS4yMiwgaXMubmEoVW5pdmVyc2l0ZWl0MS4yMiksICIiKSwgVW5pdmVyc2l0ZWl0Mi4yMiA9IHJlcGxhY2UoVW5pdmVyc2l0ZWl0Mi4yMiwKICAgICAgICAgICAgaXMubmEoVW5pdmVyc2l0ZWl0Mi4yMiksICIiKSwgVW5pdmVyc2l0ZWl0MS4yNCA9IHJlcGxhY2UoVW5pdmVyc2l0ZWl0MS4yNCwgaXMubmEoVW5pdmVyc2l0ZWl0MS4yNCksCiAgICAgICAgICAgICIiKSwgVW5pdmVyc2l0ZWl0Mi4yNCA9IHJlcGxhY2UoVW5pdmVyc2l0ZWl0Mi4yNCwgaXMubmEoVW5pdmVyc2l0ZWl0Mi4yNCksICIiKSwgZGlzY2lwbGluZS4yMiA9IHJlcGxhY2UoZGlzY2lwbGluZS4yMiwKICAgICAgICAgICAgaXMubmEoZGlzY2lwbGluZS4yMiksICIiKSwgZGlzY2lwbGluZS4yNCA9IHJlcGxhY2UoZGlzY2lwbGluZS4yNCwgaXMubmEoZGlzY2lwbGluZS4yNCksICIiKSkKCiAgICBzYW1wbGUgPC0gd2hpY2goKGRlbW9ncmFwaGljcyRVbml2ZXJzaXRlaXQxLjIyICVpbiUgdW5pdmVyc2l0eSB8IGRlbW9ncmFwaGljcyRVbml2ZXJzaXRlaXQyLjIyICVpbiUKICAgICAgICB1bml2ZXJzaXR5IHwgZGVtb2dyYXBoaWNzJFVuaXZlcnNpdGVpdDEuMjQgJWluJSB1bml2ZXJzaXR5IHwgZGVtb2dyYXBoaWNzJFVuaXZlcnNpdGVpdDIuMjQgJWluJQogICAgICAgIHVuaXZlcnNpdHkpICYgKGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjIyICVpbiUgZGlzY2lwbGluZSB8IGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjI0ICVpbiUgZGlzY2lwbGluZSkpCgogICAgZGVtb2dyYXBoaWNzX3NvYyA8LSBkZW1vZ3JhcGhpY3Nbc2FtcGxlLCBdCiAgICBzY2hvbGFyc19zZWwgPC0gbGFwcGx5KHNjaG9sYXJzLCAiWyIsIHNhbXBsZSkKCiAgICAjIHN0ZXAgMgogICAgaWRzIDwtIGRlbW9ncmFwaGljc19zb2MkYXVfaWQKICAgIG53YXZlcyA8LSBsZW5ndGgod2F2ZXMpCiAgICBuZXRzIDwtIGFycmF5KDAsIGRpbSA9IGMobndhdmVzLCBsZW5ndGgoaWRzKSwgbGVuZ3RoKGlkcykpLCBkaW1uYW1lcyA9IGxpc3Qod2F2ZSA9IDE6bndhdmVzLCBpZHMsCiAgICAgICAgaWRzKSkKICAgIGRpbW5hbWVzKG5ldHMpCgogICAgIyBzdGVwIDMKICAgIGRmX3dvcmtzIDwtIHRpYmJsZSh3b3Jrc19pZCA9IHVubGlzdChsYXBwbHkoc2Nob2xhcnNfc2VsJHdvcmssIGZ1bmN0aW9uKGwpIGwkaWQpKSwgd29ya3NfYXV0aG9yID0gdW5saXN0KGxhcHBseShzY2hvbGFyc19zZWwkd29yaywKICAgICAgICBmdW5jdGlvbihsKSBsJGF1dGhvciksIHJlY3Vyc2l2ZSA9IEZBTFNFKSwgd29ya3NfeWVhciA9IHVubGlzdChsYXBwbHkoc2Nob2xhcnNfc2VsJHdvcmssIGZ1bmN0aW9uKGwpIGwkcHVibGljYXRpb25feWVhciksCiAgICAgICAgcmVjdXJzaXZlID0gRkFMU0UpKQoKICAgIGRmX3dvcmtzIDwtIGRmX3dvcmtzWyFkdXBsaWNhdGVkKGRmX3dvcmtzKSwgXQoKICAgICMgc3RlcCA0CiAgICBpZiAodHlwZSA9PSAiZmlyc3QiKSB7CiAgICAgICAgZm9yIChqIGluIDE6bndhdmVzKSB7CiAgICAgICAgICAgIGRmX3dvcmtzX3cgPC0gZGZfd29ya3NbZGZfd29ya3Mkd29ya3NfeWVhciA+PSB3YXZlc1tbal1dWzFdICYgZGZfd29ya3Mkd29ya3NfeWVhciA8PSB3YXZlc1tbal1dWzJdLAogICAgICAgICAgICAgICAgXQogICAgICAgICAgICBmb3IgKGkgaW4gMTpucm93KGRmX3dvcmtzX3cpKSB7CiAgICAgICAgICAgICAgICBlZ28gPC0gZGZfd29ya3NfdyR3b3Jrc19hdXRob3JbaV1bWzFdXSRhdV9pZFsxXQogICAgICAgICAgICAgICAgYWx0ZXJzIDwtIGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kYXVfaWRbLTFdCiAgICAgICAgICAgICAgICBpZiAoc3VtKGlkcyAlaW4lIGVnbykgPiAwICYgc3VtKGlkcyAlaW4lIGFsdGVycykgPiAwKSB7CiAgICAgICAgICAgICAgICAgIG5ldHNbaiwgd2hpY2goaWRzICVpbiUgZWdvKSwgd2hpY2goaWRzICVpbiUgYWx0ZXJzKV0gPC0gMQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQoKICAgIGlmICh0eXBlID09ICJsYXN0IikgewogICAgICAgIGZvciAoaiBpbiAxOm53YXZlcykgewogICAgICAgICAgICBkZl93b3Jrc193IDwtIGRmX3dvcmtzW2RmX3dvcmtzJHdvcmtzX3llYXIgPj0gd2F2ZXNbW2pdXVsxXSAmIGRmX3dvcmtzJHdvcmtzX3llYXIgPD0gd2F2ZXNbW2pdXVsyXSwKICAgICAgICAgICAgICAgIF0KICAgICAgICAgICAgZm9yIChpIGluIDE6bnJvdyhkZl93b3Jrc193KSkgewogICAgICAgICAgICAgICAgZWdvIDwtIHJldihkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGF1X2lkKVsxXQogICAgICAgICAgICAgICAgYWx0ZXJzIDwtIHJldihkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGF1X2lkKVstMV0KICAgICAgICAgICAgICAgIGlmIChzdW0oaWRzICVpbiUgZWdvKSA+IDAgJiBzdW0oaWRzICVpbiUgYWx0ZXJzKSA+IDApIHsKICAgICAgICAgICAgICAgICAgbmV0c1tqLCB3aGljaChpZHMgJWluJSBlZ28pLCB3aGljaChpZHMgJWluJSBhbHRlcnMpXSA8LSAxCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9CgogICAgaWYgKHR5cGUgPT0gImFsbCIpIHsKICAgICAgICBmb3IgKGogaW4gMTpud2F2ZXMpIHsKICAgICAgICAgICAgZGZfd29ya3NfdyA8LSBkZl93b3Jrc1tkZl93b3JrcyR3b3Jrc195ZWFyID49IHdhdmVzW1tqXV1bMV0gJiBkZl93b3JrcyR3b3Jrc195ZWFyIDw9IHdhdmVzW1tqXV1bMl0sCiAgICAgICAgICAgICAgICBdCiAgICAgICAgICAgIGZvciAoaSBpbiAxOm5yb3coZGZfd29ya3NfdykpIHsKICAgICAgICAgICAgICAgIGVnb3MgPC0gZGZfd29ya3NfdyR3b3Jrc19hdXRob3JbaV1bWzFdXSRhdV9pZAogICAgICAgICAgICAgICAgaWYgKHN1bShpZHMgJWluJSBlZ29zKSA+IDApIHsKICAgICAgICAgICAgICAgICAgbmV0c1tqLCB3aGljaChpZHMgJWluJSBlZ29zKSwgd2hpY2goaWRzICVpbiUgZWdvcyldIDwtIDEKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KICAgIG91dHB1dCA8LSBsaXN0KCkKICAgIG91dHB1dCRkYXRhIDwtIHNjaG9sYXJzX3NlbAogICAgb3V0cHV0JG5ldHMgPC0gbmV0cwogICAgcmV0dXJuKG91dHB1dCkKfQoKYGBgCgoKYGBge3IsIGV2YWw9RkFMU0V9CgojIHNvY190ZXN0X2RhdGEgPC0gc2llbmFEYXRhQ3JlYXRlKHdhdmUxLCB3YXZlMikKCnNvY190ZXN0X2RhdGEgPC0gc2llbmFEZXBlbmRlbnQoYXJyYXkoYyh3YXZlMSwgd2F2ZTIpLCBkaW0gPSBjKDM4NiwgMzg2KSkpCmBgYAoKVHJ5aW5nIHRvIGdldCBhIG5ldHdvcmsgZm9yIFJTaWVuYQoKYGBge3IsIGV2YWw9RkFMU0V9CnRlc3RfUlUgPC0gZmNvbG5ldF8yNShkYXRhID0gc2Nob2xhcnMsIAogICAgICAgICAgICAgICAgICAgIHVuaXZlcnNpdHkgPSAiUlUiLAogICAgICAgICAgICAgICAgICAgIGRpc2NpcGxpbmUgPSAic29jaW9sb2d5IiwgCiAgICAgICAgICAgICAgICAgICAgd2F2ZXMgPSBsaXN0KGMoMjAxNSwgMjAxOCksIGMoMjAxOSwgMjAyMykpLCAKICAgICAgICAgICAgICAgICAgICB0eXBlID0gYygiZmlyc3QiKSkKCnRlc3RfVXZUIDwtIGZjb2xuZXRfMjUoZGF0YSA9IHNjaG9sYXJzLCAKICAgICAgICAgICAgICAgICAgICB1bml2ZXJzaXR5ID0gIlV2VCIsCiAgICAgICAgICAgICAgICAgICAgZGlzY2lwbGluZSA9ICJzb2Npb2xvZ3kiLCAKICAgICAgICAgICAgICAgICAgICB3YXZlcyA9IGxpc3QoYygyMDE1LCAyMDE4KSwgYygyMDE5LCAyMDIzKSksIAogICAgICAgICAgICAgICAgICAgIHR5cGUgPSBjKCJmaXJzdCIpKQoKc29jX3Rlc3RfZGF0YSA8LSBzaWVuYURhdGFDcmVhdGUodGVzdF9SVSwgdGVzdF9VdlQpCgpzb2NfdGVzdF9kYXRhIDwtIHNpZW5hRGVwZW5kZW50KGFycmF5KGModGVzdF9SVSwgdGVzdF9VdlQsIGRpbSA9IGMoMzg2LCAzODYpKSkKCmBgYAoKCgoK</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("lab6.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

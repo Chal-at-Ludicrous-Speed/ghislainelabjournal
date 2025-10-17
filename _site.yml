@@ -1,4 +1,4 @@
-name: "Lab Journal of Ghislaine"
+name: "Ghislaine's Lab Journal Is Swimming with Sharks"
 author: 
   - 'Ghislaine de Groot'
 output_dir: "docs"
@@ -22,6 +22,11 @@ navbar:
         href: lab4.html
       - text: "Page 5"
         href: lab5.html
+      - text: "Page 6"
+        href: lab6.html
+        - text: "Siena exercise"
+          href: lab6sienaexercise.html
+          
         
         # here, other .Rmds can be added
 

@@ -1,0 +1,59 @@
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 10/10/2025 15:17:35
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 Jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Current random number seed is 1.
+Effects object used: myeff_CT 
+Model Type:
+ Standard actor-oriented model 
+Estimation method: unconditional moment estimation
+.
+
+Time duration for simulations in each period is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Dependent network variable friendship :
+All digraphs are constrained to having outdegrees not larger than 6 .
+Initial value of gain parameter is  0.1000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  constant friendship rate (period 1)             7.4169
+  2. rate:  constant friendship rate (period 2)             6.1665
+  3. eval:  outdegree (density)                            -1.6682
+  4. eval:  reciprocity                                     0.0000
+  5. eval:  feedback from selfesteem                       -2.4184
+  6. eval:  intercept                                       0.5166
+  7. eval:  friendship indegree                             0.0000
+  8. rate:  scale parameter (period 1)                      0.1156
+  9. rate:  scale parameter (period 2)                      0.1731
+
+
+Values of target statistics are
+  1. Amount of network change in period 1                               558.0000
+  2. Amount of network change in period 2                               470.0000
+  3. Number of ties                                                     983.0000
+  4. Number of reciprocated ties                                        574.0000
+  5. Feedback of selfesteem on selfesteem (A_selfesteem.selfesteem)      34.0539
+  6. Intercept of selfesteem (b_selfesteem)                              10.0767
+  7. beh. selfesteem indegrees                                           33.9822
+  8. Time scaling continuous behavior change in period 1                 13.9000
+  9. Time scaling continuous behavior change in period 2                 18.1200
+These were calculated from the data.
+
+ 9 parameters, 9 statistics
+
+Estimation of derivatives by the LR method (type 1).
+

@@ -98,7 +98,7 @@ vu_df <- data.frame(cbind(vu_names, vu_function))
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
 
 fpackage.check <- function(packages) {

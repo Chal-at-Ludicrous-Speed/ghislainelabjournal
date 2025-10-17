@@ -1,0 +1,71 @@
+---
+title: "lab6sienaexercise"
+author: "Ghislaine de Groot"
+date: "2025-10-10"
+output: html_document
+---
+
+# step 1 data
+
+```{r, eval=FALSE}
+
+mynet1 <- sienaDependent(array(c(s501, s502, s503), dim=c(50, 50, 3)))
+mybehh <- sienaDependent(s50a, type= "behavior")
+drinking <- varCovar(s50a) # same info, but as covariate
+smoko <- varCovar(s50s)
+
+mydata <- sienaDataCreate(mynet1, mybehh, smoko)
+
+
+```
+
+# step 2
+
+```{r, eval=FALSE}
+print01Report(mydata)
+```
+
+# step 3
+
+```{r, eval=FALSE}
+
+myeff <- getEffects(mydata)
+myeff
+
+myeff <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "smoko")
+
+myeff_2 <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "mybehh")
+
+myeff_3 <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "drinking")
+
+
+# data, statistic, network dependent variable, behavior variable
+
+
+
+```
+# step 4
+
+```{r, eval=FALSE}
+
+algae <- sienaAlgorithmCreate()
+
+```
+
+```{r, eval=FALSE}
+
+ans <- siena07(algae, data=mydata, effects = myeff)
+
+ans2 <- siena07(algae, data=mydata, effects = myeff_2, prevAns=ans)
+
+ans3 <- siena07(algae, data=mydata, effects = myeff_3, prevAns=ans2)
+
+# previous estimation, estimation of the previous model
+
+# with third model, it's mismatched now. interaction effect is insig (already was insig but shh)
+
+```
+
+
+
+

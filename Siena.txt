@@ -1,0 +1,795 @@
+							************************
+									 Siena.txt
+							************************
+
+Filename is Siena.txt.
+
+This file contains primary output for SIENA project <<Siena>>.
+
+Date and time: 10/10/2025 13:56:14 
+
+RSiena version 1.5.0 (06 07 2025)
+
+
+@1
+Data input.
+===========
+
+3 observations,
+50 actors,
+1 dependent network variables,
+0 dependent bipartite variables,
+1 dependent discrete behavior variables,
+0 dependent continuous behavior variables,
+0 constant actor covariates,
+1 exogenous changing actor covariates,
+0 constant dyadic covariates,
+0 exogenous changing dyadic covariates,
+0 no files with times of composition change.
+
+
+@2
+Reading network variables.
+--------------------------
+
+Name of network variable: mynet1.
+oneMode network.
+For observation moment 1, degree distributions are as follows:
+Nodes
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 
+41 42 43 44 45 46 47 48 49 50
+out-degrees
+ 2  2  2  2  1  1  3  1  2  3  3  3  0  3  3  2  5  2  4  0 
+ 1  4  1  5  3  3  3  1  3  4  3  4  2  2  1  2  3  2  1  3 
+ 2  2  2  2  3  3  0  2  2  0
+in-degrees
+ 1  2  2  2  1  1  5  1  2  3  8  0  0  1  3  2  2  2  3  0 
+ 5  5  1  3  1  3  1  1  3  4  5  4  3  2  1  2  2  2  1  2 
+ 2  3  1  4  2  4  2  1  2  0
+
+No missing data for observation 1.
+
+For observation moment 2, degree distributions are as follows:
+Nodes
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 
+41 42 43 44 45 46 47 48 49 50
+out-degrees
+ 3  1  2  1  2  1  0  1  1  4  5  4  0  3  1  3  5  1  3  0 
+ 3  1  1  3  4  3  2  2  3  3  2  2  3  3  2  4  5  1  2  3 
+ 3  2  1  2  3  4  3  2  2  1
+in-degrees
+ 3  0  2  4  1  2  2  1  1  4  2  0  0  2  4  2  4  0  5  0 
+ 1  2  1  3  0  5  2  4  2  6  3  4  3  2  2  3  2  1  2  4 
+ 4  4  2  1  3  5  3  1  2  0
+
+No missing data for observation 2.
+
+For observation moment 3, degree distributions are as follows:
+Nodes
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 
+41 42 43 44 45 46 47 48 49 50
+out-degrees
+ 4  3  1  1  2  3  4  1  1  5  5  2  0  4  4  3  3  0  2  0 
+ 4  0  1  3  2  2  2  1  4  4  2  2  5  2  1  5  4  2  1  4 
+ 1  2  1  4  4  4  2  2  3  0
+in-degrees
+ 3  1  2  3  2  1  4  1  0  4  4  2  0  3  5  3  1  0  3  0 
+ 2  1  1  2  1  4  4  3  3  4  2  2  7  0  1  4  2  2  2  5 
+ 3  3  1  3  2  5  4  3  2  2
+
+No missing data for observation 3.
+
+
+
+
+
+@2
+Reading dependent actor variables.
+----------------------------------
+
+1st dependent actor variable named mybehh.
+Maximum and minimum rounded values are 1 and 5.
+
+
+A total of 1 dependent actor variable.
+
+Number of missing cases per observation:
+ observation         1         2         3		overall
+mybehh               0         0         0         0	  ( 0.0 %)
+
+Means per observation:
+ observation         1         2         3		overall
+mybehh             2.880     3.100     3.360     3.113
+
+@2
+Reading exogenous changing actor covariates.
+--------------------------------------------
+
+1 variable, named:
+smoko           
+
+A total of 1 exogenous changing actor covariate.
+
+Number of missing cases per period:
+ period                    1       2     overall
+smoko                      0       0        0 	   ( 0.0 %)
+
+Information about changing covariates:
+
+              minimum  maximum	  mean  centered 
+smoko                                      Y 
+	period   1     1.0     3.0      1.380 
+	period   2     1.0     3.0      1.520 
+Overall                            1.450 
+
+The mean value is subtracted from the centered covariate.
+
+
+
+The mean structural dissimilarity value subtracted in the
+balance calculations is         0.0889.
+
+For the similarity variable calculated from each actor covariate,
+the mean is subtracted.
+These means are:
+Similarity mybehh                   :       0.6744 
+Similarity smoko                    :       0.6557 
+
+
+
+@1
+Initial data description.
+=========================
+
+
+@2
+Change in networks:
+-------------------
+
+For the following statistics, missing values (if any) are not counted.
+
+Network density indicators:
+observation time              1      2      3
+density                    0.046  0.047  0.050
+average degree             2.260  2.320  2.440
+number of ties               113    116    122
+missing fraction           0.000  0.000  0.000
+
+The average degree is 2.34 
+
+
+Tie changes between subsequent observations:
+ periods        0 =>  0   0 =>  1   1 =>  0   1 =>  1   Distance Jaccard   Missing
+  1 ==>   2      2278        59        56        57       115     0.331         0 (0%)
+  2 ==>   3      2278        56        50        66       106     0.384         0 (0%)
+
+Directed dyad Counts:
+ observation    total    mutual    asymm.     null
+     1.          2450       78        70      2302
+     2.          2450       70        92      2288
+     3.          2450       90        64      2296
+
+Standard values for initial parameter values
+-------------------------------------------------
+
+constant mynet1 rate (period 1)         4.6960 
+constant mynet1 rate (period 2)         4.3288 
+outdegree (density)                               -1.4677 
+
+
+
+@2
+Dependent discrete actor variables:
+-----------------------------------
+
+mybehh 
+
+
+@3
+Marginal distribution
+                     
+                Observations
+values               1     2     3
+                ------------------
+  1                  5     3     1
+  2                 16    16     9
+  3                 12    12    17
+  4                 14    11    17
+  5                  3     8     6
+No missings
+
+
+
+@3
+Changes
+       
+ periods    actors:  down   up   constant  missing  ;   steps:   down    up  total
+  1  =>  2             6    16      28         0                    8    19    27
+  2  =>  3             9    18      23         0                   10    23    33
+
+For this variable, the standard initial behavioral tendency parameter is   0.3224
+
+Initialisation of project <<Siena>> executed succesfully.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 10/10/2025 14:01:14
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 Jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 137861.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 10/10/2025 14:01:34
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 Jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 640282.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 10/10/2025 14:03:21
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 Jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 899396.
+Effects object used: myeff 
+Model Type:
+ Standard actor-oriented model 
+Behavioral Model Type:
+ Standard behavior actor-oriented model ('restrict')
+Estimation method: unconditional moment estimation
+.
+
+Time duration for simulations in each period is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.2000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  constant mynet1 rate (period 1)                 4.6960
+  2. rate:  constant mynet1 rate (period 2)                 4.3288
+  3. eval:  outdegree (density)                            -1.4677
+  4. eval:  reciprocity                                     0.0000
+  5. eval:  unequal smoko                                   0.0000
+  6. rate:  rate mybehh (period 1)                          0.7057
+  7. rate:  rate mybehh (period 2)                          0.8494
+  8. eval:  mybehh linear shape                             0.3224
+  9. eval:  mybehh quadratic shape                          0.0000
+
+
+Values of target statistics are
+  1. Amount of network change in period 1                               115.0000
+  2. Amount of network change in period 2                               106.0000
+  3. Number of ties                                                     238.0000
+  4. Number of reciprocated ties                                        160.0000
+  5. number ties between different smoko                                 81.0000
+  6. Amount of behavioral change in period 1 on mybehh                   27.0000
+  7. Amount of behavioral change in period 2 on mybehh                   33.0000
+  8. mybehh centered sum                                                 11.6667
+  9. mybehh sum of cent. squares                                        121.0711
+These were calculated from the data.
+
+ 9 parameters, 9 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 2877 iterations.
+Parameter estimates based on 1877 iterations,
+convergence diagnostics, covariance and derivative matrices based on 1000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.  -0.5860   9.9010  -0.0592 
+  2.  -0.6290   8.8967  -0.0707 
+  3.  -0.3150  14.8493  -0.0212 
+  4.   0.2080  13.8387   0.0150 
+  5.  -0.0260   9.0050  -0.0029 
+  6.   0.0790   4.3943   0.0180 
+  7.   0.2560   4.6937   0.0545 
+  8.   0.1670   7.4819   0.0223 
+  9.  -1.0029  12.2228  -0.0820 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.1462 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 2877 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Network Dynamics
+ 1. rate:  constant mynet1 rate (period 1)                         5.7810  (   0.9315)
+ 2. rate:  constant mynet1 rate (period 2)                         4.5654  (   0.5885)
+ 3. eval:  outdegree (density)                                    -2.2761  (   0.1172)
+ 4. eval:  reciprocity                                             2.8198  (   0.1984)
+ 5. eval:  unequal smoko                                          -0.2169  (   0.1444)
+
+Behavior Dynamics
+ 6. rate:  rate mybehh (period 1)                                  1.1967  (   0.3169)
+ 7. rate:  rate mybehh (period 2)                                  1.6427  (   0.4186)
+ 8. eval:  mybehh linear shape                                     0.3643  (   0.1512)
+ 9. eval:  mybehh quadratic shape                                 -0.2005  (   0.1000)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.868     -0.027      0.000     -0.003      0.001     -0.013      0.017     -0.015     -0.005
+    -0.049      0.346      0.003     -0.005      0.002      0.002     -0.053      0.006      0.003
+     0.001      0.045      0.014     -0.015     -0.007      0.003      0.006     -0.001      0.001
+    -0.014     -0.043     -0.653      0.039     -0.002     -0.002     -0.010      0.000     -0.001
+     0.011      0.027     -0.441     -0.058      0.021      0.000     -0.002     -0.001      0.000
+    -0.044      0.009      0.068     -0.038      0.006      0.100      0.007     -0.011      0.005
+     0.044     -0.214      0.118     -0.119     -0.038      0.055      0.175     -0.018      0.010
+    -0.110      0.069     -0.030      0.010     -0.056     -0.225     -0.285      0.023     -0.004
+    -0.056      0.057      0.088     -0.070      0.008      0.146      0.241     -0.254      0.010
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 7.07 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 10/10/2025 14:08:24
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 Jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 629747.
+Effects object used: myeff 
+Model Type:
+ Standard actor-oriented model 
+Behavioral Model Type:
+ Standard behavior actor-oriented model ('restrict')
+Estimation method: unconditional moment estimation
+.
+
+Time duration for simulations in each period is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.2000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  constant mynet1 rate (period 1)                 5.7810
+  2. rate:  constant mynet1 rate (period 2)                 4.5654
+  3. eval:  outdegree (density)                            -2.2761
+  4. eval:  reciprocity                                     2.8198
+  5. eval:  unequal smoko                                  -0.2169
+  6. rate:  rate mybehh (period 1)                          1.1967
+  7. rate:  rate mybehh (period 2)                          1.6427
+  8. eval:  mybehh linear shape                             0.3643
+  9. eval:  mybehh quadratic shape                         -0.2005
+
+
+Values of target statistics are
+  1. Amount of network change in period 1                               115.0000
+  2. Amount of network change in period 2                               106.0000
+  3. Number of ties                                                     238.0000
+  4. Number of reciprocated ties                                        160.0000
+  5. number ties between different smoko                                 81.0000
+  6. Amount of behavioral change in period 1 on mybehh                   27.0000
+  7. Amount of behavioral change in period 2 on mybehh                   33.0000
+  8. mybehh centered sum                                                 11.6667
+  9. mybehh sum of cent. squares                                        121.0711
+These were calculated from the data.
+
+ 9 parameters, 9 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 2685 iterations.
+Parameter estimates based on 1685 iterations,
+convergence diagnostics, covariance and derivative matrices based on 1000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.   0.0640   9.5749   0.0067 
+  2.   0.2780   8.8176   0.0315 
+  3.  -0.2320  14.2501  -0.0163 
+  4.   0.0540  13.5588   0.0040 
+  5.   0.0310   8.7250   0.0036 
+  6.   0.1460   4.4576   0.0328 
+  7.  -0.0350   4.8848  -0.0072 
+  8.  -0.0590   8.0238  -0.0074 
+  9.  -0.9936  12.2756  -0.0809 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.1071 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 2685 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Network Dynamics
+ 1. rate:  constant mynet1 rate (period 1)                         5.8538  (   0.9395)
+ 2. rate:  constant mynet1 rate (period 2)                         4.6092  (   0.6714)
+ 3. eval:  outdegree (density)                                    -2.2720  (   0.1157)
+ 4. eval:  reciprocity                                             2.8129  (   0.1865)
+ 5. eval:  unequal smoko                                          -0.2163  (   0.1355)
+
+Behavior Dynamics
+ 6. rate:  rate mybehh (period 1)                                  1.1834  (   0.3098)
+ 7. rate:  rate mybehh (period 2)                                  1.6502  (   0.4602)
+ 8. eval:  mybehh linear shape                                     0.3664  (   0.1517)
+ 9. eval:  mybehh quadratic shape                                 -0.2060  (   0.0961)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.883     -0.011     -0.003      0.011      0.012      0.046      0.007     -0.005     -0.001
+    -0.017      0.451      0.001     -0.007      0.002     -0.006      0.007      0.011      0.000
+    -0.030      0.017      0.013     -0.015     -0.007      0.000     -0.003     -0.001      0.000
+     0.064     -0.053     -0.683      0.035      0.001      0.001     -0.004      0.001      0.000
+     0.094      0.027     -0.445      0.032      0.018      0.000      0.002      0.001      0.000
+     0.156     -0.029     -0.003      0.011     -0.002      0.096      0.005     -0.008      0.002
+     0.017      0.022     -0.049     -0.044      0.027      0.032      0.212     -0.019      0.010
+    -0.038      0.105     -0.053      0.037      0.027     -0.160     -0.266      0.023     -0.004
+    -0.008      0.004     -0.022      0.017     -0.013      0.083      0.225     -0.282      0.009
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 6.28 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 10/10/2025 14:14:57
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 Jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 381364.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 10/10/2025 14:15:01
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 Jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 344069.
+Effects object used: myeff_2 
+Model Type:
+ Standard actor-oriented model 
+Behavioral Model Type:
+ Standard behavior actor-oriented model ('restrict')
+Estimation method: unconditional moment estimation
+.
+
+Time duration for simulations in each period is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.2000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  constant mynet1 rate (period 1)                 5.7810
+  2. rate:  constant mynet1 rate (period 2)                 4.5654
+  3. eval:  outdegree (density)                            -2.2761
+  4. eval:  reciprocity                                     2.8198
+  5. eval:  unequal mybehh                                  0.0000
+  6. eval:  unequal smoko                                  -0.2169
+  7. rate:  rate mybehh (period 1)                          1.1967
+  8. rate:  rate mybehh (period 2)                          1.6427
+  9. eval:  mybehh linear shape                             0.3643
+ 10. eval:  mybehh quadratic shape                         -0.2005
+
+
+Values of target statistics are
+  1. Amount of network change in period 1                               115.0000
+  2. Amount of network change in period 2                               106.0000
+  3. Number of ties                                                     238.0000
+  4. Number of reciprocated ties                                        160.0000
+  5. number ties between different mybehh                               158.0000
+  6. number ties between different smoko                                 81.0000
+  7. Amount of behavioral change in period 1 on mybehh                   27.0000
+  8. Amount of behavioral change in period 2 on mybehh                   33.0000
+  9. mybehh centered sum                                                 11.6667
+ 10. mybehh sum of cent. squares                                        121.0711
+These were calculated from the data.
+
+ 10 parameters, 10 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 2926 iterations.
+Parameter estimates based on 1926 iterations,
+convergence diagnostics, covariance and derivative matrices based on 1000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.  -0.4540   9.6887  -0.0469 
+  2.  -0.0590   8.7797  -0.0067 
+  3.   0.9830  14.6540   0.0671 
+  4.   0.3160  13.6455   0.0232 
+  5.   0.6610  12.4214   0.0532 
+  6.   0.1520   8.7514   0.0174 
+  7.  -0.3030   4.5122  -0.0672 
+  8.  -0.1910   5.0092  -0.0381 
+  9.   0.3240   7.6912   0.0421 
+ 10.   0.4366  12.1226   0.0360 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.174 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 2926 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Network Dynamics
+ 1. rate:  constant mynet1 rate (period 1)                         5.6885  (   0.8390)
+ 2. rate:  constant mynet1 rate (period 2)                         4.5268  (   0.6434)
+ 3. eval:  outdegree (density)                                    -1.9297  (   0.2625)
+ 4. eval:  reciprocity                                             2.7884  (   0.1864)
+ 5. eval:  unequal mybehh                                         -0.4761  (   0.3708)
+ 6. eval:  unequal smoko                                          -0.1972  (   0.1321)
+
+Behavior Dynamics
+ 7. rate:  rate mybehh (period 1)                                  1.1732  (   0.3234)
+ 8. rate:  rate mybehh (period 2)                                  1.6183  (   0.4186)
+ 9. eval:  mybehh linear shape                                     0.3742  (   0.1444)
+10. eval:  mybehh quadratic shape                                 -0.2015  (   0.0945)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.704     -0.005     -0.027      0.004      0.027      0.012     -0.022      0.007     -0.002      0.001
+    -0.009      0.414     -0.017     -0.012      0.041     -0.005     -0.005      0.006      0.005     -0.002
+    -0.125     -0.099      0.069     -0.013     -0.087     -0.006      0.009      0.004     -0.003      0.002
+     0.028     -0.100     -0.268      0.035     -0.003      0.002      0.000      0.000      0.000      0.000
+     0.086      0.171     -0.892     -0.050      0.138     -0.002     -0.017     -0.003      0.004     -0.003
+     0.112     -0.058     -0.168      0.070     -0.033      0.017      0.002     -0.002      0.000      0.001
+    -0.080     -0.023      0.106      0.005     -0.146      0.053      0.105      0.006     -0.008      0.005
+     0.019      0.024      0.036      0.006     -0.018     -0.031      0.042      0.175     -0.016      0.009
+    -0.017      0.049     -0.070     -0.006      0.067     -0.005     -0.161     -0.266      0.021     -0.003
+     0.012     -0.033      0.070      0.002     -0.084      0.043      0.165      0.221     -0.197      0.009
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 8.7 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 10/10/2025 14:15:20
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 Jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 908281.
+Effects object used: myeff_3 
+Model Type:
+ Standard actor-oriented model 
+Behavioral Model Type:
+ Standard behavior actor-oriented model ('restrict')
+Estimation method: unconditional moment estimation
+.
+
+Time duration for simulations in each period is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.2000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  constant mynet1 rate (period 1)                 5.6885
+  2. rate:  constant mynet1 rate (period 2)                 4.5268
+  3. eval:  outdegree (density)                            -1.9297
+  4. eval:  reciprocity                                     2.7884
+  5. eval:  unequal smoko                                  -0.1972
+  6. rate:  rate mybehh (period 1)                          1.1732
+  7. rate:  rate mybehh (period 2)                          1.6183
+  8. eval:  mybehh linear shape                             0.3742
+  9. eval:  mybehh quadratic shape                         -0.2015
+
+
+Values of target statistics are
+  1. Amount of network change in period 1                               115.0000
+  2. Amount of network change in period 2                               106.0000
+  3. Number of ties                                                     238.0000
+  4. Number of reciprocated ties                                        160.0000
+  5. number ties between different smoko                                 81.0000
+  6. Amount of behavioral change in period 1 on mybehh                   27.0000
+  7. Amount of behavioral change in period 2 on mybehh                   33.0000
+  8. mybehh centered sum                                                 11.6667
+  9. mybehh sum of cent. squares                                        121.0711
+These were calculated from the data.
+
+ 9 parameters, 9 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 2877 iterations.
+Parameter estimates based on 1877 iterations,
+convergence diagnostics, covariance and derivative matrices based on 1000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.  -0.4010   9.3837  -0.0427 
+  2.   0.2530   8.4667   0.0299 
+  3.  -0.1740  14.2739  -0.0122 
+  4.  -0.1300  13.5376  -0.0096 
+  5.   0.2070   8.9178   0.0232 
+  6.  -0.2220   4.5276  -0.0490 
+  7.  -0.0740   4.8745  -0.0152 
+  8.  -0.1700   7.7391  -0.0220 
+  9.   0.5525  12.5589   0.0440 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.0953 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 2877 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Network Dynamics
+ 1. rate:  constant mynet1 rate (period 1)                         5.7972  (   0.9100)
+ 2. rate:  constant mynet1 rate (period 2)                         4.5975  (   0.7248)
+ 3. eval:  outdegree (density)                                    -2.2651  (   0.1219)
+ 4. eval:  reciprocity                                             2.8061  (   0.1914)
+ 5. eval:  unequal smoko                                          -0.2225  (   0.1392)
+
+Behavior Dynamics
+ 6. rate:  rate mybehh (period 1)                                  1.1812  (   0.2990)
+ 7. rate:  rate mybehh (period 2)                                  1.6422  (   0.4062)
+ 8. eval:  mybehh linear shape                                     0.3639  (   0.1419)
+ 9. eval:  mybehh quadratic shape                                 -0.2017  (   0.0956)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.828     -0.035     -0.012      0.005      0.013     -0.002      0.007     -0.002      0.002
+    -0.052      0.525      0.014     -0.017     -0.004     -0.002     -0.031      0.014      0.007
+    -0.107      0.153      0.015     -0.016     -0.008      0.001     -0.004      0.000     -0.001
+     0.030     -0.119     -0.684      0.037      0.002     -0.003      0.008      0.000      0.001
+     0.099     -0.040     -0.490      0.067      0.019      0.000      0.008     -0.001      0.000
+    -0.007     -0.007      0.038     -0.060     -0.011      0.089      0.002     -0.007      0.001
+     0.020     -0.105     -0.089      0.098      0.140      0.018      0.165     -0.016      0.007
+    -0.013      0.134      0.006     -0.014     -0.059     -0.163     -0.271      0.020     -0.002
+     0.020      0.103     -0.067      0.061      0.016      0.031      0.188     -0.176      0.009
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 6.2 seconds.
