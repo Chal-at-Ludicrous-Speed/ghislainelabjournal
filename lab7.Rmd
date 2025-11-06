@@ -1,0 +1,471 @@
+---
+title: "lab7"
+author: "Ghislaine de Groot"
+date: "2025-10-17"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Packages
+
+```{r, eval=FALSE}
+library(RSiena)
+library(foreign)
+library(tidyverse)
+library(scholar) 
+library(openalexR)
+library(rvest) 
+library(jsonlite)
+```
+
+
+# Learning about goodness of fit
+
+## step 1 data
+
+```{r, eval=FALSE}
+
+mynet1 <- sienaDependent(array(c(s501, s502, s503), dim=c(50, 50, 3)))
+mybehh <- sienaDependent(s50a, type= "behavior")
+drinking <- varCovar(s50a) # same info, but as covariate
+smoko <- varCovar(s50s)
+
+mydata <- sienaDataCreate(mynet1, mybehh, smoko)
+
+
+```
+
+## step 2
+
+```{r, eval=FALSE}
+print01Report(mydata)
+```
+
+## step 3
+
+```{r, eval=FALSE}
+
+myeff <- getEffects(mydata)
+myeff
+
+myeff <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "smoko")
+
+myeff_2 <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "mybehh")
+
+myeff_3 <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "drinking")
+
+
+# data, statistic, network dependent variable, behavior variable
+
+
+
+```
+## step 4
+
+```{r, eval=FALSE}
+
+algae <- sienaAlgorithmCreate()
+
+```
+
+```{r, eval=FALSE}
+
+ans <- siena07(algae, data=mydata, effects = myeff)
+
+ans2 <- siena07(algae, data=mydata, effects = myeff_2, prevAns=ans)
+
+ans3 <- siena07(algae, data=mydata, effects = myeff_3, prevAns=ans2, returnDeps = TRUE)
+
+# previous estimation, estimation of the previous model
+
+# with third model, it's mismatched now. interaction effect is insig (already was insig but shh)
+
+```
+
+```{r, eval=FALSE}
+# see here: ?'sienaGOF-auxiliary'
+
+# The geodesic distribution is not available from within RSiena, and therefore is copied from the
+# help page of sienaGOF-auxiliary:
+
+# GeodesicDistribution calculates the distribution of non-directed geodesic distances; see
+# ?sna::geodist The default for \code{levls} reflects the usual phenomenon that geodesic distances
+# larger than 5 do not differ appreciably with respect to interpretation.  Note that the levels of
+# the result are named; these names are used in the \code{plot} method.
+GeodesicDistribution <- function(i, data, sims, period, groupName, mynet1, levls = c(1:5, Inf), cumulative = TRUE,
+    ...) {
+    x <- networkExtraction(i, data, sims, period, groupName, mynet1)
+    require(sna)
+    a <- sna::geodist(symmetrize(x))$gdist
+    if (cumulative) {
+        gdi <- sapply(levls, function(i) {
+            sum(a <= i)
+        })
+    } else {
+        gdi <- sapply(levls, function(i) {
+            sum(a == i)
+        })
+    }
+    names(gdi) <- as.character(levls)
+    gdi
+}
+
+# The following function is taken from the help page for sienaTest
+
+testall <- function(ans) {
+    for (i in which(ans$test)) {
+        sct <- score.Test(ans, i)
+        cat(ans$requestedEffects$effectName[i], "\n")
+        print(sct)
+    }
+    invisible(score.Test(ans))
+}
+```
+
+```{r, eval=FALSE}
+gofi0 <- sienaGOF(ans3, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "mynet1")
+gofo0 <- sienaGOF(ans3, OutdegreeDistribution, verbose = FALSE, join = TRUE, levls = c(0:10, 15, 20),
+    varName = "mynet1")
+gof0.gd <- sienaGOF(ans3, GeodesicDistribution, cumulative = FALSE, verbose = FALSE, join = TRUE, varName = "mynet1")
+```
+```{r}
+# to check the indegree distribution of the outcome network ourselves:
+# table(colSums(wave2))
+```
+```{r, eval=FALSE}
+plot(gofi0, main = "")
+
+# goodness of fit distribution 
+
+# x-axis number of indegrees per person
+# y-axis frequency
+# 0 people with no indegrees
+# boxplot: based on estimation, simulated networks, for each simulated network there is an indegree count
+#   median value of simualted
+#   violent/violin plot: normal distribution of simulations
+#   bit overkill to have both
+#   red is observed network
+#   the numbers increase, it's not cumulative except for the fact that they are stacked in one plot because they have a different scale, plus it's counterintuitive
+#   12 + 17 = 29
+#   underestimate or overestimate? in the SNASS graph, it is overestimation, underestimate isolates,     overestimate people with some degrees, underestimate people with many degrees 
+# fixed, no randomness
+# testing a set of random variables against fixed values, one sample t-test
+# this test is called uhhh monte carlo something something
+# it's not (always) clear what to do, but if these common GOF statistics don't fit then something went wrong
+
+# "maybe you shouldn't use RSiena"
+
+```
+```{r, eval=FALSE}
+plot(gof0.gd, main = "")
+```
+----
+Read 7.15.4
+
+
+At each decision point, the statistics are checked...?
+----
+
+```{r, eval=FALSE}
+
+RI <- RSiena:::sienaRI(data = mydata, ans = ans3)
+
+# RI <- RSiena:::sienaRI(
+#  data = ,
+#  theta = theta.eval,
+#  algorithm = myAlgorithm
+#  effects = myeff.eval
+#)
+  
+class(RI) # now running plot for that specific type
+
+plot <- RSiena:::sienaRI(RI, addPieChart = TRUE, legendColumns = 3)
+
+# depend on tie characteristics how relevant certain statistics are for a node
+# does not reflect parameter 
+# if reciprocity is relevant overall, if it applies to you it definitely influences your decision, but if it doesn't apply to you then it doesn't influence
+
+# RSiena tutorial > Analyse > 6.8 graph
+# indegree popularity not as relevant
+# micro-macro link
+
+# some GOF in the paper
+# need to include plot
+
+```
+
+# Own data
+
+## Practicing with RSiena without prestige
+
+### Reloading sociologists
+```{r, eval=FALSE}
+
+scholars <- fload("./data/processed/scholars_20240924.rda")
+
+demographics <- do.call(rbind.data.frame, scholars$demographics)
+
+sample <- which(demographics$discipline.22 == "sociology" | demographics$discipline.24 == "sociology")
+
+demographics_soc <- demographics[sample,]
+sociologists <- lapply(scholars, "[",sample)
+```
+
+
+
+### own fcolnet, different from niels
+
+```{r, eval=FALSE}
+
+fcolnet_25 <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
+    2018), c(2019, 2023)), type = c("first")) {
+
+    # step 1
+    demographics <- do.call(rbind.data.frame, data$demographics)
+    demographics <- demographics %>%
+        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), ""), Universiteit2.22 = replace(Universiteit2.22,
+            is.na(Universiteit2.22), ""), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+            ""), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), ""), discipline.22 = replace(discipline.22,
+            is.na(discipline.22), ""), discipline.24 = replace(discipline.24, is.na(discipline.24), ""))
+
+    sample <- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
+        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
+        university) & (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% discipline))
+
+    demographics_soc <- demographics[sample, ]
+    scholars_sel <- lapply(scholars, "[", sample)
+
+    # step 2
+    ids <- demographics_soc$au_id
+    nwaves <- length(waves)
+    nets <- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works <- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = unlist(lapply(scholars_sel$work,
+        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) l$publication_year),
+        recursive = FALSE))
+
+    df_works <- df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == "first") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- df_works_w$works_author[i][[1]]$au_id[1]
+                alters <- df_works_w$works_author[i][[1]]$au_id[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+                }
+            }
+        }
+    }
+
+    if (type == "last") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+                alters <- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+                }
+            }
+        }
+    }
+
+    if (type == "all") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos <- df_works_w$works_author[i][[1]]$au_id
+                if (sum(ids %in% egos) > 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] <- 1
+                }
+            }
+        }
+    }
+    output <- list()
+    output$data <- scholars_sel
+    output$nets <- nets
+    return(output)
+}
+
+```
+----
+Trying to get network data for RSiena. 
+----
+```{r, eval=FALSE}
+ids <- demographics_soc$au_id
+wave2 <- wave1 <- matrix(0, nrow = length(ids), ncol = length(ids), dimnames = list(ids, ids))
+```
+
+
+
+```{r, eval=FALSE}
+
+# soc_test_data <- sienaDataCreate(wave1, wave2)
+
+soc_test_data <- sienaDependent(array(c(wave1, wave2), dim = c(386, 386, 2)))
+```
+
+
+```{r, eval=FALSE}
+mybehh <- sienaDependent(sociologists, type= "behavior")
+
+
+```
+
+```{r, eval=FALSE}
+testsoceff <- getEffects(soc_test_data)
+
+
+```
+
+# With the new data
+
+```{r, eval=FALSE}
+
+UU_RU_test <- fcolnet(data = scholars, 
+                    university = c("UU", "RU"),
+                    discipline = "Sociologie", 
+                    waves = list(c(2015, 2018), c(2019, 2023), c(2024, 2025)), 
+                    type = c("first"))
+
+```
+
+```{r, eval=FALSE}
+df_ego = df_ego |>
+    mutate(
+        uni = case_when(
+            functie.22 == "UU" ~ 1,
+            functie.24 == "UU" ~ 1,
+            functie.25 == "UU" ~ 1,
+            .default = 0
+        )
+    )
+
+uni = coCovar(df_ego$uni)
+```
+
+### VAMOS
+```{r, eval=FALSE}
+testdata = sienaDataCreate(net, uni)
+testeff = getEffects(testdata)
+testeff = includeEffects(testeff, isolateNet, inPop.c, outAct)
+
+myAlgorithm = sienaAlgorithmCreate(
+    projname = "soc_init")
+
+ansM1 = siena07(
+    myAlgorithm, 
+    data = testdata, 
+    effects = testeff,
+    returnDeps = TRUE
+)
+
+ansM1
+```
+
+### plot network
+```{r, eval=FALSE}
+test <- fcolnet(data = scholars, 
+                university = c("UU", "RU"), 
+                discipline = c("Sociologie", "Politicologie"), 
+                waves = list(c(2015, 2018), c(2019, 2025)), 
+                type = c("all"))
+
+test_w2 <- igraph::graph_from_adjacency_matrix(
+  test$nets[2,,], #now, I take the second wave
+  mode = c("directed"),
+  weighted = NULL,
+  diag = FALSE,
+  add.colnames = NULL,
+
+)
+
+#Let us find ego characteristics. 
+#first fish out the data
+df <- test$data
+
+#same complicated structure as 'scholars' thus first make a dataframe from the list in which all info was saved. 
+# df_ego <- do.call(rbind.data.frame, df$demographics)
+df_ego = df
+
+
+plot(test_w2,
+  vertex.color = ifelse(df_ego$universiteit.24 == "UU", "yellow", "red"), #now, I can use actor attributes for plotting. 
+  vertex.label = NA,
+  vertex.size = 5,
+  edge.width = 0.2,
+  edge.arrow.size = 0.2)
+```
+
+### drop isolates
+```{r, eval=FALSE}
+noisolates = rowSums(test$nets[2,,]) > 0
+netnew = test$nets[2,noisolates,noisolates]
+dfnew = df_ego[noisolates, ]
+
+test_w2_new <- igraph::graph_from_adjacency_matrix(
+  netnew, #now, I take the second wave
+  mode = c("directed"),
+  weighted = NULL,
+  diag = FALSE,
+  add.colnames = NULL,
+
+)
+
+plot(test_w2_new,
+  vertex.color = ifelse(dfnew$universiteit.24 == "UU", "yellow", "red"), #now, I can use actor attributes for plotting. 
+  vertex.label = NA,
+  vertex.size = 5,
+  node.size = 0.2,
+  edge.width = 0.2,
+  edge.arrow.size =0.2)
+
+```
+
+```{r, eval=FALSE}
+
+testall <- fcolnet(data = scholars, 
+                university = c("UU", 'RU', 'UvT', 'RUG',), 
+                discipline = "Sociologie", 
+                waves = list(c(2015, 2018), c(2019, 2025)), 
+                type = c("all"))
+
+testall_w2 <- igraph::graph_from_adjacency_matrix(
+  test$nets[2,,], #now, I take the second wave
+  mode = c("directed"),
+  weighted = NULL,
+  diag = FALSE,
+  add.colnames = NULL,
+
+)
+
+#Let us find ego characteristics. 
+#first fish out the data
+df <- test$data
+
+#same complicated structure as 'scholars' thus first make a dataframe from the list in which all info was saved. 
+# df_ego <- do.call(rbind.data.frame, df$demographics)
+df_ego = df
+
+
+plot(test_w2,
+  vertex.color = ifelse(df_ego$discipline.24 == "Sociologie", "yellow", "red"), #now, I can use actor attributes for plotting. 
+  vertex.label = NA,
+  vertex.size = 5,
+  edge.width = 0.2,
+  edge.arrow.size =0.2)
+
+```
+
+

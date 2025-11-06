@@ -4,6 +4,9 @@ author: "Ghislaine de Groot"
 date: "2025-10-10"
 output: html_document
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ### Packages
 
@@ -30,6 +33,7 @@ sjr2024 <- read_csv2('/Users/ghislaine/Downloads/Github/Social Networks/scimagoj
 ```
 
 # Stealing niels vullings' code and linking the journals from SJR to the journals in the dataset
+
 
 df_works doesn't work yet
 
@@ -455,7 +459,7 @@ soc_test_data <- sienaDependent(array(c(test_RU, test_UvT, dim = c(386, 386)))
 
 ```
 
-
+----
 # Two articles
 
 We had to send in two articles before class. 
@@ -465,5 +469,5 @@ Hancean et al. (2014) is about collaboration networks across the 17 Romanian soc
 
 
 Knoke and Yang (2011) explained how prestige works in social networks, that an ego receives much less ties that they receive.  
-
+----
 
