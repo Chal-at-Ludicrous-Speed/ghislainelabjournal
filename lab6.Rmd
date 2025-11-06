@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Packages
 
-```{r. eval=FALSE}
+```{r, eval=FALSE}
 library(foreign)
 library(tidyverse)
 library(scholar) 
@@ -32,7 +32,7 @@ sjr2024 <- read_csv2('/Users/ghislaine/Downloads/Github/Social Networks/scimagoj
 
 ```
 
-# Stealing niels vullings' code and linking the journals from SJR to the journals in the dataset
+# Stealing Niels Vullings' code and linking the journals from SJR to the journals in the dataset
 
 
 df_works doesn't work yet

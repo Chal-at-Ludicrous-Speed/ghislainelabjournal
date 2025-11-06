@@ -42,7 +42,6 @@ myeff_3 <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "drin
 # data, statistic, network dependent variable, behavior variable
 
 
-
 ```
 # step 4
 

@@ -34,7 +34,6 @@ smoko <- varCovar(s50s)
 
 mydata <- sienaDataCreate(mynet1, mybehh, smoko)
 
-
 ```
 
 ## step 2
