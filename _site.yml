@@ -1,4 +1,4 @@
-name: "Ghislaine's Lab Journal Is Swimming with Sharks"
+name: "Ghislaine's Lab Journal is Swimming with Sharks"
 author: 
   - 'Ghislaine de Groot'
 output_dir: "docs"
@@ -10,24 +10,25 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
-    - text: "Ghislaine's Journal"
+    - text: "Lab Journal"
       menu:
-      - text: "Page 1"
+      - text: "Lab 1"
         href: lab1.html
-      - text: "Page 2"
+      - text: "Lab 2"
         href: lab2.html
-      - text: "Page 3"
+      - text: "Lab 3"
         href: lab3.html
-      - text: "Page 4"
+      - text: "Lab 4"
         href: lab4.html
-      - text: "Page 5"
+      - text: "Lab 5"
         href: lab5.html
-      - text: "Page 6"
+      - text: "Lab 6"
         href: lab6.html
-        - text: "Siena exercise"
-          href: lab6sienaexercise.html
-          
-        
+      - text: "Siena exercise"
+        href: lab6sienaexercise.html
+      - text: "Lab 7"
+        href: lab7.html
+  
         # here, other .Rmds can be added
 
 
