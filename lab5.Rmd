@@ -487,7 +487,7 @@ df_works_5 <- tibble(works_id, works_author, works_year)
 # test1 <- df_works %>% select(id, so, issn_l, author) # test the works
 ```
 
-Also have this code below in lab 6, which *should* work.
+I also copied this code below to lab 6, which *should* work.
 
 ```{r, eval=FALSE}
 
