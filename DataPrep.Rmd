@@ -3,6 +3,7 @@ title: "DataPrep"
 author: "Ghislaine de Groot"
 date: "2025-11-05"
 output: html_document
+bibliography: references.bib
 ---
 
 # Getting Started

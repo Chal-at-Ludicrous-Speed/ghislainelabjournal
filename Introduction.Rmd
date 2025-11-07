@@ -1,0 +1,29 @@
+---
+title: "Introduction"
+author: "Ghislaine de Groot"
+date: "2025-11-07"
+output: html_document
+bibliography: references.bib
+---
+# Introduction
+
+For the course Social Networks, we are answering research questions around collaboration networks among Dutch academic researchers.
+
+It is known and perfectly understandable that colleagues at the same department prefer collaborating with each other. They likely have similar research interests (source). While certain topics are fundamental to the discipline and are researched across the country, some are more niche and belong to specific traditions, the biggest traditions being ‘figurational sociology’ and ‘analytical sociology’. 
+It becomes interesting when a sociologist reaches out to a colleague from a different department at a different university.
+
+Sociology departments, as with the universities they are attached to, differ in size and research productivity.
+
+Despite the image of academia as an ivory tower removed from society, research universities are subject to similar, if not the same, social processes that govern the organisation of work and labour. The work of one university of university department are valued differently (and unequally), consequently having different levels of prestige. This may indicate stratification between universities and departments, which extents to social mobility and promotion opportunities.    
+In countries with a larger amount of sociology departments, stark differences in quality can occur, such as the United States of America (sources), Romania (Hancean et al). Earlier research in the USA (@Burris2004) showed that sociologists across the 94 US departments formed castes at the top 5%, where those who started at a top-level university stay employed at top-level universities, creating a tightly knit group of collaborators. 
+The little research there is on this topic has not yet covered the Netherlands, despite the importance of Dutch sociology on the international playing field (report source). Most literature is also from two decades ago, and much has changed in the sociological landscape (source).   
+
+Funding can impact the quality of the department, and if the department has little room to grow and accumulate academic capital, chances are that they cannot prove themselves, and cannot get more funding as a result, missing out on prestige (@Larregue2025).  
+
+I will to examine whether there is a significant difference in prestige between the sociology departments, and how that affects the collaboration networks of sociologists. My aim is to research whether this prestige has an impact on collaboration, which could stratify the quality of research output. As I want to map how sociologists are connected together and have different types and strengths of connections, I will conduct Social Network Analysis. The underlying question is whether academics, in this case sociologists, send collaboration invitations on the basis of another sociologist's own academic output, or on the basis of status by association. 
+
+RQ 1: To what extent do Dutch sociology department differ in prestige?
+
+RQ 2: To what extent do Dutch sociologists want to collaborate with other Dutch sociologists who have more prestige?
+
+It would be interesting to see whether there is a pattern among the departments. Especially of note would be a pattern in prestige or sending ties to one of the two Dutch sociological traditions; figurational or analytical sociology (@Haan2012). This would imply a preference or a different value judgement of sociological knowledge. 

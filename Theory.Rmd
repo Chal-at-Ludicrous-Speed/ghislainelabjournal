@@ -1,0 +1,20 @@
+---
+title: "Theory"
+author: "Ghislaine de Groot"
+date: "2025-11-07"
+output: html_document
+bibliography: references.bib
+---
+
+# Theory
+
+If there is an effect of departmental prestige on the formation of interuniversity collaboration networks present, then it would also be reflected on the individual level. Sociologists who have a lower h-index could then benefit from the collective prestige of their department. This is called basking in reflective glory, which is a well known effect within the social networks literature.
+
+The **principle of preferential attachment** [@Hancean2014], who quotes [@Moody2004] and someone else). "New links and nodes are not randomly connected to large networks, but based on observed power-law distributions" (page number). Matthew-effect: scientific fields grow and develop around highly prestigious scientific scholars. These highly prestigious scholars are star nodes (source).
+
+A prestigious ego receives more ties than they send themselves [@Knoke2011].
+
+H1. Sociologists prefer working with a sociologist with a higher individual prestige than themselves
+H2. Sociologists prefer working with a sociologist with a higher departmental prestige than themselves
+
+With Hypothesis 2, it can either indicate that a sociologist has an equal or higher h-index than the department mean, or the sociologist in question has a lower h-index than the mean and can benefit from the department’s prestige.  

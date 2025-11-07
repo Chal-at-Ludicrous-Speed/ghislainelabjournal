@@ -3,6 +3,7 @@ title: "Analysis"
 author: "Ghislaine de Groot"
 date: "2025-11-06"
 output: html_document
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -20,6 +21,11 @@ require(tidyr)
 ```
 
 # Descriptive statistics
+
+## Difference in prestige between departments
+
+Important for RQ1. For later.
+
 
 ## Indegree distribution
 

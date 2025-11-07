@@ -1,0 +1,23 @@
+---
+title: "Conclusion"
+author: "Ghislaine de Groot"
+date: "2025-11-07"
+output: html_document
+bibliography: references.bib
+---
+
+# Conclusion
+
+RQ 1: To what extent do Dutch sociology department differ in prestige?
+
+RQ 2: To what extent do Dutch sociologists want to collaborate with other Dutch sociologists who have more prestige?
+
+Answers to the research questions... 
+
+
+The lack of significance of both individual and departmental prestige should be viewed as beneficial. It appears that prestige is not an important factor for wanting to collaborate with a colleague, at least within the Dutch context. 
+
+Several limitations should be noted. 
+The use of h-index as proxy for prestige... 
+
+Future research should widen the scope of the dataset. Academic collaborations occur in an international context. A prestigious scholar in the Netherlands can link with other scholars who have similar or even more name recognition. As this study suggests that prestige matters little to nothing to collaborations in the Netherlands, it may be due to the similar level of prestige, or due to differences in research interest [@Haan2012]. In an international context, larger differences in (perceived) prestige may be more important, as seen in previous literature on the US [@Burris2004, @Moody2004], etc.) and Romania [@Hancean2014]. 

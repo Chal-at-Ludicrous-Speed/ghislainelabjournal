@@ -370,23 +370,23 @@ div.tocify {
     <li>
       <a href="lab7.html">Lab 7</a>
     </li>
-  </ul>
-</li>
-<li>
-  <a href="DataAndMethods.html">Test</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Final project
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="DataPrep.html">Data preparation</a>
+      <a href="Introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="Theory.html">Theory</a>
+    </li>
+    <li>
+      <a href="DataAndMethods.html">Data and Methods</a>
+    </li>
+    <li>
+      <a href="DataPrep.html">Data Preparation</a>
     </li>
     <li>
       <a href="Analysis.html">Analysis</a>
+    </li>
+    <li>
+      <a href="Conclusion.html">Conclusion</a>
     </li>
   </ul>
 </li>
@@ -424,10 +424,82 @@ div.tocify {
 </div>
 
 
-<div id="frequencies" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Frequencies</h1>
-<div id="university" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> University</h2>
+<div id="data" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Data</h1>
+<div id="sample" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Sample</h2>
+<p>Stochastic Actor Oriented Models (SAOM)</p>
+<p>The dataset consists of directed ties in a network of scholars
+working at a Dutch sociology department and scholars working at a Dutch
+political science department. By using the OpenAlex API (source?), the
+IDs of the works affiliated with these scholars had been webscraped.</p>
+<p>First, the dataset was filtered so that only the scholars from the
+sociology departments remained. The duplicate scholar IDs were
+subsequently removed.</p>
+<p>The dataset contains academic works from 2015 until 2025. For the
+2025 time point, the academic function of members of the Erasmus
+University Rotterdam sociology department is missing.</p>
+<p>To examine change over time, two waves were constructed. Wave 1 goes
+from 2015 until 2019, and Wave 2 goes from 2020 to 2024, meaning an
+equal time distribution of four years.</p>
+</div>
+</div>
+<div id="methods" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Methods</h1>
+<p>R will be used.</p>
+<div id="measures" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Measures</h2>
+<p>To operationalise the concept of ‘academic prestige’, the personal
+h-index was used as a proxy(?), representing individual prestige.
+The</p>
+<p>Scholars with more career seniority and a permanent position are more
+likely to be representative of the level of quality of an academic
+department than those who are more junior. The functions in the data are
+also somewhat ambiguous, […] Therefore, sociologists who have a function
+as assistant professor, associate professor or full professor were taken
+into the departmental prestige measure. The h-index of these members
+were counted up to calculate the mean h-index. This became the
+departmental prestige measure. The <em>higher</em> effect in RSiena, an
+R package which will be used for the analysis. This is the effect that
+the ego has a higher covariate than the alter. The effect is written out
+as an equation below</p>
+<p><span class="math display">\[ \Sigma_j x_{ij}dsign(v_{i} -
+v_{j})\]</span></p>
+<p>Where dsign(<em>d</em>) = 0 for <em>d</em> &lt; 0, 0.5 for <em>d</em>
+= 0, and 1 for <em>d</em> &gt; 0.</p>
+<div id="job-position" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Job position</h3>
+<p>While many changes can happen to someone’s academic function, such as
+being hired, leaving or getting a promotion, most remain stable. For the
+sake of the analysis, the functions were standardised. After removing
+the 2025 time point, the available variables were the function at 2022
+and 2024. The job position at 2022 was used for 2024. Most sociologists
+held the same position on both time points, but a promotion or leave was
+therefore not included. When a function at 2022 was missing, the
+function at 2024 was used instead.</p>
+</div>
+<div id="control-variables" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Control
+variables</h3>
+<p>Besides the main effects of individual and departmental prestige, two
+control variables were also taken into the analysis. The first is a
+numeric version of the university variable and the second is a dummy
+variable of gender. Both are used to control for the effect that
+scholars may prefer working together with others from their own
+department (source), or who share the same gender (source). This is
+achieved through the sameX effect, taking the same value of the…</p>
+<p>After removing the 2025 time point, some missingness remained in
+university, function and gender. This missingness was very small,
+[number]. Removing the scholars with missing variables proved to be more
+problematic to run the RSiena model than keeping them in the
+dataset.</p>
+</div>
+</div>
+</div>
+<div id="frequencies" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Frequencies</h1>
+<div id="university" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> University</h2>
 <pre class="r"><code>table(df_ego2$university, useNA = &#39;always&#39;)
 
 # Frequency table for university
@@ -436,8 +508,8 @@ uni_count &lt;- c(50, 49, 74, 53, 70, 28, 80, 54)
 df_uni_freq &lt;- data.frame(University = uni_value, Count = uni_count)
 fshowdf(df_uni_freq)</code></pre>
 </div>
-<div id="job-position" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Job position</h2>
+<div id="job-position-1" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Job position</h2>
 <pre class="r"><code>table(df_ego2$position, useNA = &#39;always&#39;)
 
 # Frequency table for job position
@@ -448,8 +520,8 @@ posit_count &lt;- c(136, 15, 21, 32, 81, 39, 69, 4, 61)
 df_freq_posit &lt;- data.frame(Function = posit_value, Count = posit_count)
 fshowdf(df_freq_posit)</code></pre>
 </div>
-<div id="gender" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> Gender</h2>
+<div id="gender" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Gender</h2>
 <pre class="r"><code>table(df_ego2$gender, useNA = &#39;always&#39;)
 
 # Frequency table for gender
@@ -461,7 +533,7 @@ fshowdf(df_freq_gen)</code></pre>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRGF0YUFuZE1ldGhvZHMiCmF1dGhvcjogIkdoaXNsYWluZSBkZSBHcm9vdCIKZGF0ZTogIjIwMjUtMTEtMDciCm91dHB1dDogaHRtbF9kb2N1bWVudAotLS0KCiMgRnJlcXVlbmNpZXMKCiMjIFVuaXZlcnNpdHkKCmBgYHtyLCBldmFsPUZBTFNFfQoKdGFibGUoZGZfZWdvMiR1bml2ZXJzaXR5LCB1c2VOQSA9ICdhbHdheXMnKQoKIyBGcmVxdWVuY3kgdGFibGUgZm9yIHVuaXZlcnNpdHkKdW5pX3ZhbHVlIDwtIGMoJ0VVUicsICdSVScsICdSdkcnLCAnVVUnLCAnVXZBJywgIlV2VCIsICdWVScsICdtaXNzaW5nJykKdW5pX2NvdW50IDwtIGMoNTAsIDQ5LCA3NCwgNTMsIDcwLCAyOCwgODAsIDU0KQpkZl91bmlfZnJlcSA8LSBkYXRhLmZyYW1lKFVuaXZlcnNpdHkgPSB1bmlfdmFsdWUsIENvdW50ID0gdW5pX2NvdW50KQpmc2hvd2RmKGRmX3VuaV9mcmVxKQoKYGBgCgojIyBKb2IgcG9zaXRpb24KCmBgYHtyLCBldmFsPUZBTFNFfQoKdGFibGUoZGZfZWdvMiRwb3NpdGlvbiwgdXNlTkEgPSAnYWx3YXlzJykKCiMgRnJlcXVlbmN5IHRhYmxlIGZvciBqb2IgcG9zaXRpb24KCnBvc2l0X3ZhbHVlIDwtIGMoJ1BoRCBDYW5kaWRhdGUnLCAnUG9zdGRvY3RvcmFsIFJlc2VhcmNoZXInLCAnTGVjdHVyZXInLCAnUmVzZWFyY2hlcicsCiAgICAgICAgICAgICdBc3Npc3RhbnQgcHJvZmVzc29yJywnQXNzb2NpYXRlIHByb2Zlc3NvcicsICdGdWxsIHByb2Zlc3NvcicsICdTdGFmZicsICdtaXNzaW5nJykKcG9zaXRfY291bnQgPC0gYygxMzYsIDE1LCAyMSwgMzIsIDgxLCAzOSwgNjksIDQsIDYxKQpkZl9mcmVxX3Bvc2l0IDwtIGRhdGEuZnJhbWUoRnVuY3Rpb24gPSBwb3NpdF92YWx1ZSwgQ291bnQgPSBwb3NpdF9jb3VudCkKZnNob3dkZihkZl9mcmVxX3Bvc2l0KQoKYGBgCiMjIEdlbmRlcgoKYGBge3IsIGV2YWw9RkFMU0V9Cgp0YWJsZShkZl9lZ28yJGdlbmRlciwgdXNlTkEgPSAnYWx3YXlzJykKCiMgRnJlcXVlbmN5IHRhYmxlIGZvciBnZW5kZXIKCkdlbl92YWx1ZSA8LSBjKCdGZW1hbGUnLCAnTWFsZScsICdtaXNzaW5nJykKR2VuX2NvdW50IDwtIGMoMjQyLCAyMTEsIDUpCmRmX2ZyZXFfZ2VuIDwtIGRhdGEuZnJhbWUoR2VuZGVyID0gR2VuX3ZhbHVlLCBDb3VudCA9IEdlbl9jb3VudCkKZnNob3dkZihkZl9mcmVxX2dlbikKCmBgYAoKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRGF0YUFuZE1ldGhvZHMiCmF1dGhvcjogIkdoaXNsYWluZSBkZSBHcm9vdCIKZGF0ZTogIjIwMjUtMTEtMDciCm91dHB1dDogaHRtbF9kb2N1bWVudApiaWJsaW9ncmFwaHk6IHJlZmVyZW5jZXMuYmliCi0tLQoKIyBEYXRhCgojIyBTYW1wbGUKClN0b2NoYXN0aWMgQWN0b3IgT3JpZW50ZWQgTW9kZWxzIChTQU9NKQoKVGhlIGRhdGFzZXQgY29uc2lzdHMgb2YgZGlyZWN0ZWQgdGllcyBpbiBhIG5ldHdvcmsgb2Ygc2Nob2xhcnMgd29ya2luZyBhdCBhIER1dGNoIHNvY2lvbG9neSBkZXBhcnRtZW50IGFuZCBzY2hvbGFycyB3b3JraW5nIGF0IGEgRHV0Y2ggcG9saXRpY2FsIHNjaWVuY2UgZGVwYXJ0bWVudC4gQnkgdXNpbmcgdGhlIE9wZW5BbGV4IEFQSSAoc291cmNlPyksIHRoZSBJRHMgb2YgdGhlIHdvcmtzIGFmZmlsaWF0ZWQgd2l0aCB0aGVzZSBzY2hvbGFycyBoYWQgYmVlbiB3ZWJzY3JhcGVkLiAKCkZpcnN0LCB0aGUgZGF0YXNldCB3YXMgZmlsdGVyZWQgc28gdGhhdCBvbmx5IHRoZSBzY2hvbGFycyBmcm9tIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudHMgcmVtYWluZWQuIFRoZSBkdXBsaWNhdGUgc2Nob2xhciBJRHMgd2VyZSBzdWJzZXF1ZW50bHkgcmVtb3ZlZC4KClRoZSBkYXRhc2V0IGNvbnRhaW5zIGFjYWRlbWljIHdvcmtzIGZyb20gMjAxNSB1bnRpbCAyMDI1LiBGb3IgdGhlIDIwMjUgdGltZSBwb2ludCwgdGhlIGFjYWRlbWljIGZ1bmN0aW9uIG9mIG1lbWJlcnMgb2YgdGhlIEVyYXNtdXMgVW5pdmVyc2l0eSBSb3R0ZXJkYW0gc29jaW9sb2d5IGRlcGFydG1lbnQgaXMgbWlzc2luZy4gCgpUbyBleGFtaW5lIGNoYW5nZSBvdmVyIHRpbWUsIHR3byB3YXZlcyB3ZXJlIGNvbnN0cnVjdGVkLiBXYXZlIDEgZ29lcyBmcm9tIDIwMTUgdW50aWwgMjAxOSwgYW5kIFdhdmUgMiBnb2VzIGZyb20gMjAyMCB0byAyMDI0LCBtZWFuaW5nIGFuIGVxdWFsIHRpbWUgZGlzdHJpYnV0aW9uIG9mIGZvdXIgeWVhcnMuIAoKIyBNZXRob2RzCgpSIHdpbGwgYmUgdXNlZC4KCiMjIE1lYXN1cmVzIAoKVG8gb3BlcmF0aW9uYWxpc2UgdGhlIGNvbmNlcHQgb2Yg4oCYYWNhZGVtaWMgcHJlc3RpZ2XigJksIHRoZSBwZXJzb25hbCBoLWluZGV4IHdhcyB1c2VkIGFzIGEgcHJveHkoPyksIHJlcHJlc2VudGluZyBpbmRpdmlkdWFsIHByZXN0aWdlLiBUaGUgCgpTY2hvbGFycyB3aXRoIG1vcmUgY2FyZWVyIHNlbmlvcml0eSBhbmQgYSBwZXJtYW5lbnQgcG9zaXRpb24gYXJlIG1vcmUgbGlrZWx5IHRvIGJlIHJlcHJlc2VudGF0aXZlIG9mIHRoZSBsZXZlbCBvZiBxdWFsaXR5IG9mIGFuIGFjYWRlbWljIGRlcGFydG1lbnQgdGhhbiB0aG9zZSB3aG8gYXJlIG1vcmUganVuaW9yLiBUaGUgZnVuY3Rpb25zIGluIHRoZSBkYXRhIGFyZSBhbHNvIHNvbWV3aGF0IGFtYmlndW91cywgWy4uLl0gVGhlcmVmb3JlLCBzb2Npb2xvZ2lzdHMgd2hvIGhhdmUgYSBmdW5jdGlvbiBhcyBhc3Npc3RhbnQgcHJvZmVzc29yLCBhc3NvY2lhdGUgcHJvZmVzc29yIG9yIGZ1bGwgcHJvZmVzc29yIHdlcmUgdGFrZW4gaW50byB0aGUgZGVwYXJ0bWVudGFsIHByZXN0aWdlIG1lYXN1cmUuIFRoZSBoLWluZGV4IG9mIHRoZXNlIG1lbWJlcnMgd2VyZSBjb3VudGVkIHVwIHRvIGNhbGN1bGF0ZSB0aGUgbWVhbiBoLWluZGV4LiBUaGlzIGJlY2FtZSB0aGUgZGVwYXJ0bWVudGFsIHByZXN0aWdlIG1lYXN1cmUuIApUaGUgKmhpZ2hlciogZWZmZWN0IGluIFJTaWVuYSwgYW4gUiBwYWNrYWdlIHdoaWNoIHdpbGwgYmUgdXNlZCBmb3IgdGhlIGFuYWx5c2lzLiBUaGlzIGlzIHRoZSBlZmZlY3QgdGhhdCB0aGUgZWdvIGhhcyBhIGhpZ2hlciBjb3ZhcmlhdGUgdGhhbiB0aGUgYWx0ZXIuIFRoZSBlZmZlY3QgaXMgd3JpdHRlbiBvdXQgYXMgYW4gZXF1YXRpb24gYmVsb3cKCiQkIFxTaWdtYV9qIHhfe2lqfWRzaWduKHZfe2l9IC0gdl97an0pJCQKCldoZXJlIGRzaWduKCpkKikgPSAwIGZvciAqZCogPCAwLCAwLjUgZm9yICpkKiA9IDAsIGFuZCAxIGZvciAqZCogPiAwLgoKIyMjIEpvYiBwb3NpdGlvbgoKV2hpbGUgbWFueSBjaGFuZ2VzIGNhbiBoYXBwZW4gdG8gc29tZW9uZeKAmXMgYWNhZGVtaWMgZnVuY3Rpb24sIHN1Y2ggYXMgYmVpbmcgaGlyZWQsIGxlYXZpbmcgb3IgZ2V0dGluZyBhIHByb21vdGlvbiwgbW9zdCByZW1haW4gc3RhYmxlLiBGb3IgdGhlIHNha2Ugb2YgdGhlIGFuYWx5c2lzLCB0aGUgZnVuY3Rpb25zIHdlcmUgc3RhbmRhcmRpc2VkLiAKQWZ0ZXIgcmVtb3ZpbmcgdGhlIDIwMjUgdGltZSBwb2ludCwgdGhlIGF2YWlsYWJsZSB2YXJpYWJsZXMgd2VyZSB0aGUgZnVuY3Rpb24gYXQgMjAyMiBhbmQgMjAyNC4gVGhlIGpvYiBwb3NpdGlvbiBhdCAyMDIyIHdhcyB1c2VkIGZvciAyMDI0LiBNb3N0IHNvY2lvbG9naXN0cyBoZWxkIHRoZSBzYW1lIHBvc2l0aW9uIG9uIGJvdGggdGltZSBwb2ludHMsIGJ1dCBhIHByb21vdGlvbiBvciBsZWF2ZSB3YXMgdGhlcmVmb3JlIG5vdCBpbmNsdWRlZC4gV2hlbiBhIGZ1bmN0aW9uIGF0IDIwMjIgd2FzIG1pc3NpbmcsIHRoZSBmdW5jdGlvbiBhdCAyMDI0IHdhcyB1c2VkIGluc3RlYWQuCgojIyMgQ29udHJvbCB2YXJpYWJsZXMKCkJlc2lkZXMgdGhlIG1haW4gZWZmZWN0cyBvZiBpbmRpdmlkdWFsIGFuZCBkZXBhcnRtZW50YWwgcHJlc3RpZ2UsIHR3byBjb250cm9sIHZhcmlhYmxlcyB3ZXJlIGFsc28gdGFrZW4gaW50byB0aGUgYW5hbHlzaXMuIFRoZSBmaXJzdCBpcyBhIG51bWVyaWMgdmVyc2lvbiBvZiB0aGUgdW5pdmVyc2l0eSB2YXJpYWJsZSBhbmQgdGhlIHNlY29uZCBpcyBhIGR1bW15IHZhcmlhYmxlIG9mIGdlbmRlci4gQm90aCBhcmUgdXNlZCB0byBjb250cm9sIGZvciB0aGUgZWZmZWN0IHRoYXQgc2Nob2xhcnMgbWF5IHByZWZlciB3b3JraW5nIHRvZ2V0aGVyIHdpdGggb3RoZXJzIGZyb20gdGhlaXIgb3duIGRlcGFydG1lbnQgKHNvdXJjZSksIG9yIHdobyBzaGFyZSB0aGUgc2FtZSBnZW5kZXIgKHNvdXJjZSkuIFRoaXMgaXMgYWNoaWV2ZWQgdGhyb3VnaCB0aGUgc2FtZVggZWZmZWN0LCB0YWtpbmcgdGhlIHNhbWUgdmFsdWUgb2YgdGhlLi4uCgpBZnRlciByZW1vdmluZyB0aGUgMjAyNSB0aW1lIHBvaW50LCBzb21lIG1pc3NpbmduZXNzIHJlbWFpbmVkIGluIHVuaXZlcnNpdHksIGZ1bmN0aW9uIGFuZCBnZW5kZXIuIFRoaXMgbWlzc2luZ25lc3Mgd2FzIHZlcnkgc21hbGwsIFtudW1iZXJdLiBSZW1vdmluZyB0aGUgc2Nob2xhcnMgd2l0aCBtaXNzaW5nIHZhcmlhYmxlcyBwcm92ZWQgdG8gYmUgbW9yZSBwcm9ibGVtYXRpYyB0byBydW4gdGhlIFJTaWVuYSBtb2RlbCB0aGFuIGtlZXBpbmcgdGhlbSBpbiB0aGUgZGF0YXNldC4KCiMgRnJlcXVlbmNpZXMKCiMjIFVuaXZlcnNpdHkKCmBgYHtyLCBldmFsPUZBTFNFfQoKdGFibGUoZGZfZWdvMiR1bml2ZXJzaXR5LCB1c2VOQSA9ICdhbHdheXMnKQoKIyBGcmVxdWVuY3kgdGFibGUgZm9yIHVuaXZlcnNpdHkKdW5pX3ZhbHVlIDwtIGMoJ0VVUicsICdSVScsICdSdkcnLCAnVVUnLCAnVXZBJywgIlV2VCIsICdWVScsICdtaXNzaW5nJykKdW5pX2NvdW50IDwtIGMoNTAsIDQ5LCA3NCwgNTMsIDcwLCAyOCwgODAsIDU0KQpkZl91bmlfZnJlcSA8LSBkYXRhLmZyYW1lKFVuaXZlcnNpdHkgPSB1bmlfdmFsdWUsIENvdW50ID0gdW5pX2NvdW50KQpmc2hvd2RmKGRmX3VuaV9mcmVxKQoKYGBgCgojIyBKb2IgcG9zaXRpb24KCmBgYHtyLCBldmFsPUZBTFNFfQoKdGFibGUoZGZfZWdvMiRwb3NpdGlvbiwgdXNlTkEgPSAnYWx3YXlzJykKCiMgRnJlcXVlbmN5IHRhYmxlIGZvciBqb2IgcG9zaXRpb24KCnBvc2l0X3ZhbHVlIDwtIGMoJ1BoRCBDYW5kaWRhdGUnLCAnUG9zdGRvY3RvcmFsIFJlc2VhcmNoZXInLCAnTGVjdHVyZXInLCAnUmVzZWFyY2hlcicsCiAgICAgICAgICAgICdBc3Npc3RhbnQgcHJvZmVzc29yJywnQXNzb2NpYXRlIHByb2Zlc3NvcicsICdGdWxsIHByb2Zlc3NvcicsICdTdGFmZicsICdtaXNzaW5nJykKcG9zaXRfY291bnQgPC0gYygxMzYsIDE1LCAyMSwgMzIsIDgxLCAzOSwgNjksIDQsIDYxKQpkZl9mcmVxX3Bvc2l0IDwtIGRhdGEuZnJhbWUoRnVuY3Rpb24gPSBwb3NpdF92YWx1ZSwgQ291bnQgPSBwb3NpdF9jb3VudCkKZnNob3dkZihkZl9mcmVxX3Bvc2l0KQoKYGBgCiMjIEdlbmRlcgoKYGBge3IsIGV2YWw9RkFMU0V9Cgp0YWJsZShkZl9lZ28yJGdlbmRlciwgdXNlTkEgPSAnYWx3YXlzJykKCiMgRnJlcXVlbmN5IHRhYmxlIGZvciBnZW5kZXIKCkdlbl92YWx1ZSA8LSBjKCdGZW1hbGUnLCAnTWFsZScsICdtaXNzaW5nJykKR2VuX2NvdW50IDwtIGMoMjQyLCAyMTEsIDUpCmRmX2ZyZXFfZ2VuIDwtIGRhdGEuZnJhbWUoR2VuZGVyID0gR2VuX3ZhbHVlLCBDb3VudCA9IEdlbl9jb3VudCkKZnNob3dkZihkZl9mcmVxX2dlbikKCmBgYAoKCgo=</div>
 
 
 </div>
