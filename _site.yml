@@ -28,7 +28,13 @@ navbar:
         href: lab6sienaexercise.html
       - text: "Lab 7"
         href: lab7.html
-  
+    - text: "Final project"
+      menu:  
+      - text: "Data preparation"
+        href: DataPrep.html
+      - text: "Analysis"
+        href: Analysis.html
+        
         # here, other .Rmds can be added
 
 

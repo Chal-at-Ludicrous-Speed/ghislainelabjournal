@@ -1,0 +1,464 @@
+---
+title: "DataPrep"
+author: "Ghislaine de Groot"
+date: "2025-11-05"
+output: html_document
+---
+
+# Getting Started
+
+```{r, eval=FALSE}
+rm(list = ls())
+```
+
+
+```{r, eval=FALSE}
+library(foreign)
+library(tidyverse)
+library(scholar) 
+library(openalexR)
+library(rvest) 
+library(jsonlite)
+library(RSiena)
+
+```
+
+# Custom Functions
+
+
+```{r, eval=FALSE}
+fpackage.check = function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave = function(x, file = NULL, location = "./data/processed/") {
+    ifelse(!dir.exists("data"), dir.create("data"), FALSE)
+    ifelse(!dir.exists("data/processed"), dir.create("data/processed"), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename = substr(gsub("[:-]", "", Sys.time()), 1, 8)
+    totalname = paste(location, datename, file, ".rda", sep = "")
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload = function(filename) {
+    load(filename)
+    get(ls()[ls() != "filename"])
+}
+
+fshowdf = function(x, ...) {
+    knitr::kable(x, digits = 2, "html", ...) |>
+        kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) |>
+        kableExtra::scroll_box(width = "100%", height = "300px")
+}
+
+```
+
+
+## Define Network Data Helper Function
+```{r, eval=FALSE}
+
+fcolnet = function(data = scholars, university = c("RU", 'UU'), discipline = "Sociologie", waves = list(c(2015, 2018), c(2019, 2023), c(2024, 2025)), type = c("first")) {
+
+    university = paste0('(', paste0(university, collapse='|' ), ')')
+    discipline = paste0('(', paste0(discipline, collapse='|' ), ')')
+
+    # step 1
+    demographics = data$demographics
+    sample = which(
+        (str_detect(demographics$universiteit.22, university)
+            | str_detect(demographics$universiteit.24, university)
+            | str_detect(demographics$universiteit.25, university)
+        ) & (
+            str_detect(demographics$discipline.22, discipline)
+            | str_detect(demographics$discipline.24, discipline)
+            | str_detect(demographics$discipline.25, discipline)
+        ) |> replace_na(FALSE))
+
+    demographics_soc = demographics[sample, ] |> drop_na(id)
+
+    # step 2
+    ids = demographics_soc$id |> unique()
+
+
+    scholars_sel = list() 
+    for (id_ in ids){
+        scholars_sel[[id_]] = bind_rows(scholars$works) |>
+            filter(author_id == id_)
+    }
+    scholars_sel = bind_rows(scholars$works) 
+    
+
+    nwaves = length(waves)
+    nets = array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works = tibble(
+            works_id = scholars_sel$id, 
+            works_author = scholars_sel$authorships, 
+            works_year = scholars_sel$publication_year
+        )
+
+
+    df_works = df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == "first") {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego = df_works_w$works_author[i][[1]]$id[1]
+                alters = df_works_w$works_author[i][[1]]$id[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] = 1
+                }
+            }
+        }
+    }
+
+    if (type == "last") {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego = rev(df_works_w$works_author[i][[1]]$id[1])
+                alters = rev(df_works_w$works_author[i][[1]]$id[-1])
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] = 1
+                }
+            }
+        }
+    }
+    if (type == "all") {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos = df_works_w$works_author[i][[1]]$id
+                if (sum(ids %in% egos) > 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] = 1
+                }
+            }
+            diag(nets[j,,]) = 0
+        }
+    }
+
+    output = list()
+    output$data = demographics_soc
+    output$nets = nets
+    return(output)
+}
+```
+
+
+```{r, eval=FALSE}
+packages = c(
+    "RSiena", "tidyverse",
+    'dplyr', 'stringr' # these packages were added to make the code run
+)
+fpackage.check(packages)
+
+library(RSiena)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+
+scholars = fload('data/processed/20251017scholars.Rda')
+
+scholars$demographics = scholars$demographics |>
+  mutate(
+    universiteit.22 = str_replace(universiteit.22, 'RUG', 'RvG'),
+    universiteit.24 = str_replace(universiteit.24, 'RUG', 'RvG'),
+    universiteit.25 = str_replace(universiteit.25, 'RUG', 'RvG'),
+  )
+```
+
+## Application
+### Load Data
+```{r, eval=FALSE}
+sociologists = fcolnet(scholars, university = c('RU','UU','UvT','EUR','UvA','VU','RvG'), waves = list(c(2015, 2019), c(2020, 2024)))
+df_ego = bind_rows(sociologists$data)
+```
+
+### Wrangle Data
+```{r, eval=FALSE}
+wave1 = sociologists$nets[1,,]
+wave2 = sociologists$nets[2,,]
+
+nets = array(
+    data = c(wave1, wave2),
+    dim = c(dim(wave2), 2)
+)
+
+net = sienaDependent(nets)
+```
+
+### Defining academic function of a sociologist
+
+```{r, eval=FALSE}
+df_ego = df_ego |>
+    mutate(
+        funcs = case_when(
+            functie.22 == "Full Professor" ~ 1,
+            functie.24 == "Full Professor" ~ 1,
+            .default = 0
+        )
+    )
+
+funcs = coCovar(df_ego$funcs)
+```
+
+# Prestige measure
+
+```{r, eval=FALSE}
+# Add h-index and i10-index columns to df_ego
+df_ego <- df_ego %>%
+    mutate(h_index = NA_real_, i10_index = NA_real_)
+
+# Get H-index and i10-index
+get_openalex_metrics <- function(openalex_id) {
+    url <- paste0("https://api.openalex.org/authors/", openalex_id)
+    author_data <- tryCatch({
+        jsonlite::fromJSON(url)
+    }, error = function(e) {
+        message(paste("Error fetching data for OpenAlex ID:", openalex_id))
+        return(NULL)
+    })
+
+    if (!is.null(author_data)) {
+        h_index <- author_data$summary_stats$h_index
+        i10_index <- author_data$summary_stats$i10_index
+        works_count <- author_data$works_count
+        cited_by_count <- author_data$cited_by_count
+        return(list(h_index = h_index, i10_index = i10_index, works_count = works_count, cited_by_count = cited_by_count))
+    } else {
+        return(list(h_index = NA, i10_index = NA, works_count = NA, cited_by_count = NA))
+    }
+}
+
+# Loop for each scholar
+for (i in 1:nrow(df_ego)) {
+    openalex_id <- df_ego$id[i]  # assuming id is the OpenAlex ID in df_ego
+    metrics <- get_openalex_metrics(openalex_id)
+    df_ego$h_index[i] <- metrics$h_index
+    df_ego$i10_index[i] <- metrics$i10_index
+    df_ego$works_count[i] <- metrics$works_count
+    df_ego$cited_by_count[i] <- metrics$cited_by_count
+}
+
+# View updated df_ego with h-index and i10-index
+View(df_ego)
+
+```
+## Missings h-index
+
+```{r, eval=FALSE}
+table(df_ego$h_index,useNA='always')
+
+# 0 missings
+```
+
+## making one variable for functie
+
+```{r, eval=FALSE}
+
+table(df_ego$functie.22,useNA='always')
+table(df_ego$functie.24,useNA='always')
+
+# df_ego$position <- ifelse(df_ego$functie.22 == NA, df_ego$functie.24, df_ego$functie.22)
+
+df_ego$position <- ifelse(is.na(df_ego$functie.22), df_ego$functie.24, df_ego$functie.22)
+
+
+table(df_ego$position,useNA='always')
+
+checkposition <- cbind.data.frame(
+  df_ego$functie.22, df_ego$functie.24, df_ego$position)
+view(checkposition)
+rm(checkposition)
+
+```
+## making one variable for universiteit
+
+```{r, eval=FALSE}
+
+table(df_ego$universiteit.22,useNA='always')
+table(df_ego$universiteit.24,useNA='always')
+
+df_ego$university <- ifelse(is.na(df_ego$universiteit.22), df_ego$universiteit.24, df_ego$universiteit.22)
+
+table(df_ego$university,useNA='always')
+
+checkuni <- cbind.data.frame(
+  df_ego$universiteit.22, df_ego$universiteit.24, df_ego$university)
+view(checkuni)
+rm(checkuni)
+
+df_ego$university <- gsub('EUR/Boston University', 'EUR', df_ego$university)
+df_ego$university <- gsub('RU/RvG', 'RU', df_ego$university)
+df_ego$university <- gsub('RvG/RU', 'RvG', df_ego$university)
+df_ego$university <- gsub('RvG/Tilburg', 'RvG', df_ego$university)
+df_ego$university <- gsub('RvG/TU Delft', 'RvG', df_ego$university)
+df_ego$university <- gsub('RvG/Universiteit Stockholm', 'RvG', df_ego$university)
+df_ego$university <- gsub('RvG/University Linköping', 'RvG', df_ego$university)
+df_ego$university <- gsub('RvG/University of Leipzig', 'RvG', df_ego$university)
+df_ego$university <- gsub('RvG/University of Turku', 'RvG', df_ego$university)
+df_ego$university <- gsub('UU/UvA', 'UU', df_ego$university)
+df_ego$university <- gsub('UvA/Frankfurt School of Finance & Management', 'UvA', df_ego$university)
+df_ego$university <- gsub('UvA/EUR', 'UvA', df_ego$university)
+df_ego$university <- gsub('UvA/University of Lausanne', 'UvA', df_ego$university)
+df_ego$university <- gsub('UvT/Trento University', 'UvT', df_ego$university)
+df_ego$university <- gsub('VU/UvH', 'VU', df_ego$university)
+
+table(df_ego$university,useNA='always')
+checkuni <- cbind.data.frame(
+  df_ego$universiteit.22, df_ego$universiteit.24, df_ego$university)
+view(checkuni)
+rm(checkuni)
+
+```
+
+```{r, eval=FALSE}
+
+df_ego = df_ego |>
+    mutate(
+        bigleague = case_when(
+            position == "Assistant Professor" ~ 1,
+            position == "Associate Professor" ~ 1,
+            position == "Full Professor" ~ 1,
+            .default = 0
+        )
+    )
+
+checkbigleague <- cbind.data.frame(
+  df_ego$position, df_ego$bigleague)
+view(checkbigleague)
+rm(checkbigleague)
+
+```
+
+```{r, eval=FALSE}
+# Getting the assistant/associate/full professors into a variable
+table(df_ego$bigleague, df_ego$university)
+
+bleague <- ifelse(df_ego$bigleague == 1, df_ego$university, NA)
+
+hindex <- ifelse(df_ego$bigleague == 1, df_ego$h_index, NA)
+
+blhin <- data.frame(university = bleague, hindex = hindex)
+
+table(blhin$university, useNA = 'always')
+table(blhin$hindex, useNA = 'always')
+
+blhin <- blhin[!is.na(blhin[c('university')]), ]
+
+table(blhin$university, useNA = 'always')
+table(blhin$hindex, useNA = 'always')
+
+# EUR  RU   RvG  UU   UvA  UvT  VU  <NA> 
+# 32   18   31   25   34   16   33    0 
+
+```
+
+```{r, eval=FALSE}
+# average h-index of department
+
+uni_list <- as.data.frame(c('EUR', 'RU', 'RvG', 'UU', 'UvA', 'UvT', 'VU'))
+
+names(uni_list) <- 'university'
+
+uni_df <- merge(uni_list, blhin, by='university')
+
+require(dplyr)
+
+summarise(group_by(uni_df, university), sum_h = sum(hindex))
+
+table(blhin$university, useNA = 'always')
+
+EUR_mean_h <- 473 / 32
+RU_mean_h <- 279 / 18
+RvG_mean_h <- 766 / 31
+UU_mean_h <- 417 / 25
+UvA_mean_h <- 567 / 34
+UvT_mean_h <- 246 / 16
+VU_mean_h <- 660 / 33
+
+mean_h <- c(EUR_mean_h, RU_mean_h, RvG_mean_h, UU_mean_h, UvA_mean_h, UvT_mean_h, VU_mean_h)
+
+df_mean_h <- data.frame(university = uni_list, mean_h)
+
+df_ego2 <- merge(df_ego, df_mean_h, by = "university", all.x = TRUE)
+
+```
+
+```{r, eval=FALSE}
+# university as numeric
+
+df_ego2$uni_num <- df_ego2$university
+df_ego2$uni_num <- gsub('EUR', 0, df_ego2$uni_num)
+df_ego2$uni_num <- gsub('RU', 1, df_ego2$uni_num)
+df_ego2$uni_num <- gsub('RvG', 2, df_ego2$uni_num)
+df_ego2$uni_num <- gsub('UU', 3, df_ego2$uni_num)
+df_ego2$uni_num <- gsub('UvA', 4, df_ego2$uni_num)
+df_ego2$uni_num <- gsub('UvT', 5, df_ego2$uni_num)
+df_ego2$uni_num <- gsub('VU', 6, df_ego2$uni_num)
+
+table(df_ego2$university, df_ego2$uni_num, useNA = 'always')
+
+```
+```{r, eval=FALSE}
+# gender as numeric
+
+Gender_value <- c('Female','Male')
+Gender_count <- c(245,213)
+df_gender_freq <- data.frame(Gender=Gender_value, Count=Gender_count)
+fshowdf(df_gender_freq) 
+
+#Lastly there is the gender variable, which has five missings
+table(df_ego2$gender,useNA='always')
+
+# DO MISSINGS HERE
+
+
+#dummy
+df_ego2$gender_num <- df_ego2$gender
+df_ego2$gender_num <- gsub('female', 0, df_ego2$gender_num)
+df_ego2$gender_num <- gsub('male', 1, df_ego2$gender_num)
+
+# check
+table(df_ego2$gender,df_ego2$gender_num,useNA='always')
+
+```
+# RSiena objects
+
+```{r, eval=FALSE}
+
+df_ego2$uni_num <- as.numeric(df_ego2$uni_num)
+uni_num2 <- coCovar(df_ego2$uni_num,centered=FALSE)
+
+df_ego2$gender_num <- as.numeric(df_ego2$gender_num)
+gender_dummy <- coCovar(df_ego2$gender_num, centered=FALSE)
+
+H_index_CC <- coCovar(df_ego2$h_index, centered = TRUE)
+mean_h_CC <- coCovar(df_ego2$mean_h, centered = TRUE)
+
+
+#Making the data object
+
+collab1 <- sienaDataCreate(net, uni_num2, gender_dummy, H_index_CC, mean_h_CC)
+
+```
+
+
+
+
+
+

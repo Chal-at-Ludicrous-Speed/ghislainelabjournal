@@ -1,0 +1,240 @@
+---
+title: "Analysis"
+author: "Ghislaine de Groot"
+date: "2025-11-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+library(foreign)
+library(tidyverse)
+library(scholar) 
+library(openalexR)
+library(rvest) 
+library(jsonlite)
+library(RSiena)
+library(ggraph)
+require(tidyr)
+
+```
+
+# Descriptive statistics
+
+## Visualisations
+
+```{r, eval=FALSE}
+
+#Without isolates
+#Wave 1
+no_iso_w1 = rowSums(sociologists$nets[1,,]) > 0
+net_no_iso_w1 = sociologists$nets[1,no_iso_w1,no_iso_w1]
+df_no_iso_w1 = df_ego2[no_iso_w1, ]
+
+
+ggraph(net_no_iso_w1,
+       layout = "fr") +
+  geom_edge_link(arrow = arrow(length = unit(2, 'mm')), end_cap = circle(1, 'mm'), color = "gray", width = 0.5) +
+  geom_node_point(size = 3, aes(color = df_no_iso_w1$h_index, shape = as.factor(df_no_iso_w1$bigleague))) + 
+  scale_size(range = c(3, 10)) + 
+  scale_color_gradient(low = "red", high = "blue") + 
+  theme_void()
+
+```
+
+![](images/zoomed plot.png)
+
+# Model 0
+
+```{r, eval=FALSE}
+
+#Create main algorithm
+Main_algo <- sienaAlgorithmCreate()
+
+#Specifying model 0
+#Model 0: the null model, only density and reciprocity
+effects0 <- getEffects(collab1)
+
+#Estimating Model 0
+Esti0 <- siena07(Main_algo,data = collab1, effects = effects1, returnDeps = TRUE)
+Esti0
+
+#Goodness of fit Model 0
+model0gof1 <- sienaGOF(Esti0, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model0gof2 <- sienaGOF(Esti0, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model0gof3 <- sienaGOF(Esti0, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
+plot(model0gof1)
+plot(model0gof2)
+plot(model0gof3)
+
+#t-value calculation to check significance of effects in model 1
+df_result0 <- cbind.data.frame(Esti0$theta,Esti1$se)
+names(df_result0) <- c('theta','se')
+df_result0$t_test <- df_result0$theta/df_result0$se
+
+```
+# Model 1
+
+```{r, eval=FALSE}
+# Model 1: ego level effect individual prestige 'h_index', structural effects 
+
+effects1 <- getEffects(collab1)
+
+# Included effects
+  effects1 <- includeEffects(effects1, isolateNet, inPop, transTrip)
+  effects1 <- includeEffects(effects1, higher, name = 'net', interaction1 = 'H_index_CC')
+
+# effect of higher will be reversed in the interpretation  
+  
+#Estimating model 1
+Esti1 <- siena07(Main_algo, data = collab1, effects = effects1, returnDeps=TRUE)
+Esti1
+  
+#Goodness of fit
+model1gof1 <- sienaGOF(Esti1, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model1gof2 <- sienaGOF(Esti1, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model1gof3 <- sienaGOF(Esti1, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
+plot(model1gof1)
+plot(model1gof2)
+plot(model1gof3)
+
+#t-value calculation to check significance of effects in model 2
+df_result1 <- cbind.data.frame(Esti1$theta, Esti1$se)
+names(df_result1) <- c('theta','se')
+df_result1$ttest <- df_result1$theta/df_result1$se
+
+
+
+```
+
+# Model 2
+
+```{r, eval=FALSE}
+
+# Model 2: ego level effect departmental prestige 'mean_h', structural effects 
+
+effects2 <- getEffects(collab1)
+
+#Included effects
+  effects2 <- includeEffects(effects2, isolateNet, inPop, transTrip)
+  effects2 <- includeEffects(effects2, higher, name ='net', interaction1 = 'mean_h_CC')
+
+# effect of higher will be reversed in the interpretation  
+  
+#Estimating model 2
+Esti2 <- siena07(Main_algo, data = collab1, effects = effects2, returnDeps = TRUE)
+Esti2
+  
+#Goodness of fit
+model2gof1 <- sienaGOF(Esti2, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model2gof2 <- sienaGOF(Esti2, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model2gof3 <- sienaGOF(Esti2, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
+plot(model2gof1)
+plot(model2gof2)
+plot(model2gof3)
+
+#t-value calculation to check significance of effects in model 2
+df_result2 <- cbind.data.frame(Esti2$theta, Esti2$se)
+names(df_result2) <- c('theta','se')
+df_result2$ttest <- df_result2$theta/df_result2$se
+
+
+```
+# Model 3
+```{r, eval=FALSE}
+# Adding both ego-level H-index measures, as well as the control variables
+
+effects3 <- getEffects(collab1)
+
+# Included effects
+  effects3 <- includeEffects(effects3, isolateNet, inPop, transTrip)
+  effects3 <- includeEffects(effects3, sameX, name ='net', interaction1 = 'gender_dummy')
+  effects3 <- includeEffects(effects3, sameX, name ='net', interaction1 = 'uni_num2')
+  effects3 <- includeEffects(effects3, higher, name ='net', interaction1 = 'H_index_CC')
+  effects3 <- includeEffects(effects3, higher, name ='net', interaction1 = 'mean_h_CC')
+  
+# Estimating model 3
+  Esti3 <- siena07(Main_algo, data = collab1, effects = effects3, returnDeps=TRUE)
+  Esti3
+  
+# Goodness of fit
+model3gof1 <- sienaGOF(Esti3, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model3gof2 <- sienaGOF(Esti3, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model3gof3 <- sienaGOF(Esti3, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
+plot(model3gof1)
+plot(model3gof2)
+plot(model3gof3)
+
+# t-value calculation to check significance of effects in model 3
+df_result3 <- cbind.data.frame(Esti3$theta,Esti3$se)
+names(df_result3) <- c('theta','se')
+df_result3$ttest <- df_result3$theta/df_result3$se
+
+```
+# Model 4 
+```{r, eval=FALSE}
+# Trying to improve the goodness of fit
+
+effects4 <- getEffects(collab1)
+
+# Included effects
+  effects4 <- includeEffects(effects4, isolateNet, inPop, outAct, inAct, transTrip)
+  effects4 <- includeEffects(effects4, sameX, name = 'net', interaction1 = 'gender_dummy')
+  effects4 <- includeEffects(effects4, sameX, name = 'net', interaction1 = 'uni_num2')
+  effects4 <- includeEffects(effects4, higher, name = 'net', interaction1 = 'H_index_CC')
+  effects4 <- includeEffects(effects4, higher, name = 'net', interaction1 = 'mean_h_CC')
+  
+# Estimating model 4
+  Esti4 <- siena07(Main_algo, data = collab1, effects = effects4, returnDeps = TRUE)
+  Esti4
+  
+# Goodness of fit
+model4gof1 <- sienaGOF(Esti4, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model4gof2 <- sienaGOF(Esti4, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model4gof3 <- sienaGOF(Esti4, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
+plot(model4gof1)
+plot(model4gof2)
+plot(model4gof3)
+
+# t-value calculation to check significance of effects in model 4
+df_result4 <- cbind.data.frame(Esti4$theta,Esti4$se)
+names(df_result4) <- c('theta','se')
+df_result4$ttest <- df_result4$theta/df_result4$se
+
+```
+# Model 5
+
+```{r, eval=FALSE}
+#Model 5: Using the estimates of Model 4 to improve convergence
+
+effects5 <- getEffects(collab1)
+
+#Included effects
+  effects5 <- includeEffects(effects5, isolateNet, inPop, outAct, inAct, transTrip)
+  effects5 <- includeEffects(effects5, sameX, name = 'net', interaction1 = 'gender_dummy')
+  effects5 <- includeEffects(effects5, sameX, name = 'net', interaction1 = 'uni_num')
+  effects5 <- includeEffects(effects5, higher, name = 'net', interaction1 = 'H_index_CC')
+  effects5 <- includeEffects(effects5, higher, name ='net', interaction1 = 'mean_h_CC')
+  
+# Estimate model 5
+  Esti5 <- siena07(Main_algo, data = collab1, effects = effects5, returnDeps=TRUE, prevAns = Esti4)
+  Esti5
+  
+#Goodness of fit testing for model 5
+model5gof1 <- sienaGOF(Esti5, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model5gof2 <- sienaGOF(Esti5, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model5gof3 <- sienaGOF(Esti5, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
+plot(model5gof1)
+plot(model5gof2)
+plot(model5gof3)
+  
+#t-value calculation to check significance of effects in model 5
+df_results5 <- cbind.data.frame(Esti5$theta, Esti5$se)
+names(df_results5) <- c('theta','se')
+df_results5$ttest <- df_results5$theta/df_results5$se
+```
+
+
+
+
+
