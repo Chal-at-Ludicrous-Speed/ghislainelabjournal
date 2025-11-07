@@ -28,6 +28,8 @@ navbar:
         href: lab6sienaexercise.html
       - text: "Lab 7"
         href: lab7.html
+    - text: "Test"
+      href: DataAndMethods.html 
     - text: "Final project"
       menu:  
       - text: "Data preparation"

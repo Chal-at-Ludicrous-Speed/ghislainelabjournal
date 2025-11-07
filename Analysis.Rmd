@@ -21,6 +21,10 @@ require(tidyr)
 
 # Descriptive statistics
 
+## Indegree distribution
+
+For later.
+
 ## Visualisations
 
 ```{r, eval=FALSE}
@@ -43,23 +47,28 @@ ggraph(net_no_iso_w1,
 ```
 
 ![](images/zoomed plot.png)
+As can be seen in the graph, there are several nodes with a high (blue) h-index and a high degree. However, nodes with a low (red) h-index often also have a high degree. It appears h-index has little effect on forming stars in the network, but there is little to conclude regarding the hypotheses yet.
 
-# Model 0
+# Results
+
+## Model 0
+
+The null model acted as a benchmark for the later models. No main effects are added yet. 
 
 ```{r, eval=FALSE}
 
-#Create main algorithm
+# Creating main algorithm
 Main_algo <- sienaAlgorithmCreate()
 
-#Specifying model 0
-#Model 0: the null model, only density and reciprocity
+# Specifying model 0
+# Model 0: the null model, only density and reciprocity
 effects0 <- getEffects(collab1)
 
 #Estimating Model 0
 Esti0 <- siena07(Main_algo,data = collab1, effects = effects1, returnDeps = TRUE)
 Esti0
 
-#Goodness of fit Model 0
+# Goodness of fit
 model0gof1 <- sienaGOF(Esti0, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
 model0gof2 <- sienaGOF(Esti0, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
 model0gof3 <- sienaGOF(Esti0, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
@@ -67,13 +76,15 @@ plot(model0gof1)
 plot(model0gof2)
 plot(model0gof3)
 
-#t-value calculation to check significance of effects in model 1
+# t-value calculation
 df_result0 <- cbind.data.frame(Esti0$theta,Esti1$se)
 names(df_result0) <- c('theta','se')
 df_result0$t_test <- df_result0$theta/df_result0$se
 
 ```
-# Model 1
+## Model 1
+
+In Model 1, the null model was expanded upon by adding the individual h-index measure and the structural effects.
 
 ```{r, eval=FALSE}
 # Model 1: ego level effect individual prestige 'h_index', structural effects 
@@ -86,11 +97,11 @@ effects1 <- getEffects(collab1)
 
 # effect of higher will be reversed in the interpretation  
   
-#Estimating model 1
+# Estimating model 1
 Esti1 <- siena07(Main_algo, data = collab1, effects = effects1, returnDeps=TRUE)
 Esti1
   
-#Goodness of fit
+# Goodness of fit
 model1gof1 <- sienaGOF(Esti1, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
 model1gof2 <- sienaGOF(Esti1, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
 model1gof3 <- sienaGOF(Esti1, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
@@ -98,16 +109,22 @@ plot(model1gof1)
 plot(model1gof2)
 plot(model1gof3)
 
-#t-value calculation to check significance of effects in model 2
+# t-value calculation
 df_result1 <- cbind.data.frame(Esti1$theta, Esti1$se)
 names(df_result1) <- c('theta','se')
 df_result1$ttest <- df_result1$theta/df_result1$se
 
 
-
 ```
 
-# Model 2
+From hypothesis 1, it would be expected that the theta-coefficient is negative, and that the t-value >= 2, which would mean that sociologists want to work together with someone with a higher h-index (p < 0.05). Because the effect of h-index is modeled as *higher* (Siena source), which states that ego has a higher value than the alter, the interpretation is reversed so a negative score means the ego has a lower value than the alter.  
+
+The effect of h-index is in the opposite direction than expected, as it is positive (t = 1.925), and it is not significant (p = 0.0596). It appears that there is no effect of individual prestige on the collaboration network. However, the poor Goodness of Fit indices of the model indicate poor fit when it comes to indegree distributions (0.006), outdegree distributions (0.009) and triad census (0.003), measured by the Mahalanobis distance. This means that the model does not match the observed data. If more effects are added, the Goodness of Fit may improve. 
+
+
+## Model 2
+
+A separate model, Model 2, was run with the mean value of the h-index per department instead of the individual h-index measure, as well as the same structural effects as in Model 1. 
 
 ```{r, eval=FALSE}
 
@@ -121,11 +138,11 @@ effects2 <- getEffects(collab1)
 
 # effect of higher will be reversed in the interpretation  
   
-#Estimating model 2
+# Estimating model 2
 Esti2 <- siena07(Main_algo, data = collab1, effects = effects2, returnDeps = TRUE)
 Esti2
   
-#Goodness of fit
+# Goodness of fit
 model2gof1 <- sienaGOF(Esti2, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
 model2gof2 <- sienaGOF(Esti2, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
 model2gof3 <- sienaGOF(Esti2, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
@@ -133,14 +150,21 @@ plot(model2gof1)
 plot(model2gof2)
 plot(model2gof3)
 
-#t-value calculation to check significance of effects in model 2
+# t-value calculation
 df_result2 <- cbind.data.frame(Esti2$theta, Esti2$se)
 names(df_result2) <- c('theta','se')
 df_result2$ttest <- df_result2$theta/df_result2$se
 
 
 ```
-# Model 3
+The convergence ratio has improved from Model 1 (0.319) to Model 2 (0.296). 
+
+The mean h-index per department is in the expected negative direction (-0.175), but also not significant (t = -1.038). It appears that there is no effect of departmental prestige on the collaboration network. The Goodness of Fit indices are close to identical to Model 1, also indicating poor fit from the indegree distributions (0.005), outdegree distributions (0.013) and triad census (0.003), measured by the Mahalanobis distance. This is likely due to the insignificance of both the individual h-index and the departmental mean h-index measures.   
+
+## Model 3
+
+In Model 3, both ego-level measures for h-index, the individual and departmental prestige, were added, as well as the control variables university (numeric) and gender (dummy).
+
 ```{r, eval=FALSE}
 # Adding both ego-level H-index measures, as well as the control variables
 
@@ -171,7 +195,16 @@ names(df_result3) <- c('theta','se')
 df_result3$ttest <- df_result3$theta/df_result3$se
 
 ```
-# Model 4 
+The individual h-index (0.2205) (t = 0.748) and departmental mean h-index (-0.1924) (t = -0.703) have not changed directions and remain insignificant.
+
+For the Goodness of Fit indices, still little change is observed, with indegree distributions (0.006), outdegree distributions (0.011) and triad census (0.005), measured by the Mahalanobis distance, again suggesting a poor fit.
+
+The convergence ratio (0.284) improves slightly from Model 2 (0.296).   
+
+## Model 4 
+
+Another model, Model 4, was run to attempt to improve the low goodness of fit of Model 3. The structural effects outAct and inAct were added. 
+
 ```{r, eval=FALSE}
 # Trying to improve the goodness of fit
 
@@ -202,14 +235,21 @@ names(df_result4) <- c('theta','se')
 df_result4$ttest <- df_result4$theta/df_result4$se
 
 ```
-# Model 5
+The outdegree distribution became significant (0.222), as it is higher than 0.05, while the indegree distribution (0.038) and the triad census (0.02) remained insignificant, as measured by the Mahalanobis distance. Meaning, the difference in outdegree distribution between the model and the observed data has become insignificant.
+
+Individual h-index (0.2275) (t = 1.230) and departmental mean h-index (-0.1884) (t = -0.912) remain insignificant.
+
+
+## Model 5
+
+Due to the low convergence of Model 4 (0.322), Model 5 was constructed to improve this. When estimating the Siena model, the starting values are the same as the previous estimations of Model 4, rather than estimated again. 
 
 ```{r, eval=FALSE}
-#Model 5: Using the estimates of Model 4 to improve convergence
+# Model 5: Using the estimates of Model 4 to improve convergence
 
 effects5 <- getEffects(collab1)
 
-#Included effects
+# Included effects
   effects5 <- includeEffects(effects5, isolateNet, inPop, outAct, inAct, transTrip)
   effects5 <- includeEffects(effects5, sameX, name = 'net', interaction1 = 'gender_dummy')
   effects5 <- includeEffects(effects5, sameX, name = 'net', interaction1 = 'uni_num')
@@ -220,7 +260,7 @@ effects5 <- getEffects(collab1)
   Esti5 <- siena07(Main_algo, data = collab1, effects = effects5, returnDeps=TRUE, prevAns = Esti4)
   Esti5
   
-#Goodness of fit testing for model 5
+# Goodness of fit
 model5gof1 <- sienaGOF(Esti5, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
 model5gof2 <- sienaGOF(Esti5, OutdegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
 model5gof3 <- sienaGOF(Esti5, TriadCensus, verbose = FALSE, join = TRUE, varName = "net")
@@ -228,13 +268,15 @@ plot(model5gof1)
 plot(model5gof2)
 plot(model5gof3)
   
-#t-value calculation to check significance of effects in model 5
+# t-value calculation
 df_results5 <- cbind.data.frame(Esti5$theta, Esti5$se)
 names(df_results5) <- c('theta','se')
 df_results5$ttest <- df_results5$theta/df_results5$se
 ```
+The indegree distribution (0.006) and the triad census (0.01) in Model 5 became smaller than in Model 4, except for outdegree distribution (0.241). Individual h-index (0.2372) (t = 1.810) and departmental mean h-index (-0.197) (t = -0.912) are once again insignificant. 
 
+## Summary
 
-
+No effect is found for either individual or departmental prestige on the collaboration network. Hypotheses 1 and 2 are rejected.
 
 

@@ -3,7 +3,6 @@ title: "Lab journal of Ghislaine"
 author: "by: Ghislaine de Groot"
 bibliography: references.bib
 
- 
 ---
 
 ```{r, install remotely, globalsettings, echo=FALSE, warning=FALSE, results='hide'}

@@ -1,0 +1,55 @@
+---
+title: "DataAndMethods"
+author: "Ghislaine de Groot"
+date: "2025-11-07"
+output: html_document
+---
+
+# Frequencies
+
+## University
+
+```{r, eval=FALSE}
+
+table(df_ego2$university, useNA = 'always')
+
+# Frequency table for university
+uni_value <- c('EUR', 'RU', 'RvG', 'UU', 'UvA', "UvT", 'VU', 'missing')
+uni_count <- c(50, 49, 74, 53, 70, 28, 80, 54)
+df_uni_freq <- data.frame(University = uni_value, Count = uni_count)
+fshowdf(df_uni_freq)
+
+```
+
+## Job position
+
+```{r, eval=FALSE}
+
+table(df_ego2$position, useNA = 'always')
+
+# Frequency table for job position
+
+posit_value <- c('PhD Candidate', 'Postdoctoral Researcher', 'Lecturer', 'Researcher',
+            'Assistant professor','Associate professor', 'Full professor', 'Staff', 'missing')
+posit_count <- c(136, 15, 21, 32, 81, 39, 69, 4, 61)
+df_freq_posit <- data.frame(Function = posit_value, Count = posit_count)
+fshowdf(df_freq_posit)
+
+```
+## Gender
+
+```{r, eval=FALSE}
+
+table(df_ego2$gender, useNA = 'always')
+
+# Frequency table for gender
+
+Gen_value <- c('Female', 'Male', 'missing')
+Gen_count <- c(242, 211, 5)
+df_freq_gen <- data.frame(Gender = Gen_value, Count = Gen_count)
+fshowdf(df_freq_gen)
+
+```
+
+
+
