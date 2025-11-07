@@ -15,24 +15,24 @@ Unfortunately, I updated RStudio between last class and the upcoming one, and mo
 
 ------------------------------------------------------------------------
 
-```{r}
+```{r, eval=FALSE}
 
-# lpol_staff <- read_html("https://www.universiteitleiden.nl/en/social-behavioural-sciences/political-science/staff#tab-1")
-# head(lpol_staff)
+ lpol_staff <- read_html("https://www.universiteitleiden.nl/en/social-behavioural-sciences/political-science/staff#tab-1")
+ head(lpol_staff)
 
-# lpol_staff <- lpol_staff %>%
-#   html_nodes("body") %>%
-#   html_nodes(xpath = "//a") %>%
-#   html_text()
+ lpol_staff <- lpol_staff %>%
+   html_nodes("body") %>%
+   html_nodes(xpath = "//a") %>%
+   html_text()
 
 ```
 -----
 
-The function "read_html" is having issues, so I made turned the above code into notes.
+The function "read_html" is having issues.
 
 ---- 
 
-```{r}
+```{r, eval=FALSE}
 
 library(tidyr)
 library(xml2)

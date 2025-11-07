@@ -30,7 +30,7 @@ Question: what is "trying to use CRAN without setting a mirror"?
 -----
 
 
-```{r}
+```{r, eval=FALSE}
 
 # install.packages('data.table')
 library(data.table) 
@@ -55,7 +55,7 @@ library(knitr)
 setwd('/Users/ghislaine/Downloads/Github/Social Networks/Webscraping for lab 4')
 ```
 
-```{r}
+```{r, eval=FALSE}
 # Let's first get the staff page read_html is a function that simply extracts html webpages and
 # puts them in xml format
 
@@ -143,7 +143,7 @@ library(jsonlite)
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 
 lw_json <- fromJSON("https://api.openalex.org/people/A5009389179", simplifyVector = FALSE)
 
@@ -152,7 +152,7 @@ glimpse(lw_json)
 glimpse(lw_json, max.level = 1)
 
 ```
-```{r}
+```{r, eval=FALSE}
 
 lw__works_json <- fromJSON("https://api.openalex.org/works?page=1&filter=authorships.author.id:a5009389179,type:types/article", simplifyVector = FALSE)
 
@@ -190,7 +190,7 @@ sociologists <- data.frame(name, current_university, workscount_ind, totalcitati
 
 # Seminar stuff
 
-```{r}
+```{r, eval=FALSE}
 
 require(sna)
 
@@ -213,7 +213,7 @@ plot(g, layout = l)
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 rm(list = ls())
 
 
@@ -252,23 +252,23 @@ fpackage.check(packages)
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 scholars <- fload("./data/processed/scholars_20240924.rda")
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 str(scholars$demographics[[1]])
 ```
 
 
 
-```{r}
+```{r, eval=FALSE}
 demographics <- do.call(rbind.data.frame, scholars$demographics)
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 fcolnet <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
     2018), c(2019, 2023)), type = c("first")) {
 
@@ -350,7 +350,7 @@ fcolnet <- function(data = scholars, university = "RU", discipline = "sociology"
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 eursoc <- fcolnet(data = scholars, university = "EUR", discipline = "sociology", type = "first", waves = list(c(2015, 2018), c(2019, 2023)))
 
 df <- eursoc$data
@@ -376,7 +376,7 @@ plot(eursoc_igraph,
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 
 # remove political scientists
 
@@ -388,7 +388,7 @@ sociologists <- lapply(scholars, "[",sample)
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 
 frequency(demographics_soc$Universiteit.22)
 
@@ -406,7 +406,7 @@ table_so <- table(sociologists$works$so)
 
 -----
 
-```{r}
+```{r, eval=FALSE}
 
 sociologists$scholars_oa[[1]]$works_api_url
 
@@ -416,7 +416,7 @@ sociologists$scholars_oa[[1]]$works_api_url
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 
 ids <- demographics_soc$au_id
 wave2 <- wave1 <- matrix(0, nrow = length(ids), ncol = length(ids), dimnames = list(ids, ids))
@@ -437,7 +437,7 @@ df_works_w2 <- df_works[df_works$works_year > 2019, ]
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 
 # first to others
 for (i in 1:nrow(df_works_w2)) {
@@ -470,103 +470,103 @@ for (i in 1:nrow(df_works_w2)) {
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 
 # Old code
 
-# fcolnet <- function(data = scholars, waves = list(c(2015, 2018), c(2019, 2023)), type = c("first")) {
+fcolnet <- function(data = scholars, waves = list(c(2015, 2018), c(2019, 2023)), type = c("first")) {
 
     # step 1
-#    demographics <- do.call(rbind.data.frame, data$demographics)
-#    demographics <- demographics %>%
-#        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), ""), Universiteit2.22 = #replace(Universiteit2.22,
-#            is.na(Universiteit2.22), ""), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
-#            ""), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), ""), discipline.22 = #replace(discipline.22,
-#            is.na(discipline.22), ""), discipline.24 = replace(discipline.24, is.na(discipline.24), ""))
+    demographics <- do.call(rbind.data.frame, data$demographics)
+    demographics <- demographics %>%
+        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), ""), Universiteit2.22 = #replace(Universiteit2.22,
+            is.na(Universiteit2.22), ""), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+            ""), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), ""), discipline.22 = #replace(discipline.22,
+            is.na(discipline.22), ""), discipline.24 = replace(discipline.24, is.na(discipline.24), ""))
 
-#    sample <- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
-#        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
-#        university) & (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% #discipline))
+    sample <- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
+        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
+        university) & (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% #discipline))
 
-#    demographics_soc <- demographics[sample, ]
-#    scholars_sel <- lapply(scholars, "[", sample)
-#
+    demographics_soc <- demographics[sample, ]
+    scholars_sel <- lapply(scholars, "[", sample)
+
     # step 2
-#    ids <- demographics_soc$au_id
-#    nwaves <- length(waves)
-#    nets <- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
-#        ids))
-#    dimnames(nets)
+    ids <- demographics_soc$au_id
+    nwaves <- length(waves)
+    nets <- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
 
     # step 3
-#    df_works <- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = #unlist(lapply(scholars_sel$work,
-#        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) #l$publication_year),
-#        recursive = FALSE))
+    df_works <- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = #unlist(lapply(scholars_sel$work,
+        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) #l$publication_year),
+        recursive = FALSE))
 
-#    df_works <- df_works[!duplicated(df_works), ]
+    df_works <- df_works[!duplicated(df_works), ]
 
     # step 4
-#    if (type == "first") {
-#        for (j in 1:nwaves) {
-#            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
-#                ]
-#            for (i in 1:nrow(df_works_w)) {
-#                ego <- df_works_w$works_author[i][[1]]$au_id[1]
-#                alters <- df_works_w$works_author[i][[1]]$au_id[-1]
-#                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
-#                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
-#               }
-#            }
-#        }
-#    }
+    if (type == "first") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- df_works_w$works_author[i][[1]]$au_id[1]
+                alters <- df_works_w$works_author[i][[1]]$au_id[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+               }
+            }
+        }
+    }
 
-#    if (type == "last") {
-#        for (j in 1:nwaves) {
-#            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
-#                ]
-#            for (i in 1:nrow(df_works_w)) {
-#                ego <- rev(df_works_w$works_author[i][[1]]$au_id)[1]
-#                alters <- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
-#                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
-#                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
-#                }
-#            }
-#        }
-#    }
-#
-#    if (type == "all") {
-#        for (j in 1:nwaves) {
-#            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
-#              ]
-#            for (i in 1:nrow(df_works_w)) {
-#                egos <- df_works_w$works_author[i][[1]]$au_id
-#                if (sum(ids %in% egos) > 0) {
-#                  nets[j, which(ids %in% egos), which(ids %in% egos)] <- 1
-#                }
-#            }
-#        }
-#    }
-#    output <- list()
-#    output$data <- scholars_sel
-#    output$nets <- nets
-#    return(output)
-# }
+    if (type == "last") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+                alters <- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+                }
+            }
+        }
+    }
 
-```
-
-```{r}
-# fcolnet(data = sociologists, waves = list(c(2015, 2018), c(2019, 2023)), type = c("first"))
+    if (type == "all") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+              ]
+            for (i in 1:nrow(df_works_w)) {
+                egos <- df_works_w$works_author[i][[1]]$au_id
+                if (sum(ids %in% egos) > 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] <- 1
+                }
+            }
+        }
+    }
+    output <- list()
+    output$data <- scholars_sel
+    output$nets <- nets
+    return(output)
+ }
 
 ```
 
-```{r}
+```{r, eval=FALSE}
+ fcolnet(data = sociologists, waves = list(c(2015, 2018), c(2019, 2023)), type = c("first"))
 
-# fcolnet
+```
+
+```{r, eval=FALSE}
+
+ fcolnet
 
 ```
 
 
-```{r}
+```{r, eval=FALSE}
 
 # Working code
 
@@ -673,7 +673,7 @@ plot(test_w1,
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 
 # Trying to get the journals
 
@@ -706,7 +706,7 @@ str(x[1:5])
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 # Attempt number two for the journals
 
 

@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 These functions are empty again (9 Oct)! Tried running it in an .r file but it was still "empty"/just a save of the command rather than making an actual function.
 
-```{r}
+```{r, eval=FALSE}
 
 library(tidyverse)
 library(scholar) 
@@ -21,14 +21,14 @@ library(rvest)
 library(jsonlite)
 library(RSiena)
 
-# fpackage.check <- function(packages) {
-#  lapply(packages, FUN = function(x) {
-#       if (!require(x, character.only = TRUE)) {
-#           install.packages(x, dependencies = TRUE)
-#           library(x, character.only = TRUE)
-#       }
-#   })
-# }
+ fpackage.check <- function(packages) {
+  lapply(packages, FUN = function(x) {
+       if (!require(x, character.only = TRUE)) {
+           install.packages(x, dependencies = TRUE)
+           library(x, character.only = TRUE)
+       }
+   })
+ }
 
 fsave <- function(x, file = NULL, location = "./data/processed/") {
     ifelse(!dir.exists("data"), dir.create("data"), FALSE)
@@ -83,7 +83,7 @@ ego
 
 When trying at home, s501 was not found. 
 
-```{r}
+```{r, eval=FALSE}
 
 #?s501
 
@@ -158,7 +158,7 @@ ansM1
 
 
 
-```{r}
+```{r, eval=FALSE}
 
 scholars <- fload("./data/processed/scholars_20240924.rda")
 
@@ -170,7 +170,7 @@ demographics_soc <- demographics[sample,]
 sociologists <- lapply(scholars, "[",sample)
 ```
 
-```{r}
+```{r, eval=FALSE}
 fcolnet <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
     2018), c(2019, 2023)), type = c("first")) {
 
@@ -254,7 +254,7 @@ fcolnet <- function(data = scholars, university = "RU", discipline = "sociology"
 
 ### works
 
-```{r}
+```{r, eval=FALSE}
 demographics_soc <- demographics[sample,]
 
 ids <- demographics_soc$au_id
@@ -267,7 +267,7 @@ works_author <- unlist(lapply(worksobject, function(l) l$author), recursive = FA
 works_year <- unlist(lapply(worksobject, function(l) l$publication_year), recursive = FALSE)
 ```
 
-```{r}
+```{r, eval=FALSE}
 fcolnet_nouni <- function(data = scholars, discipline = "sociology", waves = list(c(2015,2018), c(2019, 2023)), type = c("first")) {
   
   # step 1
@@ -350,7 +350,7 @@ fcolnet_nouni <- function(data = scholars, discipline = "sociology", waves = lis
 
 # In class exercise
 
-```{r}
+```{r, eval=FALSE}
 
 test_all <- fcolnet_nouni(data = scholars, 
                     discipline = "sociology",
@@ -410,7 +410,7 @@ functie <- coCovar(df_ego$functie)
 # RUtesteff
 
 ```
-```{r}
+```{r, eval=FALSE}
 ifelse(!dir.exists("results"), dir.create("results"), FALSE)
 ```
 
@@ -445,7 +445,7 @@ ansM1
 
 ## getting journal quality
 
-```{r}
+```{r, eval=FALSE}
 data = sociologists$works[[1]]
 
 q1_journals = c('Annual Review of Sociology')
@@ -463,7 +463,7 @@ number_of_q1_articles(sociologists$works[[55]])
 
 ### Loading the journal dataset
 
-```{r}
+```{r, eval=FALSE}
 
 sjr2022 <- read_csv2('/Users/ghislaine/Downloads/Github/Social Networks/scimagojr 2022 Subject Category - Sociology and Political Science.csv')
 
@@ -533,7 +533,7 @@ df_pres_22
 
 ### first try linking works, bad attempt 
 
-```{r}
+```{r, eval=FALSE}
 
 number_q1_articles = function(data, q1_journals = c("Annual Review of Sociology")) {
   n_q1 = sum(data$so[!is.na(data$so)] %in% q1_journals)
