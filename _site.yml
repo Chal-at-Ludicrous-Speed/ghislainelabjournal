@@ -28,6 +28,8 @@ navbar:
         href: lab6sienaexercise.html
       - text: "Lab 7"
         href: lab7.html
+    - text: "Final assignment"
+      menu:
       - text: "Introduction"
         href: Introduction.html
       - text: "Theory"
