@@ -53,7 +53,9 @@ After removing the 2025 time point, some missingness remained in university, fun
 ```{r, eval=FALSE}
 
 table(df_ego2$university, useNA = 'always')
+```
 
+```{r, eval=FALSE}
 # Frequency table for university
 uni_value <- c('EUR', 'RU', 'RvG', 'UU', 'UvA', "UvT", 'VU', 'missing')
 uni_count <- c(50, 49, 74, 53, 70, 28, 80, 54)
@@ -67,7 +69,9 @@ fshowdf(df_uni_freq)
 ```{r, eval=FALSE}
 
 table(df_ego2$position, useNA = 'always')
+```
 
+```{r, eval}
 # Frequency table for job position
 
 posit_value <- c('PhD Candidate', 'Postdoctoral Researcher', 'Lecturer', 'Researcher',
@@ -77,12 +81,15 @@ df_freq_posit <- data.frame(Function = posit_value, Count = posit_count)
 fshowdf(df_freq_posit)
 
 ```
+
 ## Gender
 
 ```{r, eval=FALSE}
 
 table(df_ego2$gender, useNA = 'always')
+```
 
+```{r, eval}
 # Frequency table for gender
 
 Gen_value <- c('Female', 'Male', 'missing')

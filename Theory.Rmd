@@ -12,6 +12,8 @@ If there is an effect of departmental prestige on the formation of interuniversi
 
 The **principle of preferential attachment** [@Hancean2014], who quotes [@Moody2004] and someone else). "New links and nodes are not randomly connected to large networks, but based on observed power-law distributions" (page number). Matthew-effect: scientific fields grow and develop around highly prestigious scientific scholars. These highly prestigious scholars are star nodes (source).
 
+-> h-index source
+
 A prestigious ego receives more ties than they send themselves [@Knoke2011].
 
 H1. Sociologists prefer working with a sociologist with a higher individual prestige than themselves
