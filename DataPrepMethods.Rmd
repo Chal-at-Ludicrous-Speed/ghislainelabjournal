@@ -465,7 +465,9 @@ table(df_ego2$gender,df_ego2$gender_num,useNA='always')
 
 ## Sample
 
-The dataset consists of directed ties in a network of scholars working at a Dutch sociology department and scholars working at a Dutch political science department. By using the OpenAlex API, the IDs of the works affiliated with these scholars had been webscraped. In addition to the existing data, I personally webscraped the h-index of OpenAlex. This is publicly available data.
+To analyse the effect of prestige on the network of Dutch sociologists, I will create a sample representative of the population.
+
+The dataset consists of directed ties in a network of scholars working at a Dutch sociology department and scholars working at a Dutch political science department. By using the OpenAlex API, the IDs of the works affiliated with these scholars had been webscraped. In addition to the existing data, I personally webscraped the h-index of OpenAlex. This is publicly available data. The sample includes sociologists who work or have worked at sociology departments in the Netherlands and have an OpenAlex profile. This profile is necessary, as it gives access to much information such as amount of publications, work collaborations for those publications and h-index.
 
 First, the dataset was filtered so that only the scholars from the sociology departments remained. The duplicate scholar IDs were subsequently removed.
 
@@ -477,11 +479,17 @@ To examine change over time, two waves were constructed. Wave 1 goes from 2015 u
 
 R will be used to calculate Stochastic Actor Oriented Models (SAOM). These are random network configurations, where each estimate generates a new, random model.
 
+First, a descriptive model will be run to answer the first research question. This model will show the distribution of scholars, their respective departments and their level of prestige across the network of all Dutch sociologists. 
+Secondly, several explanatory models will be run using the RSiena package. 
+The node is an author, and a tie is the article written by  authors. The network is modelled as a directed network. Therefore, the first author of the paper is considered to be the receiver of the tie by the other authors of the same paper. 
+
+The first model is a null model, where two variables are included. Then two separate models are run where one independent variable is included to answer the separate hypotheses, followed by a model where both independent variables are included. Finally, a model with the independent and control variables is run.     
+
 ## Measures 
 
 To operationalise the concept of ‘academic prestige’, the personal h-index was used as a proxy, representing individual prestige. 
 
-Scholars with more career seniority and a permanent position are more likely to be representative of the level of quality of an academic department than those who are more junior. The functions in the data are also somewhat ambiguous, with some being listed in more general terms like lecturer or staff, and others more specifically like full professor. Therefore, sociologists who have a function as assistant professor, associate professor or full professor were taken into the departmental prestige measure. The h-index of these members were counted up to calculate the mean h-index. This became the departmental prestige measure. 
+Scholars with more career seniority and a permanent position are more likely to be representative of the level of quality of an academic department than those who are more junior. The functions in the data are also somewhat ambiguous, with some being listed in more general terms like lecturer or staff, and others more specifically like full professor. Being a ‘Lecturer’ differs per university and per academic, as they can be academics who have only completed their MA, are currently working on their PhD promotion or have already obtained their PhD. Therefore, sociologists who have a function as assistant professor, associate professor or full professor were taken into the departmental prestige measure. The h-index of these members were counted up to calculate the mean h-index. This became the departmental prestige measure. 
 The *higher* effect in RSiena, an R package which will be used for the analysis. This is the effect that the ego has a higher covariate than the alter. The effect is written out as an equation below
 
 $$ \Sigma_j x_{ij}dsign(v_{i} - v_{j})$$
