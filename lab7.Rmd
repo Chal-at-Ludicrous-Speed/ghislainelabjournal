@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Packages
 
-```{r, eval=FALSE}
+```{r}
 library(RSiena)
 library(foreign)
 library(tidyverse)
@@ -20,12 +20,138 @@ library(rvest)
 library(jsonlite)
 ```
 
+```{r}
+packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
+
+fpackage.check <- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave <- function(x, file = NULL, location = "./data/processed/") {
+    ifelse(!dir.exists("data"), dir.create("data"), FALSE)
+    ifelse(!dir.exists("data/processed"), dir.create("data/processed"), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename <- substr(gsub("[:-]", "", Sys.time()), 1, 8)
+    totalname <- paste(location, file, "_", datename, ".rda", sep = "")
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload <- function(filename) {
+    load(filename)
+    get(ls()[ls() != "filename"])
+}
+
+fshowdf <- function(x, ...) {
+    knitr::kable(x, digits = 2, "html", ...) %>%
+        kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+        kableExtra::scroll_box(width = "100%", height = "300px")
+}
+
+
+fpackage.check(packages)
+
+library(openalexR)
+library(tidyverse)
+library(scholar)
+library(rvest)
+library(jsonlite)
+
+
+```
+
+```{r}
+fcolnet <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
+    2018), c(2019, 2023)), type = c("first")) {
+
+    # step 1
+    demographics <- do.call(rbind.data.frame, data$demographics)
+    demographics <- demographics %>%
+        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), ""), Universiteit2.22 = replace(Universiteit2.22,
+            is.na(Universiteit2.22), ""), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+            ""), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), ""), discipline.22 = replace(discipline.22,
+            is.na(discipline.22), ""), discipline.24 = replace(discipline.24, is.na(discipline.24), ""))
+
+    sample <- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
+        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
+        university) & (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% discipline))
+
+    demographics_soc <- demographics[sample, ]
+    scholars_sel <- lapply(scholars, "[", sample)
+
+    # step 2
+    ids <- demographics_soc$au_id
+    nwaves <- length(waves)
+    nets <- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works <- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = unlist(lapply(scholars_sel$work,
+        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) l$publication_year),
+        recursive = FALSE))
+
+    df_works <- df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == "first") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- df_works_w$works_author[i][[1]]$au_id[1]
+                alters <- df_works_w$works_author[i][[1]]$au_id[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+                }
+            }
+        }
+    }
+
+    if (type == "last") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+                alters <- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+                }
+            }
+        }
+    }
+
+    if (type == "all") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos <- df_works_w$works_author[i][[1]]$au_id
+                if (sum(ids %in% egos) > 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] <- 1
+                }
+            }
+        }
+    }
+    output <- list()
+    output$data <- scholars_sel
+    output$nets <- nets
+    return(output)
+}
+
+```
 
 # Learning about goodness of fit
 
 ## step 1 data
 
-```{r, eval=FALSE}
+```{r}
 
 mynet1 <- sienaDependent(array(c(s501, s502, s503), dim=c(50, 50, 3)))
 mybehh <- sienaDependent(s50a, type= "behavior")
@@ -44,7 +170,7 @@ print01Report(mydata)
 
 ## step 3
 
-```{r, eval=FALSE}
+```{r}
 
 myeff <- getEffects(mydata)
 myeff
@@ -55,21 +181,19 @@ myeff_2 <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "mybe
 
 myeff_3 <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "drinking")
 
-
 # data, statistic, network dependent variable, behavior variable
-
 
 
 ```
 ## step 4
 
-```{r, eval=FALSE}
+```{r}
 
 algae <- sienaAlgorithmCreate()
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 ans <- siena07(algae, data=mydata, effects = myeff)
 
@@ -83,7 +207,7 @@ ans3 <- siena07(algae, data=mydata, effects = myeff_3, prevAns=ans2, returnDeps 
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 # see here: ?'sienaGOF-auxiliary'
 
 # The geodesic distribution is not available from within RSiena, and therefore is copied from the
@@ -123,7 +247,7 @@ testall <- function(ans) {
 }
 ```
 
-```{r, eval=FALSE}
+```{r}
 gofi0 <- sienaGOF(ans3, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "mynet1")
 gofo0 <- sienaGOF(ans3, OutdegreeDistribution, verbose = FALSE, join = TRUE, levls = c(0:10, 15, 20),
     varName = "mynet1")
@@ -133,7 +257,7 @@ gof0.gd <- sienaGOF(ans3, GeodesicDistribution, cumulative = FALSE, verbose = FA
 # to check the indegree distribution of the outcome network ourselves:
 # table(colSums(wave2))
 ```
-```{r, eval=FALSE}
+```{r}
 plot(gofi0, main = "")
 
 # goodness of fit distribution 
@@ -157,7 +281,7 @@ plot(gofi0, main = "")
 # "maybe you shouldn't use RSiena"
 
 ```
-```{r, eval=FALSE}
+```{r}
 plot(gof0.gd, main = "")
 ```
 ----
@@ -167,20 +291,23 @@ Read 7.15.4
 At each decision point, the statistics are checked...?
 ----
 
+R keeps self-destructing when I try to run this chunk, so I had to deactivate it.
+
 ```{r, eval=FALSE}
 
 RI <- RSiena:::sienaRI(data = mydata, ans = ans3)
 
-# RI <- RSiena:::sienaRI(
-#  data = ,
-#  theta = theta.eval,
-#  algorithm = myAlgorithm
-#  effects = myeff.eval
-#)
+RI <- RSiena:::sienaRI(
+  data = ,
+  theta = theta.eval,
+  algorithm = myAlgorithm
+  effects = myeff.eval
+)
   
 class(RI) # now running plot for that specific type
 
-plot <- RSiena:::sienaRI(RI, addPieChart = TRUE, legendColumns = 3)
+plot <- RSiena:::sienaRI(RI[1])
+                         #addPieChart = TRUE, legendColumns = 3)
 
 # depend on tie characteristics how relevant certain statistics are for a node
 # does not reflect parameter 
@@ -200,7 +327,7 @@ plot <- RSiena:::sienaRI(RI, addPieChart = TRUE, legendColumns = 3)
 ## Practicing with RSiena without prestige
 
 ### Reloading sociologists
-```{r, eval=FALSE}
+```{r}
 
 scholars <- fload("./data/processed/scholars_20240924.rda")
 
@@ -216,7 +343,7 @@ sociologists <- lapply(scholars, "[",sample)
 
 ### own fcolnet, different from niels
 
-```{r, eval=FALSE}
+```{r}
 
 fcolnet_25 <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
     2018), c(2019, 2023)), type = c("first")) {
@@ -301,7 +428,7 @@ fcolnet_25 <- function(data = scholars, university = "RU", discipline = "sociolo
 ----
 Trying to get network data for RSiena. 
 ----
-```{r, eval=FALSE}
+```{r}
 ids <- demographics_soc$au_id
 wave2 <- wave1 <- matrix(0, nrow = length(ids), ncol = length(ids), dimnames = list(ids, ids))
 ```
@@ -310,7 +437,7 @@ wave2 <- wave1 <- matrix(0, nrow = length(ids), ncol = length(ids), dimnames = l
 
 ```{r, eval=FALSE}
 
-# soc_test_data <- sienaDataCreate(wave1, wave2)
+soc_test_data_create <- sienaDataCreate(wave1, wave2)
 
 soc_test_data <- sienaDependent(array(c(wave1, wave2), dim = c(386, 386, 2)))
 ```
@@ -319,18 +446,16 @@ soc_test_data <- sienaDependent(array(c(wave1, wave2), dim = c(386, 386, 2)))
 ```{r, eval=FALSE}
 mybehh <- sienaDependent(sociologists, type= "behavior")
 
-
 ```
 
 ```{r, eval=FALSE}
 testsoceff <- getEffects(soc_test_data)
 
-
 ```
 
 # With the new data
 
-```{r, eval=FALSE}
+```{r}
 
 UU_RU_test <- fcolnet(data = scholars, 
                     university = c("UU", "RU"),
@@ -340,13 +465,25 @@ UU_RU_test <- fcolnet(data = scholars,
 
 ```
 
+```{r}
+test <- fcolnet(data = scholars, 
+                university = c("UU", "RU"), 
+                discipline = c("Sociologie", "Politicologie"), 
+                waves = list(c(2015, 2018), c(2019, 2025)), 
+                type = c("all"))
+
+df <- test$data
+df_ego <- do.call(cbind.data.frame, df)
+```
+
+
 ```{r, eval=FALSE}
 df_ego = df_ego |>
     mutate(
         uni = case_when(
-            functie.22 == "UU" ~ 1,
-            functie.24 == "UU" ~ 1,
-            functie.25 == "UU" ~ 1,
+            universiteit.22 == "UU" ~ 1,
+            universiteit.24 == "UU" ~ 1,
+            universiteit.25 == "UU" ~ 1,
             .default = 0
         )
     )
@@ -374,7 +511,7 @@ ansM1
 ```
 
 ### plot network
-```{r, eval=FALSE}
+```{r}
 test <- fcolnet(data = scholars, 
                 university = c("UU", "RU"), 
                 discipline = c("Sociologie", "Politicologie"), 
@@ -395,8 +532,7 @@ test_w2 <- igraph::graph_from_adjacency_matrix(
 df <- test$data
 
 #same complicated structure as 'scholars' thus first make a dataframe from the list in which all info was saved. 
-# df_ego <- do.call(rbind.data.frame, df$demographics)
-df_ego = df
+df_ego <- do.call(cbind.data.frame, df$demographics)
 
 
 plot(test_w2,
@@ -408,7 +544,7 @@ plot(test_w2,
 ```
 
 ### drop isolates
-```{r, eval=FALSE}
+```{r}
 noisolates = rowSums(test$nets[2,,]) > 0
 netnew = test$nets[2,noisolates,noisolates]
 dfnew = df_ego[noisolates, ]
@@ -432,10 +568,10 @@ plot(test_w2_new,
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 testall <- fcolnet(data = scholars, 
-                university = c("UU", 'RU', 'UvT', 'RUG',), 
+                university = c("UU", 'RU', 'UvT', 'RUG'), 
                 discipline = "Sociologie", 
                 waves = list(c(2015, 2018), c(2019, 2025)), 
                 type = c("all"))
@@ -454,11 +590,11 @@ testall_w2 <- igraph::graph_from_adjacency_matrix(
 df <- test$data
 
 #same complicated structure as 'scholars' thus first make a dataframe from the list in which all info was saved. 
-# df_ego <- do.call(rbind.data.frame, df$demographics)
-df_ego = df
+df_ego <- do.call(rbind.data.frame, df$demographics)
+df_ego
 
 
-plot(test_w2,
+lastplot <- plot(test_w2,
   vertex.color = ifelse(df_ego$discipline.24 == "Sociologie", "yellow", "red"), #now, I can use actor attributes for plotting. 
   vertex.label = NA,
   vertex.size = 5,

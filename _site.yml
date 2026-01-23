@@ -35,9 +35,7 @@ navbar:
       - text: "Theory"
         href: Theory.html
       - text: "Data and Methods"
-        href: DataAndMethods.html
-      - text: "Data Preparation"
-        href: DataPrep.html
+        href: DataPrepMethods.html
       - text: "Analysis"
         href: Analysis.html
       - text: "Conclusion"

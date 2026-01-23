@@ -1,19 +1,19 @@
 ---
-title: "DataPrep"
+title: "DataPrepMethods"
 author: "Ghislaine de Groot"
 date: "2025-11-05"
 output: html_document
 bibliography: references.bib
 ---
 
-# Getting Started
+# Data Preparation
 
-```{r, eval=FALSE}
+```{r}
 rm(list = ls())
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 library(foreign)
 library(tidyverse)
 library(scholar) 
@@ -27,7 +27,7 @@ library(RSiena)
 # Custom Functions
 
 
-```{r, eval=FALSE}
+```{r}
 fpackage.check = function(packages) {
     lapply(packages, FUN = function(x) {
         if (!require(x, character.only = TRUE)) {
@@ -62,7 +62,7 @@ fshowdf = function(x, ...) {
 
 
 ## Define Network Data Helper Function
-```{r, eval=FALSE}
+```{r}
 
 fcolnet = function(data = scholars, university = c("RU", 'UU'), discipline = "Sociologie", waves = list(c(2015, 2018), c(2019, 2023), c(2024, 2025)), type = c("first")) {
 
@@ -160,7 +160,7 @@ fcolnet = function(data = scholars, university = c("RU", 'UU'), discipline = "So
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 packages = c(
     "RSiena", "tidyverse",
     'dplyr', 'stringr' # these packages were added to make the code run
@@ -184,13 +184,13 @@ scholars$demographics = scholars$demographics |>
 
 ## Application
 ### Load Data
-```{r, eval=FALSE}
+```{r}
 sociologists = fcolnet(scholars, university = c('RU','UU','UvT','EUR','UvA','VU','RvG'), waves = list(c(2015, 2019), c(2020, 2024)))
 df_ego = bind_rows(sociologists$data)
 ```
 
 ### Wrangle Data
-```{r, eval=FALSE}
+```{r}
 wave1 = sociologists$nets[1,,]
 wave2 = sociologists$nets[2,,]
 
@@ -204,7 +204,7 @@ net = sienaDependent(nets)
 
 ### Defining academic function of a sociologist
 
-```{r, eval=FALSE}
+```{r}
 df_ego = df_ego |>
     mutate(
         funcs = case_when(
@@ -219,11 +219,14 @@ funcs = coCovar(df_ego$funcs)
 
 # Prestige measure
 
-```{r, eval=FALSE}
+```{r}
 # Add h-index and i10-index columns to df_ego
 df_ego <- df_ego %>%
     mutate(h_index = NA_real_, i10_index = NA_real_)
+```
 
+
+```{r, eval=FALSE}
 # Get H-index and i10-index
 get_openalex_metrics <- function(openalex_id) {
     url <- paste0("https://api.openalex.org/authors/", openalex_id)
@@ -256,20 +259,30 @@ for (i in 1:nrow(df_ego)) {
 }
 
 # View updated df_ego with h-index and i10-index
-View(df_ego)
+# View(df_ego)
+
+#saving df_ego with h-index so we don't need to scrape every time
+fsave(df_ego, file = NULL, location = "/Users/ghislaine/Downloads/Github/Social Networks/data/processed/")
+
+```
+
+```{r}
+#load df_ego with h-index
+fload("/Users/ghislaine/Downloads/Github/Social Networks/data/processed/20260123df_ego.rda")
+
 
 ```
 ## Missings h-index
 
-```{r, eval=FALSE}
+```{r}
 table(df_ego$h_index,useNA='always')
 
 # 0 missings
 ```
 
-## making one variable for functie
+## making one variable for function
 
-```{r, eval=FALSE}
+```{r}
 
 table(df_ego$functie.22,useNA='always')
 table(df_ego$functie.24,useNA='always')
@@ -287,9 +300,9 @@ view(checkposition)
 rm(checkposition)
 
 ```
-## making one variable for universiteit
+## making one variable for university
 
-```{r, eval=FALSE}
+```{r}
 
 table(df_ego$universiteit.22,useNA='always')
 table(df_ego$universiteit.24,useNA='always')
@@ -327,7 +340,8 @@ rm(checkuni)
 
 ```
 
-```{r, eval=FALSE}
+```{r}
+#Bigleague
 
 df_ego = df_ego |>
     mutate(
@@ -346,7 +360,7 @@ rm(checkbigleague)
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 # Getting the assistant/associate/full professors into a variable
 table(df_ego$bigleague, df_ego$university)
 
@@ -369,7 +383,7 @@ table(blhin$hindex, useNA = 'always')
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 # average h-index of department
 
 uni_list <- as.data.frame(c('EUR', 'RU', 'RvG', 'UU', 'UvA', 'UvT', 'VU'))
@@ -400,7 +414,15 @@ df_ego2 <- merge(df_ego, df_mean_h, by = "university", all.x = TRUE)
 
 ```
 
-```{r, eval=FALSE}
+```{r}
+# For the visualization, some egos that only have data in universiteit.25 are very difficult to remove. Therefore, I am imputing their university value.
+
+df_ego2$university <- ifelse(is.na(df_ego2$university), df_ego2$universiteit.25, df_ego2$university)
+
+```
+
+
+```{r}
 # university as numeric
 
 df_ego2$uni_num <- df_ego2$university
@@ -415,7 +437,9 @@ df_ego2$uni_num <- gsub('VU', 6, df_ego2$uni_num)
 table(df_ego2$university, df_ego2$uni_num, useNA = 'always')
 
 ```
-```{r, eval=FALSE}
+
+
+```{r}
 # gender as numeric
 
 Gender_value <- c('Female','Male')
@@ -425,8 +449,6 @@ fshowdf(df_gender_freq)
 
 #Lastly there is the gender variable, which has five missings
 table(df_ego2$gender,useNA='always')
-
-# DO MISSINGS HERE
 
 
 #dummy
@@ -438,23 +460,97 @@ df_ego2$gender_num <- gsub('male', 1, df_ego2$gender_num)
 table(df_ego2$gender,df_ego2$gender_num,useNA='always')
 
 ```
-# RSiena objects
 
-```{r, eval=FALSE}
+# Data
 
-df_ego2$uni_num <- as.numeric(df_ego2$uni_num)
-uni_num2 <- coCovar(df_ego2$uni_num,centered=FALSE)
+## Sample
 
-df_ego2$gender_num <- as.numeric(df_ego2$gender_num)
-gender_dummy <- coCovar(df_ego2$gender_num, centered=FALSE)
+Stochastic Actor Oriented Models (SAOM)
 
-H_index_CC <- coCovar(df_ego2$h_index, centered = TRUE)
-mean_h_CC <- coCovar(df_ego2$mean_h, centered = TRUE)
+The dataset consists of directed ties in a network of scholars working at a Dutch sociology department and scholars working at a Dutch political science department. By using the OpenAlex API (source?), the IDs of the works affiliated with these scholars had been webscraped. 
 
+First, the dataset was filtered so that only the scholars from the sociology departments remained. The duplicate scholar IDs were subsequently removed.
 
-#Making the data object
+The dataset contains academic works from 2015 until 2025. For the 2025 time point, the academic function of members of the Erasmus University Rotterdam sociology department is missing. 
 
-collab1 <- sienaDataCreate(net, uni_num2, gender_dummy, H_index_CC, mean_h_CC)
+To examine change over time, two waves were constructed. Wave 1 goes from 2015 until 2019, and Wave 2 goes from 2020 to 2024, meaning an equal time distribution of four years. 
+
+# Methods
+
+R will be used.
+
+## Measures 
+
+To operationalise the concept of ‘academic prestige’, the personal h-index was used as a proxy(?), representing individual prestige. The 
+
+Scholars with more career seniority and a permanent position are more likely to be representative of the level of quality of an academic department than those who are more junior. The functions in the data are also somewhat ambiguous, [...] Therefore, sociologists who have a function as assistant professor, associate professor or full professor were taken into the departmental prestige measure. The h-index of these members were counted up to calculate the mean h-index. This became the departmental prestige measure. 
+The *higher* effect in RSiena, an R package which will be used for the analysis. This is the effect that the ego has a higher covariate than the alter. The effect is written out as an equation below
+
+$$ \Sigma_j x_{ij}dsign(v_{i} - v_{j})$$
+
+Where dsign(*d*) = 0 for *d* < 0, 0.5 for *d* = 0, and 1 for *d* > 0.
+
+### Job position
+
+While many changes can happen to someone’s academic function, such as being hired, leaving or getting a promotion, most remain stable. For the sake of the analysis, the functions were standardised. 
+After removing the 2025 time point, the available variables were the function at 2022 and 2024. The job position at 2022 was used for 2024. Most sociologists held the same position on both time points, but a promotion or leave was therefore not included. When a function at 2022 was missing, the function at 2024 was used instead.
+
+### Control variables
+
+Besides the main effects of individual and departmental prestige, two control variables were also taken into the analysis. The first is a numeric version of the university variable and the second is a dummy variable of gender. Both are used to control for the effect that scholars may prefer working together with others from their own department (source), or who share the same gender (source). This is achieved through the sameX effect, taking the same value of the...
+
+After removing the 2025 time point, some missingness remained in university, function and gender. This missingness was very small, [number]. Removing the scholars with missing variables proved to be more problematic to run the RSiena model than keeping them in the dataset.
+
+# Frequencies
+
+## University
+
+```{r}
+
+table(df_ego2$university, useNA = 'always')
+```
+
+```{r}
+# Frequency table for university
+uni_value <- c('EUR', 'RU', 'RvG', 'UU', 'UvA', "UvT", 'VU', 'missing')
+uni_count <- c(50, 49, 74, 53, 70, 28, 80, 54)
+df_uni_freq <- data.frame(University = uni_value, Count = uni_count)
+fshowdf(df_uni_freq)
+
+```
+
+## Job position
+
+```{r}
+
+table(df_ego2$position, useNA = 'always')
+```
+
+```{r}
+# Frequency table for job position
+
+posit_value <- c('PhD Candidate', 'Postdoctoral Researcher', 'Lecturer', 'Researcher',
+            'Assistant professor','Associate professor', 'Full professor', 'Staff', 'missing')
+posit_count <- c(136, 15, 21, 32, 81, 39, 69, 4, 61)
+df_freq_posit <- data.frame(Function = posit_value, Count = posit_count)
+fshowdf(df_freq_posit)
+
+```
+
+## Gender
+
+```{r}
+
+table(df_ego2$gender, useNA = 'always')
+```
+
+```{r}
+# Frequency table for gender
+
+Gen_value <- c('Female', 'Male', 'missing')
+Gen_count <- c(242, 211, 5)
+df_freq_gen <- data.frame(Gender = Gen_value, Count = Gen_count)
+fshowdf(df_freq_gen)
 
 ```
 

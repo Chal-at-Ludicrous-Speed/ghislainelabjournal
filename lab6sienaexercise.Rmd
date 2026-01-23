@@ -5,9 +5,67 @@ date: "2025-10-10"
 output: html_document
 ---
 
+```{r}
+packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
+
+fpackage.check <- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave <- function(x, file = NULL, location = "./data/processed/") {
+    ifelse(!dir.exists("data"), dir.create("data"), FALSE)
+    ifelse(!dir.exists("data/processed"), dir.create("data/processed"), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename <- substr(gsub("[:-]", "", Sys.time()), 1, 8)
+    totalname <- paste(location, file, "_", datename, ".rda", sep = "")
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload <- function(filename) {
+    load(filename)
+    get(ls()[ls() != "filename"])
+}
+
+fshowdf <- function(x, ...) {
+    knitr::kable(x, digits = 2, "html", ...) %>%
+        kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+        kableExtra::scroll_box(width = "100%", height = "300px")
+}
+
+
+fpackage.check(packages)
+
+library(openalexR)
+library(tidyverse)
+library(scholar)
+library(rvest)
+library(jsonlite)
+
+
+```
+
 # step 1 data
 
-```{r, eval=FALSE}
+### Packages
+
+```{r}
+library(foreign)
+library(tidyverse)
+library(scholar) 
+library(openalexR)
+library(rvest) 
+library(jsonlite)
+library(RSiena)
+
+```
+
+```{r}
 
 mynet1 <- sienaDependent(array(c(s501, s502, s503), dim=c(50, 50, 3)))
 mybehh <- sienaDependent(s50a, type= "behavior")
@@ -21,13 +79,13 @@ mydata <- sienaDataCreate(mynet1, mybehh, smoko)
 
 # step 2
 
-```{r, eval=FALSE}
+```{r}
 print01Report(mydata)
 ```
 
 # step 3
 
-```{r, eval=FALSE}
+```{r}
 
 myeff <- getEffects(mydata)
 myeff
@@ -49,6 +107,14 @@ myeff_3 <- includeEffects(myeff, unequalX, name = "mynet1", interaction1 = "drin
 
 algae <- sienaAlgorithmCreate()
 
+fsave(algae, file = NULL, location = "/Users/ghislaine/Downloads/Github/Social Networks/data/processed/")
+
+```
+
+```{r, echo=FALSE}
+
+fload("/Users/ghislaine/Downloads/Github/Social Networks/data/processed/20260123algae.rda")
+
 ```
 
 ```{r, eval=FALSE}
@@ -59,11 +125,24 @@ ans2 <- siena07(algae, data=mydata, effects = myeff_2, prevAns=ans)
 
 ans3 <- siena07(algae, data=mydata, effects = myeff_3, prevAns=ans2)
 
+fsave(ans, file = NULL, location = "/Users/ghislaine/Downloads/Github/Social Networks/data/processed/")
+fsave(ans2, file = NULL, location = "/Users/ghislaine/Downloads/Github/Social Networks/data/processed/")
+fsave(ans3, file = NULL, location = "/Users/ghislaine/Downloads/Github/Social Networks/data/processed/")
+
 # previous estimation, estimation of the previous model
 
 # with third model, it's mismatched now. interaction effect is insig (already was insig but shh)
 
 ```
+
+```{r, echo=FALSE}
+
+fload("/Users/ghislaine/Downloads/Github/Social Networks/data/processed/20260123ans.rda")
+fload("/Users/ghislaine/Downloads/Github/Social Networks/data/processed/20260123ans2.rda")
+fload("/Users/ghislaine/Downloads/Github/Social Networks/data/processed/20260123ans3.rda")
+
+```
+
 
 
 

@@ -386,10 +386,7 @@ div.tocify {
       <a href="Theory.html">Theory</a>
     </li>
     <li>
-      <a href="DataAndMethods.html">Data and Methods</a>
-    </li>
-    <li>
-      <a href="DataPrep.html">Data Preparation</a>
+      <a href="DataPrepMethods.html">Data and Methods</a>
     </li>
     <li>
       <a href="Analysis.html">Analysis</a>
@@ -433,14 +430,117 @@ div.tocify {
 </div>
 
 
+<pre class="r"><code>packages &lt;- c(&quot;tidyverse&quot;, &quot;scholar&quot;, &quot;openalexR&quot;, &quot;rvest&quot;, &quot;jsonlite&quot;)
+
+fpackage.check &lt;- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave &lt;- function(x, file = NULL, location = &quot;./data/processed/&quot;) {
+    ifelse(!dir.exists(&quot;data&quot;), dir.create(&quot;data&quot;), FALSE)
+    ifelse(!dir.exists(&quot;data/processed&quot;), dir.create(&quot;data/processed&quot;), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename &lt;- substr(gsub(&quot;[:-]&quot;, &quot;&quot;, Sys.time()), 1, 8)
+    totalname &lt;- paste(location, file, &quot;_&quot;, datename, &quot;.rda&quot;, sep = &quot;&quot;)
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload &lt;- function(filename) {
+    load(filename)
+    get(ls()[ls() != &quot;filename&quot;])
+}
+
+fshowdf &lt;- function(x, ...) {
+    knitr::kable(x, digits = 2, &quot;html&quot;, ...) %&gt;%
+        kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
+        kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)
+}
+
+
+fpackage.check(packages)</code></pre>
+<pre><code>## Loading required package: tidyverse</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ forcats   1.0.0     ✔ stringr   1.5.2
+## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+## ✔ purrr     1.1.0     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
+## Loading required package: scholar
+## 
+## Loading required package: openalexR
+## 
+## openalexR v2.0.0 introduces breaking changes.
+## See NEWS.md for details.
+## 
+## To suppress this message, add `openalexR.message = suppressed` to your .Renviron file.
+## 
+## Loading required package: rvest
+## 
+## 
+## Attaching package: &#39;rvest&#39;
+## 
+## 
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding
+## 
+## 
+## Loading required package: jsonlite
+## 
+## 
+## Attaching package: &#39;jsonlite&#39;
+## 
+## 
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     flatten</code></pre>
+<pre><code>## [[1]]
+## NULL
+## 
+## [[2]]
+## NULL
+## 
+## [[3]]
+## NULL
+## 
+## [[4]]
+## NULL
+## 
+## [[5]]
+## NULL</code></pre>
+<pre class="r"><code>library(openalexR)
+library(tidyverse)
+library(scholar)
+library(rvest)
+library(jsonlite)</code></pre>
 <div id="step-1-data" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> step 1 data</h1>
+<div id="packages" class="section level3" number="1.0.1">
+<h3><span class="header-section-number">1.0.1</span> Packages</h3>
+<pre class="r"><code>library(foreign)
+library(tidyverse)
+library(scholar) 
+library(openalexR)
+library(rvest) 
+library(jsonlite)
+library(RSiena)</code></pre>
 <pre class="r"><code>mynet1 &lt;- sienaDependent(array(c(s501, s502, s503), dim=c(50, 50, 3)))
 mybehh &lt;- sienaDependent(s50a, type= &quot;behavior&quot;)
 drinking &lt;- varCovar(s50a) # same info, but as covariate
 smoko &lt;- varCovar(s50s)
 
 mydata &lt;- sienaDataCreate(mynet1, mybehh, smoko)</code></pre>
+</div>
 </div>
 <div id="step-2" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> step 2</h1>
@@ -449,32 +549,128 @@ mydata &lt;- sienaDataCreate(mynet1, mybehh, smoko)</code></pre>
 <div id="step-3" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> step 3</h1>
 <pre class="r"><code>myeff &lt;- getEffects(mydata)
-myeff
-
-myeff &lt;- includeEffects(myeff, unequalX, name = &quot;mynet1&quot;, interaction1 = &quot;smoko&quot;)
-
-myeff_2 &lt;- includeEffects(myeff, unequalX, name = &quot;mynet1&quot;, interaction1 = &quot;mybehh&quot;)
-
-myeff_3 &lt;- includeEffects(myeff, unequalX, name = &quot;mynet1&quot;, interaction1 = &quot;drinking&quot;)
-
-
-# data, statistic, network dependent variable, behavior variable</code></pre>
+myeff</code></pre>
+<pre><code>##   name   effectName                      include fix   test  initialValue parm
+## 1 mynet1 constant mynet1 rate (period 1) TRUE    FALSE FALSE    4.69604   0   
+## 2 mynet1 constant mynet1 rate (period 2) TRUE    FALSE FALSE    4.32885   0   
+## 3 mynet1 outdegree (density)             TRUE    FALSE FALSE   -1.46770   0   
+## 4 mynet1 reciprocity                     TRUE    FALSE FALSE    0.00000   0   
+## 5 mybehh rate mybehh (period 1)          TRUE    FALSE FALSE    0.70571   0   
+## 6 mybehh rate mybehh (period 2)          TRUE    FALSE FALSE    0.84939   0   
+## 7 mybehh mybehh linear shape             TRUE    FALSE FALSE    0.32237   0   
+## 8 mybehh mybehh quadratic shape          TRUE    FALSE FALSE    0.00000   0</code></pre>
+<pre class="r"><code>myeff &lt;- includeEffects(myeff, unequalX, name = &quot;mynet1&quot;, interaction1 = &quot;smoko&quot;)</code></pre>
+<pre><code>##   effectNumber effectName    shortName include fix   test  initialValue parm
+## 1 501          unequal smoko unequalX  TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r"><code>myeff_2 &lt;- includeEffects(myeff, unequalX, name = &quot;mynet1&quot;, interaction1 = &quot;mybehh&quot;)</code></pre>
+<pre><code>##   effectNumber effectName     shortName include fix   test  initialValue parm
+## 1 314          unequal mybehh unequalX  TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r"><code>myeff_3 &lt;- includeEffects(myeff, unequalX, name = &quot;mynet1&quot;, interaction1 = &quot;drinking&quot;)</code></pre>
+<pre><code>## There is no effect with short name unequalX, 
+## and with interaction1 = &lt;drinking&gt;, interaction2 = &lt;&gt;, and type = &lt;eval&gt;, 
+## for dependent variable mynet1 .
+## See effectsDocumentation() for this effects object.</code></pre>
+<pre class="r"><code># data, statistic, network dependent variable, behavior variable</code></pre>
 </div>
 <div id="step-4" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> step 4</h1>
-<pre class="r"><code>algae &lt;- sienaAlgorithmCreate()</code></pre>
+<pre class="r"><code>algae &lt;- sienaAlgorithmCreate()
+
+fsave(algae, file = NULL, location = &quot;/Users/ghislaine/Downloads/Github/Social Networks/data/processed/&quot;)</code></pre>
+<pre><code>##  Siena Algorithm specification.
+##  Project name: Siena 
+##  Use standard initial values: FALSE 
+##  Random seed: NULL 
+##  Number of subphases in phase 2: 4 
+##  Starting value of gain parameter: 0.2 
+##  Reduction factor for gain parameter: 0.5 
+##  Diagonalization parameter: 0.2 
+##  Double averaging after subphase: 0 
+##  Dolby noise reduction: TRUE 
+##  Method for calculation of derivatives: Scores 
+##  Number of subphases in phase 2: 4 
+##  Number of iterations in phase 3: 1000 
+##  Unconditional simulation if more than one dependent variable</code></pre>
 <pre class="r"><code>ans &lt;- siena07(algae, data=mydata, effects = myeff)
 
 ans2 &lt;- siena07(algae, data=mydata, effects = myeff_2, prevAns=ans)
 
 ans3 &lt;- siena07(algae, data=mydata, effects = myeff_3, prevAns=ans2)
 
+fsave(ans, file = NULL, location = &quot;/Users/ghislaine/Downloads/Github/Social Networks/data/processed/&quot;)
+fsave(ans2, file = NULL, location = &quot;/Users/ghislaine/Downloads/Github/Social Networks/data/processed/&quot;)
+fsave(ans3, file = NULL, location = &quot;/Users/ghislaine/Downloads/Github/Social Networks/data/processed/&quot;)
+
 # previous estimation, estimation of the previous model
 
 # with third model, it&#39;s mismatched now. interaction effect is insig (already was insig but shh)</code></pre>
+<pre><code>## Estimates, standard errors and convergence t-ratios
+## 
+##                                           Estimate   Standard   Convergence 
+##                                                        Error      t-ratio   
+## Network Dynamics 
+##   1. rate constant mynet1 rate (period 1)  5.8574  ( 1.0024   )    0.1491   
+##   2. rate constant mynet1 rate (period 2)  4.5613  ( 0.7050   )   -0.0260   
+##   3. eval outdegree (density)             -2.2584  ( 0.1094   )    0.0248   
+##   4. eval reciprocity                      2.7929  ( 0.1799   )   -0.0318   
+##   5. eval unequal smoko                   -0.2188  ( 0.1326   )    0.0179   
+## 
+## Behavior Dynamics
+##   6. rate rate mybehh (period 1)           1.1901  ( 0.3345   )    0.0026   
+##   7. rate rate mybehh (period 2)           1.6412  ( 0.3855   )   -0.0389   
+##   8. eval mybehh linear shape              0.3697  ( 0.1580   )   -0.0161   
+##   9. eval mybehh quadratic shape          -0.1985  ( 0.0907   )    0.0426   
+## 
+## Overall maximum convergence ratio:    0.1909 
+## 
+## 
+## Total of 2877 iteration steps.</code></pre>
+<pre><code>## Estimates, standard errors and convergence t-ratios
+## 
+##                                            Estimate   Standard   Convergence 
+##                                                         Error      t-ratio   
+## Network Dynamics 
+##    1. rate constant mynet1 rate (period 1)  5.7964  ( 0.8408   )    0.0408   
+##    2. rate constant mynet1 rate (period 2)  4.5730  ( 0.6418   )   -0.0234   
+##    3. eval outdegree (density)             -1.9386  ( 0.2415   )   -0.0415   
+##    4. eval reciprocity                      2.7973  ( 0.1825   )   -0.0209   
+##    5. eval unequal mybehh                  -0.4788  ( 0.3458   )   -0.0103   
+##    6. eval unequal smoko                   -0.1926  ( 0.1420   )   -0.0062   
+## 
+## Behavior Dynamics
+##    7. rate rate mybehh (period 1)           1.1832  ( 0.3134   )    0.0046   
+##    8. rate rate mybehh (period 2)           1.6294  ( 0.3930   )   -0.0376   
+##    9. eval mybehh linear shape              0.3656  ( 0.1503   )    0.0026   
+##   10. eval mybehh quadratic shape          -0.2019  ( 0.0946   )   -0.0385   
+## 
+## Overall maximum convergence ratio:    0.1075 
+## 
+## 
+## Total of 2926 iteration steps.</code></pre>
+<pre><code>## Estimates, standard errors and convergence t-ratios
+## 
+##                                           Estimate   Standard   Convergence 
+##                                                        Error      t-ratio   
+## Network Dynamics 
+##   1. rate constant mynet1 rate (period 1)  5.7428  ( 0.9906   )   -0.0607   
+##   2. rate constant mynet1 rate (period 2)  4.5933  ( 0.7797   )    0.0015   
+##   3. eval outdegree (density)             -2.2619  ( 0.1080   )   -0.0236   
+##   4. eval reciprocity                      2.7979  ( 0.1745   )   -0.0410   
+##   5. eval unequal smoko                   -0.2186  ( 0.1329   )   -0.0167   
+## 
+## Behavior Dynamics
+##   6. rate rate mybehh (period 1)           1.1943  ( 0.2845   )    0.0331   
+##   7. rate rate mybehh (period 2)           1.6467  ( 0.3773   )   -0.0239   
+##   8. eval mybehh linear shape              0.3650  ( 0.1450   )   -0.0312   
+##   9. eval mybehh quadratic shape          -0.2017  ( 0.0923   )   -0.0296   
+## 
+## Overall maximum convergence ratio:    0.1003 
+## 
+## 
+## Total of 2733 iteration steps.</code></pre>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAibGFiNnNpZW5hZXhlcmNpc2UiCmF1dGhvcjogIkdoaXNsYWluZSBkZSBHcm9vdCIKZGF0ZTogIjIwMjUtMTAtMTAiCm91dHB1dDogaHRtbF9kb2N1bWVudAotLS0KCiMgc3RlcCAxIGRhdGEKCmBgYHtyLCBldmFsPUZBTFNFfQoKbXluZXQxIDwtIHNpZW5hRGVwZW5kZW50KGFycmF5KGMoczUwMSwgczUwMiwgczUwMyksIGRpbT1jKDUwLCA1MCwgMykpKQpteWJlaGggPC0gc2llbmFEZXBlbmRlbnQoczUwYSwgdHlwZT0gImJlaGF2aW9yIikKZHJpbmtpbmcgPC0gdmFyQ292YXIoczUwYSkgIyBzYW1lIGluZm8sIGJ1dCBhcyBjb3ZhcmlhdGUKc21va28gPC0gdmFyQ292YXIoczUwcykKCm15ZGF0YSA8LSBzaWVuYURhdGFDcmVhdGUobXluZXQxLCBteWJlaGgsIHNtb2tvKQoKCmBgYAoKIyBzdGVwIDIKCmBgYHtyLCBldmFsPUZBTFNFfQpwcmludDAxUmVwb3J0KG15ZGF0YSkKYGBgCgojIHN0ZXAgMwoKYGBge3IsIGV2YWw9RkFMU0V9CgpteWVmZiA8LSBnZXRFZmZlY3RzKG15ZGF0YSkKbXllZmYKCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCB1bmVxdWFsWCwgbmFtZSA9ICJteW5ldDEiLCBpbnRlcmFjdGlvbjEgPSAic21va28iKQoKbXllZmZfMiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgdW5lcXVhbFgsIG5hbWUgPSAibXluZXQxIiwgaW50ZXJhY3Rpb24xID0gIm15YmVoaCIpCgpteWVmZl8zIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCB1bmVxdWFsWCwgbmFtZSA9ICJteW5ldDEiLCBpbnRlcmFjdGlvbjEgPSAiZHJpbmtpbmciKQoKCiMgZGF0YSwgc3RhdGlzdGljLCBuZXR3b3JrIGRlcGVuZGVudCB2YXJpYWJsZSwgYmVoYXZpb3IgdmFyaWFibGUKCgpgYGAKIyBzdGVwIDQKCmBgYHtyLCBldmFsPUZBTFNFfQoKYWxnYWUgPC0gc2llbmFBbGdvcml0aG1DcmVhdGUoKQoKYGBgCgpgYGB7ciwgZXZhbD1GQUxTRX0KCmFucyA8LSBzaWVuYTA3KGFsZ2FlLCBkYXRhPW15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmKQoKYW5zMiA8LSBzaWVuYTA3KGFsZ2FlLCBkYXRhPW15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmXzIsIHByZXZBbnM9YW5zKQoKYW5zMyA8LSBzaWVuYTA3KGFsZ2FlLCBkYXRhPW15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmXzMsIHByZXZBbnM9YW5zMikKCiMgcHJldmlvdXMgZXN0aW1hdGlvbiwgZXN0aW1hdGlvbiBvZiB0aGUgcHJldmlvdXMgbW9kZWwKCiMgd2l0aCB0aGlyZCBtb2RlbCwgaXQncyBtaXNtYXRjaGVkIG5vdy4gaW50ZXJhY3Rpb24gZWZmZWN0IGlzIGluc2lnIChhbHJlYWR5IHdhcyBpbnNpZyBidXQgc2hoKQoKYGBgCgoKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAibGFiNnNpZW5hZXhlcmNpc2UiCmF1dGhvcjogIkdoaXNsYWluZSBkZSBHcm9vdCIKZGF0ZTogIjIwMjUtMTAtMTAiCm91dHB1dDogaHRtbF9kb2N1bWVudAotLS0KCmBgYHtyfQpwYWNrYWdlcyA8LSBjKCJ0aWR5dmVyc2UiLCAic2Nob2xhciIsICJvcGVuYWxleFIiLCAicnZlc3QiLCAianNvbmxpdGUiKQoKZnBhY2thZ2UuY2hlY2sgPC0gZnVuY3Rpb24ocGFja2FnZXMpIHsKICAgIGxhcHBseShwYWNrYWdlcywgRlVOID0gZnVuY3Rpb24oeCkgewogICAgICAgIGlmICghcmVxdWlyZSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpKSB7CiAgICAgICAgICAgIGluc3RhbGwucGFja2FnZXMoeCwgZGVwZW5kZW5jaWVzID0gVFJVRSkKICAgICAgICAgICAgbGlicmFyeSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpCiAgICAgICAgfQogICAgfSkKfQoKZnNhdmUgPC0gZnVuY3Rpb24oeCwgZmlsZSA9IE5VTEwsIGxvY2F0aW9uID0gIi4vZGF0YS9wcm9jZXNzZWQvIikgewogICAgaWZlbHNlKCFkaXIuZXhpc3RzKCJkYXRhIiksIGRpci5jcmVhdGUoImRhdGEiKSwgRkFMU0UpCiAgICBpZmVsc2UoIWRpci5leGlzdHMoImRhdGEvcHJvY2Vzc2VkIiksIGRpci5jcmVhdGUoImRhdGEvcHJvY2Vzc2VkIiksIEZBTFNFKQogICAgaWYgKGlzLm51bGwoZmlsZSkpCiAgICAgICAgZmlsZSA9IGRlcGFyc2Uoc3Vic3RpdHV0ZSh4KSkKICAgIGRhdGVuYW1lIDwtIHN1YnN0cihnc3ViKCJbOi1dIiwgIiIsIFN5cy50aW1lKCkpLCAxLCA4KQogICAgdG90YWxuYW1lIDwtIHBhc3RlKGxvY2F0aW9uLCBmaWxlLCAiXyIsIGRhdGVuYW1lLCAiLnJkYSIsIHNlcCA9ICIiKQogICAgc2F2ZSh4LCBmaWxlID0gdG90YWxuYW1lKSAgI25lZWQgdG8gZml4IGlmIGZpbGUgaXMgcmVsb2FkZWQgYXMgaW5wdXQgbmFtZSwgbm90IGFzIHguIAp9CgpmbG9hZCA8LSBmdW5jdGlvbihmaWxlbmFtZSkgewogICAgbG9hZChmaWxlbmFtZSkKICAgIGdldChscygpW2xzKCkgIT0gImZpbGVuYW1lIl0pCn0KCmZzaG93ZGYgPC0gZnVuY3Rpb24oeCwgLi4uKSB7CiAgICBrbml0cjo6a2FibGUoeCwgZGlnaXRzID0gMiwgImh0bWwiLCAuLi4pICU+JQogICAgICAgIGthYmxlRXh0cmE6OmthYmxlX3N0eWxpbmcoYm9vdHN0cmFwX29wdGlvbnMgPSBjKCJzdHJpcGVkIiwgImhvdmVyIikpICU+JQogICAgICAgIGthYmxlRXh0cmE6OnNjcm9sbF9ib3god2lkdGggPSAiMTAwJSIsIGhlaWdodCA9ICIzMDBweCIpCn0KCgpmcGFja2FnZS5jaGVjayhwYWNrYWdlcykKCmxpYnJhcnkob3BlbmFsZXhSKQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShzY2hvbGFyKQpsaWJyYXJ5KHJ2ZXN0KQpsaWJyYXJ5KGpzb25saXRlKQoKCmBgYAoKIyBzdGVwIDEgZGF0YQoKIyMjIFBhY2thZ2VzCgpgYGB7cn0KbGlicmFyeShmb3JlaWduKQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShzY2hvbGFyKSAKbGlicmFyeShvcGVuYWxleFIpCmxpYnJhcnkocnZlc3QpIApsaWJyYXJ5KGpzb25saXRlKQpsaWJyYXJ5KFJTaWVuYSkKCmBgYAoKYGBge3J9CgpteW5ldDEgPC0gc2llbmFEZXBlbmRlbnQoYXJyYXkoYyhzNTAxLCBzNTAyLCBzNTAzKSwgZGltPWMoNTAsIDUwLCAzKSkpCm15YmVoaCA8LSBzaWVuYURlcGVuZGVudChzNTBhLCB0eXBlPSAiYmVoYXZpb3IiKQpkcmlua2luZyA8LSB2YXJDb3ZhcihzNTBhKSAjIHNhbWUgaW5mbywgYnV0IGFzIGNvdmFyaWF0ZQpzbW9rbyA8LSB2YXJDb3ZhcihzNTBzKQoKbXlkYXRhIDwtIHNpZW5hRGF0YUNyZWF0ZShteW5ldDEsIG15YmVoaCwgc21va28pCgoKYGBgCgojIHN0ZXAgMgoKYGBge3J9CnByaW50MDFSZXBvcnQobXlkYXRhKQpgYGAKCiMgc3RlcCAzCgpgYGB7cn0KCm15ZWZmIDwtIGdldEVmZmVjdHMobXlkYXRhKQpteWVmZgoKbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIHVuZXF1YWxYLCBuYW1lID0gIm15bmV0MSIsIGludGVyYWN0aW9uMSA9ICJzbW9rbyIpCgpteWVmZl8yIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCB1bmVxdWFsWCwgbmFtZSA9ICJteW5ldDEiLCBpbnRlcmFjdGlvbjEgPSAibXliZWhoIikKCm15ZWZmXzMgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIHVuZXF1YWxYLCBuYW1lID0gIm15bmV0MSIsIGludGVyYWN0aW9uMSA9ICJkcmlua2luZyIpCgoKIyBkYXRhLCBzdGF0aXN0aWMsIG5ldHdvcmsgZGVwZW5kZW50IHZhcmlhYmxlLCBiZWhhdmlvciB2YXJpYWJsZQoKCmBgYAojIHN0ZXAgNAoKYGBge3IsIGV2YWw9RkFMU0V9CgphbGdhZSA8LSBzaWVuYUFsZ29yaXRobUNyZWF0ZSgpCgpmc2F2ZShhbGdhZSwgZmlsZSA9IE5VTEwsIGxvY2F0aW9uID0gIi9Vc2Vycy9naGlzbGFpbmUvRG93bmxvYWRzL0dpdGh1Yi9Tb2NpYWwgTmV0d29ya3MvZGF0YS9wcm9jZXNzZWQvIikKCmBgYAoKYGBge3IsIGVjaG89RkFMU0V9CgpmbG9hZCgiL1VzZXJzL2doaXNsYWluZS9Eb3dubG9hZHMvR2l0aHViL1NvY2lhbCBOZXR3b3Jrcy9kYXRhL3Byb2Nlc3NlZC8yMDI2MDEyM2FsZ2FlLnJkYSIpCgpgYGAKCmBgYHtyLCBldmFsPUZBTFNFfQoKYW5zIDwtIHNpZW5hMDcoYWxnYWUsIGRhdGE9bXlkYXRhLCBlZmZlY3RzID0gbXllZmYpCgphbnMyIDwtIHNpZW5hMDcoYWxnYWUsIGRhdGE9bXlkYXRhLCBlZmZlY3RzID0gbXllZmZfMiwgcHJldkFucz1hbnMpCgphbnMzIDwtIHNpZW5hMDcoYWxnYWUsIGRhdGE9bXlkYXRhLCBlZmZlY3RzID0gbXllZmZfMywgcHJldkFucz1hbnMyKQoKZnNhdmUoYW5zLCBmaWxlID0gTlVMTCwgbG9jYXRpb24gPSAiL1VzZXJzL2doaXNsYWluZS9Eb3dubG9hZHMvR2l0aHViL1NvY2lhbCBOZXR3b3Jrcy9kYXRhL3Byb2Nlc3NlZC8iKQpmc2F2ZShhbnMyLCBmaWxlID0gTlVMTCwgbG9jYXRpb24gPSAiL1VzZXJzL2doaXNsYWluZS9Eb3dubG9hZHMvR2l0aHViL1NvY2lhbCBOZXR3b3Jrcy9kYXRhL3Byb2Nlc3NlZC8iKQpmc2F2ZShhbnMzLCBmaWxlID0gTlVMTCwgbG9jYXRpb24gPSAiL1VzZXJzL2doaXNsYWluZS9Eb3dubG9hZHMvR2l0aHViL1NvY2lhbCBOZXR3b3Jrcy9kYXRhL3Byb2Nlc3NlZC8iKQoKIyBwcmV2aW91cyBlc3RpbWF0aW9uLCBlc3RpbWF0aW9uIG9mIHRoZSBwcmV2aW91cyBtb2RlbAoKIyB3aXRoIHRoaXJkIG1vZGVsLCBpdCdzIG1pc21hdGNoZWQgbm93LiBpbnRlcmFjdGlvbiBlZmZlY3QgaXMgaW5zaWcgKGFscmVhZHkgd2FzIGluc2lnIGJ1dCBzaGgpCgpgYGAKCmBgYHtyLCBlY2hvPUZBTFNFfQoKZmxvYWQoIi9Vc2Vycy9naGlzbGFpbmUvRG93bmxvYWRzL0dpdGh1Yi9Tb2NpYWwgTmV0d29ya3MvZGF0YS9wcm9jZXNzZWQvMjAyNjAxMjNhbnMucmRhIikKZmxvYWQoIi9Vc2Vycy9naGlzbGFpbmUvRG93bmxvYWRzL0dpdGh1Yi9Tb2NpYWwgTmV0d29ya3MvZGF0YS9wcm9jZXNzZWQvMjAyNjAxMjNhbnMyLnJkYSIpCmZsb2FkKCIvVXNlcnMvZ2hpc2xhaW5lL0Rvd25sb2Fkcy9HaXRodWIvU29jaWFsIE5ldHdvcmtzL2RhdGEvcHJvY2Vzc2VkLzIwMjYwMTIzYW5zMy5yZGEiKQoKYGBgCgoKCgoK</div>
 
 
 </div>

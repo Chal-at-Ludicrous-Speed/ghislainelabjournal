@@ -50,7 +50,7 @@ Reconfigured my research topic, and wrote the introduction based on my new quest
 ----
 
 
-```{r, eval=FALSE}
+```{r}
 
 numbers <- round(runif(10000), 0)
 
@@ -71,11 +71,11 @@ sum(fake, na.rm = FALSE)
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 library(tidyr)
 ```
 
-```{r, eval=FALSE}
+```{r}
 numbers <- round(runif(10000), 0)
 
 small <- matrix(data = numbers, nrow = 4, ncol = 4, byrow = FALSE,
@@ -93,7 +93,7 @@ very_small <- ifelse(very_small==2,1,0)
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 numbers <- round(runif(10000), 0)
 
 medium <- matrix(data = numbers, nrow = 5, ncol = 5, byrow = FALSE,
@@ -109,7 +109,7 @@ very_medium <- ifelse(very_medium==2, 1,0)
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 # install.packages("igraph")
 library(igraph)
 
@@ -143,7 +143,7 @@ triad_census(netGraph)
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 # install.packages("sna")
 
 bignumbers <- round(runif(10000), 0)
@@ -166,7 +166,7 @@ igraph::transitivity(bigGraph, type = "undirected")
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 
 library(foreign)
 
@@ -174,7 +174,7 @@ library(foreign)
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 # install.packages("formatR")
 library(formatR)
 ```

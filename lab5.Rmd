@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 These functions are empty again (9 Oct)! Tried running it in an .r file but it was still "empty"/just a save of the command rather than making an actual function.
 
-```{r, eval=FALSE}
+```{r}
 
 library(tidyverse)
 library(scholar) 
@@ -57,7 +57,7 @@ colorize <- function(x, color) {
 
 ```
 
-```{r eval=FALSE, include=FALSE}
+```{r}
 
 packages = c("RSiena", "devtools", "igraph")
 # fpackage.check(packages)
@@ -74,7 +74,7 @@ fpackage.check(packages)
 
 ### Exercise in class
 
-```{r eval=FALSE}
+```{r}
 set.seed(24553253)
 ego <- ts_select(net = ts_net1)
 ego
@@ -83,7 +83,7 @@ ego
 
 When trying at home, s501 was not found. 
 
-```{r, eval=FALSE}
+```{r}
 
 #?s501
 
@@ -99,7 +99,7 @@ net <- sienaDependent(nets)
 ```
 ### Independent variable
 
-```{r, eval=FALSE}
+```{r}
 
 alcohol <- s50a[,1]
 
@@ -107,7 +107,7 @@ alcohol <- coCovar(alcohol)
   
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 mydata <- sienaDataCreate(net, alcohol)
 
@@ -115,7 +115,7 @@ mydata <- sienaDataCreate(net, alcohol)
 
 ## Step 2: effects
 
-```{r, eval=FALSE}
+```{r}
 
 myeff <- getEffects(mydata)
 
@@ -132,13 +132,13 @@ print01report(mydata)
 
 ## Step 4: add effects
 
-```{r, eval=FALSE}
+```{r}
 
 myeff <- includeEffects(myeff, isolateNet, inPop, outAct)  #we know that quite a lot of staff has not published with someone else
 
 ```
 ## Step 5: estimation
-```{r, eval=FALSE}
+```{r}
 myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init")
 ansM1 <- siena07(myAlgorithm, data = mydata, effects = myeff, returnDeps = TRUE)
 # if necessary estimate again!  ansM1 <- siena07(myAlgorithm, data = mydata, effects = myeff,
@@ -147,7 +147,7 @@ ansM1
 ```
 
 
-```{r, eval=FALSE, echo=FALSE}
+```{r, echo=FALSE}
 fsave(ansM1)
 ```
 
@@ -158,8 +158,7 @@ ansM1
 
 
 
-```{r, eval=FALSE}
-
+```{r}
 scholars <- fload("./data/processed/scholars_20240924.rda")
 
 demographics <- do.call(rbind.data.frame, scholars$demographics)
@@ -168,9 +167,10 @@ sample <- which(demographics$discipline.22 == "sociology" | demographics$discipl
 
 demographics_soc <- demographics[sample,]
 sociologists <- lapply(scholars, "[",sample)
+
 ```
 
-```{r, eval=FALSE}
+```{r}
 fcolnet <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
     2018), c(2019, 2023)), type = c("first")) {
 
@@ -254,7 +254,7 @@ fcolnet <- function(data = scholars, university = "RU", discipline = "sociology"
 
 ### works
 
-```{r, eval=FALSE}
+```{r}
 demographics_soc <- demographics[sample,]
 
 ids <- demographics_soc$au_id
@@ -267,7 +267,7 @@ works_author <- unlist(lapply(worksobject, function(l) l$author), recursive = FA
 works_year <- unlist(lapply(worksobject, function(l) l$publication_year), recursive = FALSE)
 ```
 
-```{r, eval=FALSE}
+```{r}
 fcolnet_nouni <- function(data = scholars, discipline = "sociology", waves = list(c(2015,2018), c(2019, 2023)), type = c("first")) {
   
   # step 1
@@ -350,7 +350,7 @@ fcolnet_nouni <- function(data = scholars, discipline = "sociology", waves = lis
 
 # In class exercise
 
-```{r, eval=FALSE}
+```{r}
 
 test_all <- fcolnet_nouni(data = scholars, 
                     discipline = "sociology",
@@ -410,13 +410,13 @@ functie <- coCovar(df_ego$functie)
 # RUtesteff
 
 ```
-```{r, eval=FALSE}
+```{r}
 ifelse(!dir.exists("results"), dir.create("results"), FALSE)
 ```
 
 ## step 4: results
 
-```{r eval=FALSE}
+```{r}
 myeff <- includeEffects(myeff, isolateNet, inPop, outAct)
 
 ```
@@ -432,7 +432,7 @@ ansM1
 
 ```
 
-```{r, eval=FALSE, echo=FALSE}
+```{r, echo=FALSE}
 fsave(ansM1)
 ```
 
@@ -445,7 +445,7 @@ ansM1
 
 ## getting journal quality
 
-```{r, eval=FALSE}
+```{r}
 data = sociologists$works[[1]]
 
 q1_journals = c('Annual Review of Sociology')
@@ -463,7 +463,7 @@ number_of_q1_articles(sociologists$works[[55]])
 
 ### Loading the journal dataset
 
-```{r, eval=FALSE}
+```{r}
 
 sjr2022 <- read_csv2('/Users/ghislaine/Downloads/Github/Social Networks/scimagojr 2022 Subject Category - Sociology and Political Science.csv')
 
@@ -475,7 +475,7 @@ sjr2024 <- read_csv2('/Users/ghislaine/Downloads/Github/Social Networks/scimagoj
 
 df_works doesn't work yet, I copy pasted it 
 
-```{r, eval=FALSE}
+```{r}
 
 # df_works_dataframe <- do.call(rbind.data.frame, sociologists$works)  # put works in dataframe
 # head(df_works)
@@ -489,7 +489,7 @@ df_works_5 <- tibble(works_id, works_author, works_year)
 
 I also copied this code below to lab 6, which *should* work.
 
-```{r, eval=FALSE}
+```{r}
 
 # Split the ISSN codes if 2 are available
 

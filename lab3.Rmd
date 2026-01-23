@@ -32,22 +32,22 @@ The function "read_html" is having issues.
 
 ---- 
 
-```{r, eval=FALSE}
+```{r}
 
 library(tidyr)
 library(xml2)
 
-packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
+# packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
 # fpackage.check(packages)
 
-# fpackage.check <- function(packages) {
-# lapply(packages, FUN = function(x) {
-#      if (!require(x, character.only = TRUE)) {
-#          install.packages(x, dependencies = TRUE)
-#          library(x, character.only = TRUE)
-#      }
-#  })
-# }
+ fpackage.check <- function(packages) {
+ lapply(packages, FUN = function(x) {
+      if (!require(x, character.only = TRUE)) {
+          install.packages(x, dependencies = TRUE)
+          library(x, character.only = TRUE)
+      }
+  })
+}
 
 fsave <- function(x, file = NULL, location = "./data/processed/") {
     ifelse(!dir.exists("data"), dir.create("data"), FALSE)

@@ -30,7 +30,7 @@ Question: what is "trying to use CRAN without setting a mirror"?
 -----
 
 
-```{r, eval=FALSE}
+```{r}
 
 # install.packages('data.table')
 library(data.table) 
@@ -55,7 +55,7 @@ library(knitr)
 setwd('/Users/ghislaine/Downloads/Github/Social Networks/Webscraping for lab 4')
 ```
 
-```{r, eval=FALSE}
+```{r}
 # Let's first get the staff page read_html is a function that simply extracts html webpages and
 # puts them in xml format
 
@@ -98,7 +98,7 @@ vu_df <- data.frame(cbind(vu_names, vu_function))
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 packages <- c("tidyverse", "scholar", "openalexR", "rvest", "jsonlite")
 
 fpackage.check <- function(packages) {
@@ -143,7 +143,7 @@ library(jsonlite)
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 lw_json <- fromJSON("https://api.openalex.org/people/A5009389179", simplifyVector = FALSE)
 
@@ -152,7 +152,7 @@ glimpse(lw_json)
 glimpse(lw_json, max.level = 1)
 
 ```
-```{r, eval=FALSE}
+```{r}
 
 lw__works_json <- fromJSON("https://api.openalex.org/works?page=1&filter=authorships.author.id:a5009389179,type:types/article", simplifyVector = FALSE)
 
@@ -190,7 +190,7 @@ sociologists <- data.frame(name, current_university, workscount_ind, totalcitati
 
 # Seminar stuff
 
-```{r, eval=FALSE}
+```{r}
 
 require(sna)
 
@@ -213,7 +213,7 @@ plot(g, layout = l)
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 rm(list = ls())
 
 
@@ -252,23 +252,23 @@ fpackage.check(packages)
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 scholars <- fload("./data/processed/scholars_20240924.rda")
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 str(scholars$demographics[[1]])
 ```
 
 
 
-```{r, eval=FALSE}
+```{r}
 demographics <- do.call(rbind.data.frame, scholars$demographics)
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 fcolnet <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
     2018), c(2019, 2023)), type = c("first")) {
 
@@ -350,7 +350,7 @@ fcolnet <- function(data = scholars, university = "RU", discipline = "sociology"
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 eursoc <- fcolnet(data = scholars, university = "EUR", discipline = "sociology", type = "first", waves = list(c(2015, 2018), c(2019, 2023)))
 
 df <- eursoc$data
@@ -376,7 +376,7 @@ plot(eursoc_igraph,
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 # remove political scientists
 
@@ -388,7 +388,7 @@ sociologists <- lapply(scholars, "[",sample)
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 frequency(demographics_soc$Universiteit.22)
 
@@ -406,7 +406,7 @@ table_so <- table(sociologists$works$so)
 
 -----
 
-```{r, eval=FALSE}
+```{r}
 
 sociologists$scholars_oa[[1]]$works_api_url
 
@@ -416,7 +416,7 @@ sociologists$scholars_oa[[1]]$works_api_url
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 ids <- demographics_soc$au_id
 wave2 <- wave1 <- matrix(0, nrow = length(ids), ncol = length(ids), dimnames = list(ids, ids))
@@ -437,7 +437,7 @@ df_works_w2 <- df_works[df_works$works_year > 2019, ]
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 # first to others
 for (i in 1:nrow(df_works_w2)) {
@@ -546,27 +546,27 @@ fcolnet <- function(data = scholars, waves = list(c(2015, 2018), c(2019, 2023)),
             }
         }
     }
-    output <- list()
-    output$data <- scholars_sel
-    output$nets <- nets
+    output <- list(),
+    output$data <- scholars_sel,
+    output$nets <- nets,
     return(output)
  }
 
 ```
 
-```{r, eval=FALSE}
+```{r}
  fcolnet(data = sociologists, waves = list(c(2015, 2018), c(2019, 2023)), type = c("first"))
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 
  fcolnet
 
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 
 # Working code
 
@@ -673,7 +673,7 @@ plot(test_w1,
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 
 # Trying to get the journals
 
@@ -706,7 +706,7 @@ str(x[1:5])
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 # Attempt number two for the journals
 
 

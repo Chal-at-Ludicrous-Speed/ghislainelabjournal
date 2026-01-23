@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ghislaine de Groot" />
+
+<meta name="date" content="2025-11-05" />
+
+<title>DataPrepMethods</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Lab Journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lab1.html">Lab 1</a>
+    </li>
+    <li>
+      <a href="lab2.html">Lab 2</a>
+    </li>
+    <li>
+      <a href="lab3.html">Lab 3</a>
+    </li>
+    <li>
+      <a href="lab4.html">Lab 4</a>
+    </li>
+    <li>
+      <a href="lab5.html">Lab 5</a>
+    </li>
+    <li>
+      <a href="lab6.html">Lab 6</a>
+    </li>
+    <li>
+      <a href="lab6sienaexercise.html">Siena exercise</a>
+    </li>
+    <li>
+      <a href="lab7.html">Lab 7</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Final assignment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Introduction.html">Introduction</a>
+    </li>
+    <li>
+      <a href="Theory.html">Theory</a>
+    </li>
+    <li>
+      <a href="DataPrepMethods.html">Data and Methods</a>
+    </li>
+    <li>
+      <a href="Analysis.html">Analysis</a>
+    </li>
+    <li>
+      <a href="Conclusion.html">Conclusion</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://chal-at-ludicrous-speed.github.io/ghislainelabjournal/">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">DataPrepMethods</h1>
+<h4 class="author">Ghislaine de Groot</h4>
+<h4 class="date">2025-11-05</h4>
+
+</div>
+
+
+<div id="data-preparation" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Data Preparation</h1>
+<pre class="r"><code>rm(list = ls())</code></pre>
+<pre class="r"><code>library(foreign)
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ forcats   1.0.0     ✔ stringr   1.5.2
+## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+## ✔ purrr     1.1.0     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(scholar) 
+library(openalexR)</code></pre>
+<pre><code>## openalexR v2.0.0 introduces breaking changes.
+## See NEWS.md for details.
+## 
+## To suppress this message, add `openalexR.message = suppressed` to your .Renviron file.</code></pre>
+<pre class="r"><code>library(rvest) </code></pre>
+<pre><code>## 
+## Attaching package: &#39;rvest&#39;
+## 
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding</code></pre>
+<pre class="r"><code>library(jsonlite)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;jsonlite&#39;
+## 
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     flatten</code></pre>
+<pre class="r"><code>library(RSiena)</code></pre>
+</div>
+<div id="custom-functions" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Custom Functions</h1>
+<pre class="r"><code>fpackage.check = function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+fsave = function(x, file = NULL, location = &quot;./data/processed/&quot;) {
+    ifelse(!dir.exists(&quot;data&quot;), dir.create(&quot;data&quot;), FALSE)
+    ifelse(!dir.exists(&quot;data/processed&quot;), dir.create(&quot;data/processed&quot;), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename = substr(gsub(&quot;[:-]&quot;, &quot;&quot;, Sys.time()), 1, 8)
+    totalname = paste(location, datename, file, &quot;.rda&quot;, sep = &quot;&quot;)
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload = function(filename) {
+    load(filename)
+    get(ls()[ls() != &quot;filename&quot;])
+}
+
+fshowdf = function(x, ...) {
+    knitr::kable(x, digits = 2, &quot;html&quot;, ...) |&gt;
+        kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;)) |&gt;
+        kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)
+}</code></pre>
+<div id="define-network-data-helper-function" class="section level2"
+number="2.1">
+<h2><span class="header-section-number">2.1</span> Define Network Data
+Helper Function</h2>
+<pre class="r"><code>fcolnet = function(data = scholars, university = c(&quot;RU&quot;, &#39;UU&#39;), discipline = &quot;Sociologie&quot;, waves = list(c(2015, 2018), c(2019, 2023), c(2024, 2025)), type = c(&quot;first&quot;)) {
+
+    university = paste0(&#39;(&#39;, paste0(university, collapse=&#39;|&#39; ), &#39;)&#39;)
+    discipline = paste0(&#39;(&#39;, paste0(discipline, collapse=&#39;|&#39; ), &#39;)&#39;)
+
+    # step 1
+    demographics = data$demographics
+    sample = which(
+        (str_detect(demographics$universiteit.22, university)
+            | str_detect(demographics$universiteit.24, university)
+            | str_detect(demographics$universiteit.25, university)
+        ) &amp; (
+            str_detect(demographics$discipline.22, discipline)
+            | str_detect(demographics$discipline.24, discipline)
+            | str_detect(demographics$discipline.25, discipline)
+        ) |&gt; replace_na(FALSE))
+
+    demographics_soc = demographics[sample, ] |&gt; drop_na(id)
+
+    # step 2
+    ids = demographics_soc$id |&gt; unique()
+
+    scholars_sel = list() 
+    for (id_ in ids){
+        scholars_sel[[id_]] = bind_rows(scholars$works) |&gt;
+            filter(author_id == id_)
+    }
+    scholars_sel = bind_rows(scholars$works) 
+    
+
+    nwaves = length(waves)
+    nets = array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works = tibble(
+            works_id = scholars_sel$id, 
+            works_author = scholars_sel$authorships, 
+            works_year = scholars_sel$publication_year
+        )
+
+    df_works = df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == &quot;first&quot;) {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego = df_works_w$works_author[i][[1]]$id[1]
+                alters = df_works_w$works_author[i][[1]]$id[-1]
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] = 1
+                }
+            }
+        }
+    }
+
+    if (type == &quot;last&quot;) {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego = rev(df_works_w$works_author[i][[1]]$id[1])
+                alters = rev(df_works_w$works_author[i][[1]]$id[-1])
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] = 1
+                }
+            }
+        }
+    }
+    if (type == &quot;all&quot;) {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos = df_works_w$works_author[i][[1]]$id
+                if (sum(ids %in% egos) &gt; 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] = 1
+                }
+            }
+            diag(nets[j,,]) = 0
+        }
+    }
+
+    output = list()
+    output$data = demographics_soc
+    output$nets = nets
+    return(output)
+}</code></pre>
+<pre class="r"><code>packages = c(
+    &quot;RSiena&quot;, &quot;tidyverse&quot;,
+    &#39;dplyr&#39;, &#39;stringr&#39; # these packages were added to make the code run
+)
+fpackage.check(packages)</code></pre>
+<pre><code>## [[1]]
+## NULL
+## 
+## [[2]]
+## NULL
+## 
+## [[3]]
+## NULL
+## 
+## [[4]]
+## NULL</code></pre>
+<pre class="r"><code>library(RSiena)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+
+scholars = fload(&#39;data/processed/20251017scholars.Rda&#39;)
+
+scholars$demographics = scholars$demographics |&gt;
+  mutate(
+    universiteit.22 = str_replace(universiteit.22, &#39;RUG&#39;, &#39;RvG&#39;),
+    universiteit.24 = str_replace(universiteit.24, &#39;RUG&#39;, &#39;RvG&#39;),
+    universiteit.25 = str_replace(universiteit.25, &#39;RUG&#39;, &#39;RvG&#39;),
+  )</code></pre>
+</div>
+<div id="application" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Application</h2>
+<div id="load-data" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Load Data</h3>
+<pre class="r"><code>sociologists = fcolnet(scholars, university = c(&#39;RU&#39;,&#39;UU&#39;,&#39;UvT&#39;,&#39;EUR&#39;,&#39;UvA&#39;,&#39;VU&#39;,&#39;RvG&#39;), waves = list(c(2015, 2019), c(2020, 2024)))
+df_ego = bind_rows(sociologists$data)</code></pre>
+</div>
+<div id="wrangle-data" class="section level3" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Wrangle Data</h3>
+<pre class="r"><code>wave1 = sociologists$nets[1,,]
+wave2 = sociologists$nets[2,,]
+
+nets = array(
+    data = c(wave1, wave2),
+    dim = c(dim(wave2), 2)
+)
+
+net = sienaDependent(nets)</code></pre>
+</div>
+<div id="defining-academic-function-of-a-sociologist"
+class="section level3" number="2.2.3">
+<h3><span class="header-section-number">2.2.3</span> Defining academic
+function of a sociologist</h3>
+<pre class="r"><code>df_ego = df_ego |&gt;
+    mutate(
+        funcs = case_when(
+            functie.22 == &quot;Full Professor&quot; ~ 1,
+            functie.24 == &quot;Full Professor&quot; ~ 1,
+            .default = 0
+        )
+    )
+
+funcs = coCovar(df_ego$funcs)</code></pre>
+</div>
+</div>
+</div>
+<div id="prestige-measure" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Prestige measure</h1>
+<pre class="r"><code># Add h-index and i10-index columns to df_ego
+df_ego &lt;- df_ego %&gt;%
+    mutate(h_index = NA_real_, i10_index = NA_real_)</code></pre>
+<pre class="r"><code># Get H-index and i10-index
+get_openalex_metrics &lt;- function(openalex_id) {
+    url &lt;- paste0(&quot;https://api.openalex.org/authors/&quot;, openalex_id)
+    author_data &lt;- tryCatch({
+        jsonlite::fromJSON(url)
+    }, error = function(e) {
+        message(paste(&quot;Error fetching data for OpenAlex ID:&quot;, openalex_id))
+        return(NULL)
+    })
+
+    if (!is.null(author_data)) {
+        h_index &lt;- author_data$summary_stats$h_index
+        i10_index &lt;- author_data$summary_stats$i10_index
+        works_count &lt;- author_data$works_count
+        cited_by_count &lt;- author_data$cited_by_count
+        return(list(h_index = h_index, i10_index = i10_index, works_count = works_count, cited_by_count = cited_by_count))
+    } else {
+        return(list(h_index = NA, i10_index = NA, works_count = NA, cited_by_count = NA))
+    }
+}
+
+# Loop for each scholar
+for (i in 1:nrow(df_ego)) {
+    openalex_id &lt;- df_ego$id[i]  # assuming id is the OpenAlex ID in df_ego
+    metrics &lt;- get_openalex_metrics(openalex_id)
+    df_ego$h_index[i] &lt;- metrics$h_index
+    df_ego$i10_index[i] &lt;- metrics$i10_index
+    df_ego$works_count[i] &lt;- metrics$works_count
+    df_ego$cited_by_count[i] &lt;- metrics$cited_by_count
+}
+
+# View updated df_ego with h-index and i10-index
+# View(df_ego)
+
+#saving df_ego with h-index so we don&#39;t need to scrape every time
+fsave(df_ego, file = NULL, location = &quot;/Users/ghislaine/Downloads/Github/Social Networks/data/processed/&quot;)</code></pre>
+<pre class="r"><code>#load df_ego with h-index
+fload(&quot;/Users/ghislaine/Downloads/Github/Social Networks/data/processed/20260123df_ego.rda&quot;)</code></pre>
+<pre><code>## # A tibble: 458 × 35
+##    naam   id    initials first_name particle last_name maiden_name gender origin
+##    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt; 
+##  1 Aat L… http… &lt;NA&gt;     Aat        &lt;NA&gt;     Liefbroer &lt;NA&gt;        male   Neder…
+##  2 Agnie… http… &lt;NA&gt;     Agnieszka  &lt;NA&gt;     Kanas     &lt;NA&gt;        female Neder…
+##  3 Albor… http… &lt;NA&gt;     Alborno    &lt;NA&gt;     Barra Go… &lt;NA&gt;        male   &lt;NA&gt;  
+##  4 Alex … http… &lt;NA&gt;     Alex       van      Venrooij  &lt;NA&gt;        male   &lt;NA&gt;  
+##  5 Alexa… http… &lt;NA&gt;     Alexandra  &lt;NA&gt;     Ciausescu &lt;NA&gt;        female &lt;NA&gt;  
+##  6 Alexa… http… &lt;NA&gt;     Alexandra  &lt;NA&gt;     Greene    &lt;NA&gt;        female Neder…
+##  7 Alexa… http… &lt;NA&gt;     Alexandra  &lt;NA&gt;     Pior      &lt;NA&gt;        female &lt;NA&gt;  
+##  8 Alice… http… &lt;NA&gt;     Alice      de       Boer      &lt;NA&gt;        female &lt;NA&gt;  
+##  9 Aliss… http… &lt;NA&gt;     Alissa     van      Zijl      &lt;NA&gt;        female &lt;NA&gt;  
+## 10 Amber… http… &lt;NA&gt;     Amber      &lt;NA&gt;     Vellinga  Dings       female Friese
+## # ℹ 448 more rows
+## # ℹ 26 more variables: dutch &lt;lgl&gt;, email_adres.22 &lt;chr&gt;,
+## #   universiteit.22 &lt;chr&gt;, functie.22 &lt;chr&gt;, discipline.22 &lt;chr&gt;,
+## #   email_adres.24 &lt;chr&gt;, universiteit.24 &lt;chr&gt;, functie.24 &lt;chr&gt;,
+## #   discipline.24 &lt;chr&gt;, email_adres.25 &lt;chr&gt;, universiteit.25 &lt;chr&gt;,
+## #   functie.25 &lt;chr&gt;, discipline.25 &lt;chr&gt;, has_oa_id &lt;lgl&gt;, funcs &lt;dbl&gt;,
+## #   h_index &lt;dbl&gt;, i10_index &lt;dbl&gt;, works_count &lt;int&gt;, cited_by_count &lt;int&gt;, …</code></pre>
+<div id="missings-h-index" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Missings h-index</h2>
+<pre class="r"><code>table(df_ego$h_index,useNA=&#39;always&#39;)</code></pre>
+<pre><code>## 
+## &lt;NA&gt; 
+##  458</code></pre>
+<pre class="r"><code># 0 missings</code></pre>
+</div>
+<div id="making-one-variable-for-function" class="section level2"
+number="3.2">
+<h2><span class="header-section-number">3.2</span> making one variable
+for function</h2>
+<pre class="r"><code>table(df_ego$functie.22,useNA=&#39;always&#39;)</code></pre>
+<pre><code>## 
+##     Assistant Professor     Associate Professor          Full Professor 
+##                      70                      38                      67 
+##                Lecturer           PhD Candidate Postdoctoral Researcher 
+##                      21                     123                      12 
+##              Researcher                   Staff                    &lt;NA&gt; 
+##                      30                       4                      93</code></pre>
+<pre class="r"><code>table(df_ego$functie.24,useNA=&#39;always&#39;)</code></pre>
+<pre><code>## 
+##     Assistant Professor     Associate Professor          Full Professor 
+##                      80                      39                      71 
+##                Lecturer           PhD Candidate Postdoctoral Researcher 
+##                      22                     135                      14 
+##              Researcher                   Staff                    &lt;NA&gt; 
+##                      33                       3                      61</code></pre>
+<pre class="r"><code># df_ego$position &lt;- ifelse(df_ego$functie.22 == NA, df_ego$functie.24, df_ego$functie.22)
+
+df_ego$position &lt;- ifelse(is.na(df_ego$functie.22), df_ego$functie.24, df_ego$functie.22)
+
+
+table(df_ego$position,useNA=&#39;always&#39;)</code></pre>
+<pre><code>## 
+##     Assistant Professor     Associate Professor          Full Professor 
+##                      81                      39                      69 
+##                Lecturer           PhD Candidate Postdoctoral Researcher 
+##                      21                     136                      15 
+##              Researcher                   Staff                    &lt;NA&gt; 
+##                      32                       4                      61</code></pre>
+<pre class="r"><code>checkposition &lt;- cbind.data.frame(
+  df_ego$functie.22, df_ego$functie.24, df_ego$position)
+view(checkposition)
+rm(checkposition)</code></pre>
+</div>
+<div id="making-one-variable-for-university" class="section level2"
+number="3.3">
+<h2><span class="header-section-number">3.3</span> making one variable
+for university</h2>
+<pre class="r"><code>table(df_ego$universiteit.22,useNA=&#39;always&#39;)</code></pre>
+<pre><code>## 
+##                                          EUR 
+##                                           42 
+##                        EUR/Boston University 
+##                                            1 
+##                                           RU 
+##                                           44 
+##                                       RU/RvG 
+##                                            1 
+##                                          RvG 
+##                                           61 
+##                                       RvG/RU 
+##                                            1 
+##                                  RvG/Tilburg 
+##                                            1 
+##                                 RvG/TU Delft 
+##                                            1 
+##                   RvG/Universiteit Stockholm 
+##                                            1 
+##                     RvG/University Linköping 
+##                                            1 
+##                      RvG/University of Turku 
+##                                            1 
+##                                           UU 
+##                                           48 
+##                                       UU/UvA 
+##                                            1 
+##                                          UvA 
+##                                           60 
+##                                      UvA/EUR 
+##                                            1 
+## UvA/Frankfurt School of Finance &amp; Management 
+##                                            1 
+##                   UvA/University of Lausanne 
+##                                            1 
+##                                          UvT 
+##                                           23 
+##                        UvT/Trento University 
+##                                            1 
+##                                           VU 
+##                                           77 
+##                                       VU/UvH 
+##                                            1 
+##                                         &lt;NA&gt; 
+##                                           89</code></pre>
+<pre class="r"><code>table(df_ego$universiteit.24,useNA=&#39;always&#39;)</code></pre>
+<pre><code>## 
+##                                          EUR 
+##                                           48 
+##                        EUR/Boston University 
+##                                            1 
+##                                           RU 
+##                                           39 
+##                                       RU/RvG 
+##                                            1 
+##                                          RvG 
+##                                           66 
+##                                  RvG/Tilburg 
+##                                            1 
+##                                 RvG/TU Delft 
+##                                            1 
+##                     RvG/University Linköping 
+##                                            1 
+##                    RvG/University of Leipzig 
+##                                            1 
+##                      RvG/University of Turku 
+##                                            1 
+##                        University of Cologne 
+##                                            1 
+##                                           UU 
+##                                           42 
+##                                          UU? 
+##                                            1 
+##                                       UU/UvA 
+##                                            1 
+##                                          UvA 
+##                                           61 
+##                                         UvA? 
+##                                            2 
+## UvA/Frankfurt School of Finance &amp; Management 
+##                                            1 
+##                   UvA/University of Lausanne 
+##                                            1 
+##                                          UvT 
+##                                           24 
+##                        UvT/Trento University 
+##                                            1 
+##                                           VU 
+##                                           76 
+##                                       VU/UvH 
+##                                            1 
+##                                         &lt;NA&gt; 
+##                                           86</code></pre>
+<pre class="r"><code>df_ego$university &lt;- ifelse(is.na(df_ego$universiteit.22), df_ego$universiteit.24, df_ego$universiteit.22)
+
+table(df_ego$university,useNA=&#39;always&#39;)</code></pre>
+<pre><code>## 
+##                                          EUR 
+##                                           49 
+##                        EUR/Boston University 
+##                                            1 
+##                                           RU 
+##                                           48 
+##                                       RU/RvG 
+##                                            1 
+##                                          RvG 
+##                                           67 
+##                                       RvG/RU 
+##                                            1 
+##                                  RvG/Tilburg 
+##                                            1 
+##                                 RvG/TU Delft 
+##                                            1 
+##                   RvG/Universiteit Stockholm 
+##                                            1 
+##                     RvG/University Linköping 
+##                                            1 
+##                    RvG/University of Leipzig 
+##                                            1 
+##                      RvG/University of Turku 
+##                                            1 
+##                                           UU 
+##                                           52 
+##                                       UU/UvA 
+##                                            1 
+##                                          UvA 
+##                                           67 
+##                                      UvA/EUR 
+##                                            1 
+## UvA/Frankfurt School of Finance &amp; Management 
+##                                            1 
+##                   UvA/University of Lausanne 
+##                                            1 
+##                                          UvT 
+##                                           27 
+##                        UvT/Trento University 
+##                                            1 
+##                                           VU 
+##                                           79 
+##                                       VU/UvH 
+##                                            1 
+##                                         &lt;NA&gt; 
+##                                           54</code></pre>
+<pre class="r"><code>checkuni &lt;- cbind.data.frame(
+  df_ego$universiteit.22, df_ego$universiteit.24, df_ego$university)
+view(checkuni)
+rm(checkuni)
+
+df_ego$university &lt;- gsub(&#39;EUR/Boston University&#39;, &#39;EUR&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;RU/RvG&#39;, &#39;RU&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;RvG/RU&#39;, &#39;RvG&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;RvG/Tilburg&#39;, &#39;RvG&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;RvG/TU Delft&#39;, &#39;RvG&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;RvG/Universiteit Stockholm&#39;, &#39;RvG&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;RvG/University Linköping&#39;, &#39;RvG&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;RvG/University of Leipzig&#39;, &#39;RvG&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;RvG/University of Turku&#39;, &#39;RvG&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;UU/UvA&#39;, &#39;UU&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;UvA/Frankfurt School of Finance &amp; Management&#39;, &#39;UvA&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;UvA/EUR&#39;, &#39;UvA&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;UvA/University of Lausanne&#39;, &#39;UvA&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;UvT/Trento University&#39;, &#39;UvT&#39;, df_ego$university)
+df_ego$university &lt;- gsub(&#39;VU/UvH&#39;, &#39;VU&#39;, df_ego$university)
+
+table(df_ego$university,useNA=&#39;always&#39;)</code></pre>
+<pre><code>## 
+##  EUR   RU  RvG   UU  UvA  UvT   VU &lt;NA&gt; 
+##   50   49   74   53   70   28   80   54</code></pre>
+<pre class="r"><code>checkuni &lt;- cbind.data.frame(
+  df_ego$universiteit.22, df_ego$universiteit.24, df_ego$university)
+view(checkuni)
+rm(checkuni)</code></pre>
+<pre class="r"><code>#Bigleague
+
+df_ego = df_ego |&gt;
+    mutate(
+        bigleague = case_when(
+            position == &quot;Assistant Professor&quot; ~ 1,
+            position == &quot;Associate Professor&quot; ~ 1,
+            position == &quot;Full Professor&quot; ~ 1,
+            .default = 0
+        )
+    )
+
+checkbigleague &lt;- cbind.data.frame(
+  df_ego$position, df_ego$bigleague)
+view(checkbigleague)
+rm(checkbigleague)</code></pre>
+<pre class="r"><code># Getting the assistant/associate/full professors into a variable
+table(df_ego$bigleague, df_ego$university)</code></pre>
+<pre><code>##    
+##     EUR RU RvG UU UvA UvT VU
+##   0  18 31  43 28  36  12 47
+##   1  32 18  31 25  34  16 33</code></pre>
+<pre class="r"><code>bleague &lt;- ifelse(df_ego$bigleague == 1, df_ego$university, NA)
+
+hindex &lt;- ifelse(df_ego$bigleague == 1, df_ego$h_index, NA)
+
+blhin &lt;- data.frame(university = bleague, hindex = hindex)
+
+table(blhin$university, useNA = &#39;always&#39;)</code></pre>
+<pre><code>## 
+##  EUR   RU  RvG   UU  UvA  UvT   VU &lt;NA&gt; 
+##   32   18   31   25   34   16   33  269</code></pre>
+<pre class="r"><code>table(blhin$hindex, useNA = &#39;always&#39;)</code></pre>
+<pre><code>## 
+## &lt;NA&gt; 
+##  458</code></pre>
+<pre class="r"><code>blhin &lt;- blhin[!is.na(blhin[c(&#39;university&#39;)]), ]
+
+table(blhin$university, useNA = &#39;always&#39;)</code></pre>
+<pre><code>## 
+##  EUR   RU  RvG   UU  UvA  UvT   VU &lt;NA&gt; 
+##   32   18   31   25   34   16   33    0</code></pre>
+<pre class="r"><code>table(blhin$hindex, useNA = &#39;always&#39;)</code></pre>
+<pre><code>## 
+## &lt;NA&gt; 
+##  189</code></pre>
+<pre class="r"><code># EUR  RU   RvG  UU   UvA  UvT  VU  &lt;NA&gt; 
+# 32   18   31   25   34   16   33    0 </code></pre>
+<pre class="r"><code># average h-index of department
+
+uni_list &lt;- as.data.frame(c(&#39;EUR&#39;, &#39;RU&#39;, &#39;RvG&#39;, &#39;UU&#39;, &#39;UvA&#39;, &#39;UvT&#39;, &#39;VU&#39;))
+
+names(uni_list) &lt;- &#39;university&#39;
+
+uni_df &lt;- merge(uni_list, blhin, by=&#39;university&#39;)
+
+require(dplyr)
+
+summarise(group_by(uni_df, university), sum_h = sum(hindex))</code></pre>
+<pre><code>## # A tibble: 7 × 2
+##   university sum_h
+##   &lt;chr&gt;      &lt;dbl&gt;
+## 1 EUR           NA
+## 2 RU            NA
+## 3 RvG           NA
+## 4 UU            NA
+## 5 UvA           NA
+## 6 UvT           NA
+## 7 VU            NA</code></pre>
+<pre class="r"><code>table(blhin$university, useNA = &#39;always&#39;)</code></pre>
+<pre><code>## 
+##  EUR   RU  RvG   UU  UvA  UvT   VU &lt;NA&gt; 
+##   32   18   31   25   34   16   33    0</code></pre>
+<pre class="r"><code>EUR_mean_h &lt;- 473 / 32
+RU_mean_h &lt;- 279 / 18
+RvG_mean_h &lt;- 766 / 31
+UU_mean_h &lt;- 417 / 25
+UvA_mean_h &lt;- 567 / 34
+UvT_mean_h &lt;- 246 / 16
+VU_mean_h &lt;- 660 / 33
+
+mean_h &lt;- c(EUR_mean_h, RU_mean_h, RvG_mean_h, UU_mean_h, UvA_mean_h, UvT_mean_h, VU_mean_h)
+
+df_mean_h &lt;- data.frame(university = uni_list, mean_h)
+
+df_ego2 &lt;- merge(df_ego, df_mean_h, by = &quot;university&quot;, all.x = TRUE)</code></pre>
+<pre class="r"><code># For the visualization, some egos that only have data in universiteit.25 are very difficult to remove. Therefore, I am imputing their university value.
+
+df_ego2$university &lt;- ifelse(is.na(df_ego2$university), df_ego2$universiteit.25, df_ego2$university)</code></pre>
+<pre class="r"><code># university as numeric
+
+df_ego2$uni_num &lt;- df_ego2$university
+df_ego2$uni_num &lt;- gsub(&#39;EUR&#39;, 0, df_ego2$uni_num)
+df_ego2$uni_num &lt;- gsub(&#39;RU&#39;, 1, df_ego2$uni_num)
+df_ego2$uni_num &lt;- gsub(&#39;RvG&#39;, 2, df_ego2$uni_num)
+df_ego2$uni_num &lt;- gsub(&#39;UU&#39;, 3, df_ego2$uni_num)
+df_ego2$uni_num &lt;- gsub(&#39;UvA&#39;, 4, df_ego2$uni_num)
+df_ego2$uni_num &lt;- gsub(&#39;UvT&#39;, 5, df_ego2$uni_num)
+df_ego2$uni_num &lt;- gsub(&#39;VU&#39;, 6, df_ego2$uni_num)
+
+table(df_ego2$university, df_ego2$uni_num, useNA = &#39;always&#39;)</code></pre>
+<pre><code>##       
+##          0   1   2   3   4   5   6 &lt;NA&gt;
+##   EUR   50   0   0   0   0   0   0    0
+##   RU     0  52   0   0   0   0   0    0
+##   RvG    0   0 104   0   0   0   0    0
+##   UU     0   0   0  57   0   0   0    0
+##   UvA    0   0   0   0  76   0   0    0
+##   UvT    0   0   0   0   0  32   0    0
+##   VU     0   0   0   0   0   0  87    0
+##   &lt;NA&gt;   0   0   0   0   0   0   0    0</code></pre>
+<pre class="r"><code># gender as numeric
+
+Gender_value &lt;- c(&#39;Female&#39;,&#39;Male&#39;)
+Gender_count &lt;- c(245,213)
+df_gender_freq &lt;- data.frame(Gender=Gender_value, Count=Gender_count)
+fshowdf(df_gender_freq) </code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Gender
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+245
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:right;">
+213
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="r"><code>#Lastly there is the gender variable, which has five missings
+table(df_ego2$gender,useNA=&#39;always&#39;)</code></pre>
+<pre><code>## 
+## female   male   &lt;NA&gt; 
+##    242    211      5</code></pre>
+<pre class="r"><code>#dummy
+df_ego2$gender_num &lt;- df_ego2$gender
+df_ego2$gender_num &lt;- gsub(&#39;female&#39;, 0, df_ego2$gender_num)
+df_ego2$gender_num &lt;- gsub(&#39;male&#39;, 1, df_ego2$gender_num)
+
+# check
+table(df_ego2$gender,df_ego2$gender_num,useNA=&#39;always&#39;)</code></pre>
+<pre><code>##         
+##            0   1 &lt;NA&gt;
+##   female 242   0    0
+##   male     0 211    0
+##   &lt;NA&gt;     0   0    5</code></pre>
+</div>
+</div>
+<div id="data" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Data</h1>
+<div id="sample" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Sample</h2>
+<p>Stochastic Actor Oriented Models (SAOM)</p>
+<p>The dataset consists of directed ties in a network of scholars
+working at a Dutch sociology department and scholars working at a Dutch
+political science department. By using the OpenAlex API (source?), the
+IDs of the works affiliated with these scholars had been webscraped.</p>
+<p>First, the dataset was filtered so that only the scholars from the
+sociology departments remained. The duplicate scholar IDs were
+subsequently removed.</p>
+<p>The dataset contains academic works from 2015 until 2025. For the
+2025 time point, the academic function of members of the Erasmus
+University Rotterdam sociology department is missing.</p>
+<p>To examine change over time, two waves were constructed. Wave 1 goes
+from 2015 until 2019, and Wave 2 goes from 2020 to 2024, meaning an
+equal time distribution of four years.</p>
+</div>
+</div>
+<div id="methods" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Methods</h1>
+<p>R will be used.</p>
+<div id="measures" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Measures</h2>
+<p>To operationalise the concept of ‘academic prestige’, the personal
+h-index was used as a proxy(?), representing individual prestige.
+The</p>
+<p>Scholars with more career seniority and a permanent position are more
+likely to be representative of the level of quality of an academic
+department than those who are more junior. The functions in the data are
+also somewhat ambiguous, […] Therefore, sociologists who have a function
+as assistant professor, associate professor or full professor were taken
+into the departmental prestige measure. The h-index of these members
+were counted up to calculate the mean h-index. This became the
+departmental prestige measure. The <em>higher</em> effect in RSiena, an
+R package which will be used for the analysis. This is the effect that
+the ego has a higher covariate than the alter. The effect is written out
+as an equation below</p>
+<p><span class="math display">\[ \Sigma_j x_{ij}dsign(v_{i} -
+v_{j})\]</span></p>
+<p>Where dsign(<em>d</em>) = 0 for <em>d</em> &lt; 0, 0.5 for <em>d</em>
+= 0, and 1 for <em>d</em> &gt; 0.</p>
+<div id="job-position" class="section level3" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> Job position</h3>
+<p>While many changes can happen to someone’s academic function, such as
+being hired, leaving or getting a promotion, most remain stable. For the
+sake of the analysis, the functions were standardised. After removing
+the 2025 time point, the available variables were the function at 2022
+and 2024. The job position at 2022 was used for 2024. Most sociologists
+held the same position on both time points, but a promotion or leave was
+therefore not included. When a function at 2022 was missing, the
+function at 2024 was used instead.</p>
+</div>
+<div id="control-variables" class="section level3" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> Control
+variables</h3>
+<p>Besides the main effects of individual and departmental prestige, two
+control variables were also taken into the analysis. The first is a
+numeric version of the university variable and the second is a dummy
+variable of gender. Both are used to control for the effect that
+scholars may prefer working together with others from their own
+department (source), or who share the same gender (source). This is
+achieved through the sameX effect, taking the same value of the…</p>
+<p>After removing the 2025 time point, some missingness remained in
+university, function and gender. This missingness was very small,
+[number]. Removing the scholars with missing variables proved to be more
+problematic to run the RSiena model than keeping them in the
+dataset.</p>
+</div>
+</div>
+</div>
+<div id="frequencies" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Frequencies</h1>
+<div id="university" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> University</h2>
+<pre class="r"><code>table(df_ego2$university, useNA = &#39;always&#39;)</code></pre>
+<pre><code>## 
+##  EUR   RU  RvG   UU  UvA  UvT   VU &lt;NA&gt; 
+##   50   52  104   57   76   32   87    0</code></pre>
+<pre class="r"><code># Frequency table for university
+uni_value &lt;- c(&#39;EUR&#39;, &#39;RU&#39;, &#39;RvG&#39;, &#39;UU&#39;, &#39;UvA&#39;, &quot;UvT&quot;, &#39;VU&#39;, &#39;missing&#39;)
+uni_count &lt;- c(50, 49, 74, 53, 70, 28, 80, 54)
+df_uni_freq &lt;- data.frame(University = uni_value, Count = uni_count)
+fshowdf(df_uni_freq)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+University
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+EUR
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RU
+</td>
+<td style="text-align:right;">
+49
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RvG
+</td>
+<td style="text-align:right;">
+74
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UU
+</td>
+<td style="text-align:right;">
+53
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UvA
+</td>
+<td style="text-align:right;">
+70
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UvT
+</td>
+<td style="text-align:right;">
+28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+VU
+</td>
+<td style="text-align:right;">
+80
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+missing
+</td>
+<td style="text-align:right;">
+54
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="job-position-1" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Job position</h2>
+<pre class="r"><code>table(df_ego2$position, useNA = &#39;always&#39;)</code></pre>
+<pre><code>## 
+##     Assistant Professor     Associate Professor          Full Professor 
+##                      81                      39                      69 
+##                Lecturer           PhD Candidate Postdoctoral Researcher 
+##                      21                     136                      15 
+##              Researcher                   Staff                    &lt;NA&gt; 
+##                      32                       4                      61</code></pre>
+<pre class="r"><code># Frequency table for job position
+
+posit_value &lt;- c(&#39;PhD Candidate&#39;, &#39;Postdoctoral Researcher&#39;, &#39;Lecturer&#39;, &#39;Researcher&#39;,
+            &#39;Assistant professor&#39;,&#39;Associate professor&#39;, &#39;Full professor&#39;, &#39;Staff&#39;, &#39;missing&#39;)
+posit_count &lt;- c(136, 15, 21, 32, 81, 39, 69, 4, 61)
+df_freq_posit &lt;- data.frame(Function = posit_value, Count = posit_count)
+fshowdf(df_freq_posit)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Function
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+PhD Candidate
+</td>
+<td style="text-align:right;">
+136
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Postdoctoral Researcher
+</td>
+<td style="text-align:right;">
+15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lecturer
+</td>
+<td style="text-align:right;">
+21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Researcher
+</td>
+<td style="text-align:right;">
+32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Assistant professor
+</td>
+<td style="text-align:right;">
+81
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Associate professor
+</td>
+<td style="text-align:right;">
+39
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Full professor
+</td>
+<td style="text-align:right;">
+69
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Staff
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+missing
+</td>
+<td style="text-align:right;">
+61
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="gender" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Gender</h2>
+<pre class="r"><code>table(df_ego2$gender, useNA = &#39;always&#39;)</code></pre>
+<pre><code>## 
+## female   male   &lt;NA&gt; 
+##    242    211      5</code></pre>
+<pre class="r"><code># Frequency table for gender
+
+Gen_value &lt;- c(&#39;Female&#39;, &#39;Male&#39;, &#39;missing&#39;)
+Gen_count &lt;- c(242, 211, 5)
+df_freq_gen &lt;- data.frame(Gender = Gen_value, Count = Gen_count)
+fshowdf(df_freq_gen)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Gender
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Female
+</td>
+<td style="text-align:right;">
+242
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:right;">
+211
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+missing
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRGF0YVByZXBNZXRob2RzIgphdXRob3I6ICJHaGlzbGFpbmUgZGUgR3Jvb3QiCmRhdGU6ICIyMDI1LTExLTA1IgpvdXRwdXQ6IGh0bWxfZG9jdW1lbnQKYmlibGlvZ3JhcGh5OiByZWZlcmVuY2VzLmJpYgotLS0KCiMgRGF0YSBQcmVwYXJhdGlvbgoKYGBge3J9CnJtKGxpc3QgPSBscygpKQpgYGAKCgpgYGB7cn0KbGlicmFyeShmb3JlaWduKQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShzY2hvbGFyKSAKbGlicmFyeShvcGVuYWxleFIpCmxpYnJhcnkocnZlc3QpIApsaWJyYXJ5KGpzb25saXRlKQpsaWJyYXJ5KFJTaWVuYSkKCmBgYAoKIyBDdXN0b20gRnVuY3Rpb25zCgoKYGBge3J9CmZwYWNrYWdlLmNoZWNrID0gZnVuY3Rpb24ocGFja2FnZXMpIHsKICAgIGxhcHBseShwYWNrYWdlcywgRlVOID0gZnVuY3Rpb24oeCkgewogICAgICAgIGlmICghcmVxdWlyZSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpKSB7CiAgICAgICAgICAgIGluc3RhbGwucGFja2FnZXMoeCwgZGVwZW5kZW5jaWVzID0gVFJVRSkKICAgICAgICAgICAgbGlicmFyeSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpCiAgICAgICAgfQogICAgfSkKfQoKZnNhdmUgPSBmdW5jdGlvbih4LCBmaWxlID0gTlVMTCwgbG9jYXRpb24gPSAiLi9kYXRhL3Byb2Nlc3NlZC8iKSB7CiAgICBpZmVsc2UoIWRpci5leGlzdHMoImRhdGEiKSwgZGlyLmNyZWF0ZSgiZGF0YSIpLCBGQUxTRSkKICAgIGlmZWxzZSghZGlyLmV4aXN0cygiZGF0YS9wcm9jZXNzZWQiKSwgZGlyLmNyZWF0ZSgiZGF0YS9wcm9jZXNzZWQiKSwgRkFMU0UpCiAgICBpZiAoaXMubnVsbChmaWxlKSkKICAgICAgICBmaWxlID0gZGVwYXJzZShzdWJzdGl0dXRlKHgpKQogICAgZGF0ZW5hbWUgPSBzdWJzdHIoZ3N1YigiWzotXSIsICIiLCBTeXMudGltZSgpKSwgMSwgOCkKICAgIHRvdGFsbmFtZSA9IHBhc3RlKGxvY2F0aW9uLCBkYXRlbmFtZSwgZmlsZSwgIi5yZGEiLCBzZXAgPSAiIikKICAgIHNhdmUoeCwgZmlsZSA9IHRvdGFsbmFtZSkgICNuZWVkIHRvIGZpeCBpZiBmaWxlIGlzIHJlbG9hZGVkIGFzIGlucHV0IG5hbWUsIG5vdCBhcyB4LiAKfQoKZmxvYWQgPSBmdW5jdGlvbihmaWxlbmFtZSkgewogICAgbG9hZChmaWxlbmFtZSkKICAgIGdldChscygpW2xzKCkgIT0gImZpbGVuYW1lIl0pCn0KCmZzaG93ZGYgPSBmdW5jdGlvbih4LCAuLi4pIHsKICAgIGtuaXRyOjprYWJsZSh4LCBkaWdpdHMgPSAyLCAiaHRtbCIsIC4uLikgfD4KICAgICAgICBrYWJsZUV4dHJhOjprYWJsZV9zdHlsaW5nKGJvb3RzdHJhcF9vcHRpb25zID0gYygic3RyaXBlZCIsICJob3ZlciIpKSB8PgogICAgICAgIGthYmxlRXh0cmE6OnNjcm9sbF9ib3god2lkdGggPSAiMTAwJSIsIGhlaWdodCA9ICIzMDBweCIpCn0KCmBgYAoKCiMjIERlZmluZSBOZXR3b3JrIERhdGEgSGVscGVyIEZ1bmN0aW9uCmBgYHtyfQoKZmNvbG5ldCA9IGZ1bmN0aW9uKGRhdGEgPSBzY2hvbGFycywgdW5pdmVyc2l0eSA9IGMoIlJVIiwgJ1VVJyksIGRpc2NpcGxpbmUgPSAiU29jaW9sb2dpZSIsIHdhdmVzID0gbGlzdChjKDIwMTUsIDIwMTgpLCBjKDIwMTksIDIwMjMpLCBjKDIwMjQsIDIwMjUpKSwgdHlwZSA9IGMoImZpcnN0IikpIHsKCiAgICB1bml2ZXJzaXR5ID0gcGFzdGUwKCcoJywgcGFzdGUwKHVuaXZlcnNpdHksIGNvbGxhcHNlPSd8JyApLCAnKScpCiAgICBkaXNjaXBsaW5lID0gcGFzdGUwKCcoJywgcGFzdGUwKGRpc2NpcGxpbmUsIGNvbGxhcHNlPSd8JyApLCAnKScpCgogICAgIyBzdGVwIDEKICAgIGRlbW9ncmFwaGljcyA9IGRhdGEkZGVtb2dyYXBoaWNzCiAgICBzYW1wbGUgPSB3aGljaCgKICAgICAgICAoc3RyX2RldGVjdChkZW1vZ3JhcGhpY3MkdW5pdmVyc2l0ZWl0LjIyLCB1bml2ZXJzaXR5KQogICAgICAgICAgICB8IHN0cl9kZXRlY3QoZGVtb2dyYXBoaWNzJHVuaXZlcnNpdGVpdC4yNCwgdW5pdmVyc2l0eSkKICAgICAgICAgICAgfCBzdHJfZGV0ZWN0KGRlbW9ncmFwaGljcyR1bml2ZXJzaXRlaXQuMjUsIHVuaXZlcnNpdHkpCiAgICAgICAgKSAmICgKICAgICAgICAgICAgc3RyX2RldGVjdChkZW1vZ3JhcGhpY3MkZGlzY2lwbGluZS4yMiwgZGlzY2lwbGluZSkKICAgICAgICAgICAgfCBzdHJfZGV0ZWN0KGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjI0LCBkaXNjaXBsaW5lKQogICAgICAgICAgICB8IHN0cl9kZXRlY3QoZGVtb2dyYXBoaWNzJGRpc2NpcGxpbmUuMjUsIGRpc2NpcGxpbmUpCiAgICAgICAgKSB8PiByZXBsYWNlX25hKEZBTFNFKSkKCiAgICBkZW1vZ3JhcGhpY3Nfc29jID0gZGVtb2dyYXBoaWNzW3NhbXBsZSwgXSB8PiBkcm9wX25hKGlkKQoKICAgICMgc3RlcCAyCiAgICBpZHMgPSBkZW1vZ3JhcGhpY3Nfc29jJGlkIHw+IHVuaXF1ZSgpCgoKICAgIHNjaG9sYXJzX3NlbCA9IGxpc3QoKSAKICAgIGZvciAoaWRfIGluIGlkcyl7CiAgICAgICAgc2Nob2xhcnNfc2VsW1tpZF9dXSA9IGJpbmRfcm93cyhzY2hvbGFycyR3b3JrcykgfD4KICAgICAgICAgICAgZmlsdGVyKGF1dGhvcl9pZCA9PSBpZF8pCiAgICB9CiAgICBzY2hvbGFyc19zZWwgPSBiaW5kX3Jvd3Moc2Nob2xhcnMkd29ya3MpIAogICAgCgogICAgbndhdmVzID0gbGVuZ3RoKHdhdmVzKQogICAgbmV0cyA9IGFycmF5KDAsIGRpbSA9IGMobndhdmVzLCBsZW5ndGgoaWRzKSwgbGVuZ3RoKGlkcykpLCBkaW1uYW1lcyA9IGxpc3Qod2F2ZSA9IDE6bndhdmVzLCBpZHMsCiAgICAgICAgaWRzKSkKICAgIGRpbW5hbWVzKG5ldHMpCgogICAgIyBzdGVwIDMKICAgIGRmX3dvcmtzID0gdGliYmxlKAogICAgICAgICAgICB3b3Jrc19pZCA9IHNjaG9sYXJzX3NlbCRpZCwgCiAgICAgICAgICAgIHdvcmtzX2F1dGhvciA9IHNjaG9sYXJzX3NlbCRhdXRob3JzaGlwcywgCiAgICAgICAgICAgIHdvcmtzX3llYXIgPSBzY2hvbGFyc19zZWwkcHVibGljYXRpb25feWVhcgogICAgICAgICkKCgogICAgZGZfd29ya3MgPSBkZl93b3Jrc1shZHVwbGljYXRlZChkZl93b3JrcyksIF0KCiAgICAjIHN0ZXAgNAogICAgaWYgKHR5cGUgPT0gImZpcnN0IikgewogICAgICAgIGZvciAoaiBpbiAxOmxlbmd0aCh3YXZlcykpIHsKICAgICAgICAgICAgZGZfd29ya3NfdyA9IGRmX3dvcmtzW2RmX3dvcmtzJHdvcmtzX3llYXIgPj0gd2F2ZXNbW2pdXVsxXSAmIGRmX3dvcmtzJHdvcmtzX3llYXIgPD0gd2F2ZXNbW2pdXVsyXSwKICAgICAgICAgICAgICAgIF0KICAgICAgICAgICAgZm9yIChpIGluIDE6bnJvdyhkZl93b3Jrc193KSkgewogICAgICAgICAgICAgICAgZWdvID0gZGZfd29ya3NfdyR3b3Jrc19hdXRob3JbaV1bWzFdXSRpZFsxXQogICAgICAgICAgICAgICAgYWx0ZXJzID0gZGZfd29ya3NfdyR3b3Jrc19hdXRob3JbaV1bWzFdXSRpZFstMV0KICAgICAgICAgICAgICAgIGlmIChzdW0oaWRzICVpbiUgZWdvKSA+IDAgJiBzdW0oaWRzICVpbiUgYWx0ZXJzKSA+IDApIHsKICAgICAgICAgICAgICAgICAgbmV0c1tqLCB3aGljaChpZHMgJWluJSBlZ28pLCB3aGljaChpZHMgJWluJSBhbHRlcnMpXSA9IDEKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KCiAgICBpZiAodHlwZSA9PSAibGFzdCIpIHsKICAgICAgICBmb3IgKGogaW4gMTpsZW5ndGgod2F2ZXMpKSB7CiAgICAgICAgICAgIGRmX3dvcmtzX3cgPSBkZl93b3Jrc1tkZl93b3JrcyR3b3Jrc195ZWFyID49IHdhdmVzW1tqXV1bMV0gJiBkZl93b3JrcyR3b3Jrc195ZWFyIDw9IHdhdmVzW1tqXV1bMl0sCiAgICAgICAgICAgICAgICBdCiAgICAgICAgICAgIGZvciAoaSBpbiAxOm5yb3coZGZfd29ya3NfdykpIHsKICAgICAgICAgICAgICAgIGVnbyA9IHJldihkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGlkWzFdKQogICAgICAgICAgICAgICAgYWx0ZXJzID0gcmV2KGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kaWRbLTFdKQogICAgICAgICAgICAgICAgaWYgKHN1bShpZHMgJWluJSBlZ28pID4gMCAmIHN1bShpZHMgJWluJSBhbHRlcnMpID4gMCkgewogICAgICAgICAgICAgICAgICBuZXRzW2osIHdoaWNoKGlkcyAlaW4lIGVnbyksIHdoaWNoKGlkcyAlaW4lIGFsdGVycyldID0gMQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQogICAgaWYgKHR5cGUgPT0gImFsbCIpIHsKICAgICAgICBmb3IgKGogaW4gMTpsZW5ndGgod2F2ZXMpKSB7CiAgICAgICAgICAgIGRmX3dvcmtzX3cgPSBkZl93b3Jrc1tkZl93b3JrcyR3b3Jrc195ZWFyID49IHdhdmVzW1tqXV1bMV0gJiBkZl93b3JrcyR3b3Jrc195ZWFyIDw9IHdhdmVzW1tqXV1bMl0sCiAgICAgICAgICAgICAgICBdCiAgICAgICAgICAgIGZvciAoaSBpbiAxOm5yb3coZGZfd29ya3NfdykpIHsKICAgICAgICAgICAgICAgIGVnb3MgPSBkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGlkCiAgICAgICAgICAgICAgICBpZiAoc3VtKGlkcyAlaW4lIGVnb3MpID4gMCkgewogICAgICAgICAgICAgICAgICBuZXRzW2osIHdoaWNoKGlkcyAlaW4lIGVnb3MpLCB3aGljaChpZHMgJWluJSBlZ29zKV0gPSAxCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZGlhZyhuZXRzW2osLF0pID0gMAogICAgICAgIH0KICAgIH0KCiAgICBvdXRwdXQgPSBsaXN0KCkKICAgIG91dHB1dCRkYXRhID0gZGVtb2dyYXBoaWNzX3NvYwogICAgb3V0cHV0JG5ldHMgPSBuZXRzCiAgICByZXR1cm4ob3V0cHV0KQp9CmBgYAoKCmBgYHtyfQpwYWNrYWdlcyA9IGMoCiAgICAiUlNpZW5hIiwgInRpZHl2ZXJzZSIsCiAgICAnZHBseXInLCAnc3RyaW5ncicgIyB0aGVzZSBwYWNrYWdlcyB3ZXJlIGFkZGVkIHRvIG1ha2UgdGhlIGNvZGUgcnVuCikKZnBhY2thZ2UuY2hlY2socGFja2FnZXMpCgpsaWJyYXJ5KFJTaWVuYSkKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkoc3RyaW5ncikKCnNjaG9sYXJzID0gZmxvYWQoJ2RhdGEvcHJvY2Vzc2VkLzIwMjUxMDE3c2Nob2xhcnMuUmRhJykKCnNjaG9sYXJzJGRlbW9ncmFwaGljcyA9IHNjaG9sYXJzJGRlbW9ncmFwaGljcyB8PgogIG11dGF0ZSgKICAgIHVuaXZlcnNpdGVpdC4yMiA9IHN0cl9yZXBsYWNlKHVuaXZlcnNpdGVpdC4yMiwgJ1JVRycsICdSdkcnKSwKICAgIHVuaXZlcnNpdGVpdC4yNCA9IHN0cl9yZXBsYWNlKHVuaXZlcnNpdGVpdC4yNCwgJ1JVRycsICdSdkcnKSwKICAgIHVuaXZlcnNpdGVpdC4yNSA9IHN0cl9yZXBsYWNlKHVuaXZlcnNpdGVpdC4yNSwgJ1JVRycsICdSdkcnKSwKICApCmBgYAoKIyMgQXBwbGljYXRpb24KIyMjIExvYWQgRGF0YQpgYGB7cn0Kc29jaW9sb2dpc3RzID0gZmNvbG5ldChzY2hvbGFycywgdW5pdmVyc2l0eSA9IGMoJ1JVJywnVVUnLCdVdlQnLCdFVVInLCdVdkEnLCdWVScsJ1J2RycpLCB3YXZlcyA9IGxpc3QoYygyMDE1LCAyMDE5KSwgYygyMDIwLCAyMDI0KSkpCmRmX2VnbyA9IGJpbmRfcm93cyhzb2Npb2xvZ2lzdHMkZGF0YSkKYGBgCgojIyMgV3JhbmdsZSBEYXRhCmBgYHtyfQp3YXZlMSA9IHNvY2lvbG9naXN0cyRuZXRzWzEsLF0Kd2F2ZTIgPSBzb2Npb2xvZ2lzdHMkbmV0c1syLCxdCgpuZXRzID0gYXJyYXkoCiAgICBkYXRhID0gYyh3YXZlMSwgd2F2ZTIpLAogICAgZGltID0gYyhkaW0od2F2ZTIpLCAyKQopCgpuZXQgPSBzaWVuYURlcGVuZGVudChuZXRzKQpgYGAKCiMjIyBEZWZpbmluZyBhY2FkZW1pYyBmdW5jdGlvbiBvZiBhIHNvY2lvbG9naXN0CgpgYGB7cn0KZGZfZWdvID0gZGZfZWdvIHw+CiAgICBtdXRhdGUoCiAgICAgICAgZnVuY3MgPSBjYXNlX3doZW4oCiAgICAgICAgICAgIGZ1bmN0aWUuMjIgPT0gIkZ1bGwgUHJvZmVzc29yIiB+IDEsCiAgICAgICAgICAgIGZ1bmN0aWUuMjQgPT0gIkZ1bGwgUHJvZmVzc29yIiB+IDEsCiAgICAgICAgICAgIC5kZWZhdWx0ID0gMAogICAgICAgICkKICAgICkKCmZ1bmNzID0gY29Db3ZhcihkZl9lZ28kZnVuY3MpCmBgYAoKIyBQcmVzdGlnZSBtZWFzdXJlCgpgYGB7cn0KIyBBZGQgaC1pbmRleCBhbmQgaTEwLWluZGV4IGNvbHVtbnMgdG8gZGZfZWdvCmRmX2VnbyA8LSBkZl9lZ28gJT4lCiAgICBtdXRhdGUoaF9pbmRleCA9IE5BX3JlYWxfLCBpMTBfaW5kZXggPSBOQV9yZWFsXykKYGBgCgoKYGBge3IsIGV2YWw9RkFMU0V9CiMgR2V0IEgtaW5kZXggYW5kIGkxMC1pbmRleApnZXRfb3BlbmFsZXhfbWV0cmljcyA8LSBmdW5jdGlvbihvcGVuYWxleF9pZCkgewogICAgdXJsIDwtIHBhc3RlMCgiaHR0cHM6Ly9hcGkub3BlbmFsZXgub3JnL2F1dGhvcnMvIiwgb3BlbmFsZXhfaWQpCiAgICBhdXRob3JfZGF0YSA8LSB0cnlDYXRjaCh7CiAgICAgICAganNvbmxpdGU6OmZyb21KU09OKHVybCkKICAgIH0sIGVycm9yID0gZnVuY3Rpb24oZSkgewogICAgICAgIG1lc3NhZ2UocGFzdGUoIkVycm9yIGZldGNoaW5nIGRhdGEgZm9yIE9wZW5BbGV4IElEOiIsIG9wZW5hbGV4X2lkKSkKICAgICAgICByZXR1cm4oTlVMTCkKICAgIH0pCgogICAgaWYgKCFpcy5udWxsKGF1dGhvcl9kYXRhKSkgewogICAgICAgIGhfaW5kZXggPC0gYXV0aG9yX2RhdGEkc3VtbWFyeV9zdGF0cyRoX2luZGV4CiAgICAgICAgaTEwX2luZGV4IDwtIGF1dGhvcl9kYXRhJHN1bW1hcnlfc3RhdHMkaTEwX2luZGV4CiAgICAgICAgd29ya3NfY291bnQgPC0gYXV0aG9yX2RhdGEkd29ya3NfY291bnQKICAgICAgICBjaXRlZF9ieV9jb3VudCA8LSBhdXRob3JfZGF0YSRjaXRlZF9ieV9jb3VudAogICAgICAgIHJldHVybihsaXN0KGhfaW5kZXggPSBoX2luZGV4LCBpMTBfaW5kZXggPSBpMTBfaW5kZXgsIHdvcmtzX2NvdW50ID0gd29ya3NfY291bnQsIGNpdGVkX2J5X2NvdW50ID0gY2l0ZWRfYnlfY291bnQpKQogICAgfSBlbHNlIHsKICAgICAgICByZXR1cm4obGlzdChoX2luZGV4ID0gTkEsIGkxMF9pbmRleCA9IE5BLCB3b3Jrc19jb3VudCA9IE5BLCBjaXRlZF9ieV9jb3VudCA9IE5BKSkKICAgIH0KfQoKIyBMb29wIGZvciBlYWNoIHNjaG9sYXIKZm9yIChpIGluIDE6bnJvdyhkZl9lZ28pKSB7CiAgICBvcGVuYWxleF9pZCA8LSBkZl9lZ28kaWRbaV0gICMgYXNzdW1pbmcgaWQgaXMgdGhlIE9wZW5BbGV4IElEIGluIGRmX2VnbwogICAgbWV0cmljcyA8LSBnZXRfb3BlbmFsZXhfbWV0cmljcyhvcGVuYWxleF9pZCkKICAgIGRmX2VnbyRoX2luZGV4W2ldIDwtIG1ldHJpY3MkaF9pbmRleAogICAgZGZfZWdvJGkxMF9pbmRleFtpXSA8LSBtZXRyaWNzJGkxMF9pbmRleAogICAgZGZfZWdvJHdvcmtzX2NvdW50W2ldIDwtIG1ldHJpY3Mkd29ya3NfY291bnQKICAgIGRmX2VnbyRjaXRlZF9ieV9jb3VudFtpXSA8LSBtZXRyaWNzJGNpdGVkX2J5X2NvdW50Cn0KCiMgVmlldyB1cGRhdGVkIGRmX2VnbyB3aXRoIGgtaW5kZXggYW5kIGkxMC1pbmRleAojIFZpZXcoZGZfZWdvKQoKI3NhdmluZyBkZl9lZ28gd2l0aCBoLWluZGV4IHNvIHdlIGRvbid0IG5lZWQgdG8gc2NyYXBlIGV2ZXJ5IHRpbWUKZnNhdmUoZGZfZWdvLCBmaWxlID0gTlVMTCwgbG9jYXRpb24gPSAiL1VzZXJzL2doaXNsYWluZS9Eb3dubG9hZHMvR2l0aHViL1NvY2lhbCBOZXR3b3Jrcy9kYXRhL3Byb2Nlc3NlZC8iKQoKYGBgCgpgYGB7cn0KI2xvYWQgZGZfZWdvIHdpdGggaC1pbmRleApmbG9hZCgiL1VzZXJzL2doaXNsYWluZS9Eb3dubG9hZHMvR2l0aHViL1NvY2lhbCBOZXR3b3Jrcy9kYXRhL3Byb2Nlc3NlZC8yMDI2MDEyM2RmX2Vnby5yZGEiKQoKCmBgYAojIyBNaXNzaW5ncyBoLWluZGV4CgpgYGB7cn0KdGFibGUoZGZfZWdvJGhfaW5kZXgsdXNlTkE9J2Fsd2F5cycpCgojIDAgbWlzc2luZ3MKYGBgCgojIyBtYWtpbmcgb25lIHZhcmlhYmxlIGZvciBmdW5jdGlvbgoKYGBge3J9Cgp0YWJsZShkZl9lZ28kZnVuY3RpZS4yMix1c2VOQT0nYWx3YXlzJykKdGFibGUoZGZfZWdvJGZ1bmN0aWUuMjQsdXNlTkE9J2Fsd2F5cycpCgojIGRmX2VnbyRwb3NpdGlvbiA8LSBpZmVsc2UoZGZfZWdvJGZ1bmN0aWUuMjIgPT0gTkEsIGRmX2VnbyRmdW5jdGllLjI0LCBkZl9lZ28kZnVuY3RpZS4yMikKCmRmX2VnbyRwb3NpdGlvbiA8LSBpZmVsc2UoaXMubmEoZGZfZWdvJGZ1bmN0aWUuMjIpLCBkZl9lZ28kZnVuY3RpZS4yNCwgZGZfZWdvJGZ1bmN0aWUuMjIpCgoKdGFibGUoZGZfZWdvJHBvc2l0aW9uLHVzZU5BPSdhbHdheXMnKQoKY2hlY2twb3NpdGlvbiA8LSBjYmluZC5kYXRhLmZyYW1lKAogIGRmX2VnbyRmdW5jdGllLjIyLCBkZl9lZ28kZnVuY3RpZS4yNCwgZGZfZWdvJHBvc2l0aW9uKQp2aWV3KGNoZWNrcG9zaXRpb24pCnJtKGNoZWNrcG9zaXRpb24pCgpgYGAKIyMgbWFraW5nIG9uZSB2YXJpYWJsZSBmb3IgdW5pdmVyc2l0eQoKYGBge3J9Cgp0YWJsZShkZl9lZ28kdW5pdmVyc2l0ZWl0LjIyLHVzZU5BPSdhbHdheXMnKQp0YWJsZShkZl9lZ28kdW5pdmVyc2l0ZWl0LjI0LHVzZU5BPSdhbHdheXMnKQoKZGZfZWdvJHVuaXZlcnNpdHkgPC0gaWZlbHNlKGlzLm5hKGRmX2VnbyR1bml2ZXJzaXRlaXQuMjIpLCBkZl9lZ28kdW5pdmVyc2l0ZWl0LjI0LCBkZl9lZ28kdW5pdmVyc2l0ZWl0LjIyKQoKdGFibGUoZGZfZWdvJHVuaXZlcnNpdHksdXNlTkE9J2Fsd2F5cycpCgpjaGVja3VuaSA8LSBjYmluZC5kYXRhLmZyYW1lKAogIGRmX2VnbyR1bml2ZXJzaXRlaXQuMjIsIGRmX2VnbyR1bml2ZXJzaXRlaXQuMjQsIGRmX2VnbyR1bml2ZXJzaXR5KQp2aWV3KGNoZWNrdW5pKQpybShjaGVja3VuaSkKCmRmX2VnbyR1bml2ZXJzaXR5IDwtIGdzdWIoJ0VVUi9Cb3N0b24gVW5pdmVyc2l0eScsICdFVVInLCBkZl9lZ28kdW5pdmVyc2l0eSkKZGZfZWdvJHVuaXZlcnNpdHkgPC0gZ3N1YignUlUvUnZHJywgJ1JVJywgZGZfZWdvJHVuaXZlcnNpdHkpCmRmX2VnbyR1bml2ZXJzaXR5IDwtIGdzdWIoJ1J2Ry9SVScsICdSdkcnLCBkZl9lZ28kdW5pdmVyc2l0eSkKZGZfZWdvJHVuaXZlcnNpdHkgPC0gZ3N1YignUnZHL1RpbGJ1cmcnLCAnUnZHJywgZGZfZWdvJHVuaXZlcnNpdHkpCmRmX2VnbyR1bml2ZXJzaXR5IDwtIGdzdWIoJ1J2Ry9UVSBEZWxmdCcsICdSdkcnLCBkZl9lZ28kdW5pdmVyc2l0eSkKZGZfZWdvJHVuaXZlcnNpdHkgPC0gZ3N1YignUnZHL1VuaXZlcnNpdGVpdCBTdG9ja2hvbG0nLCAnUnZHJywgZGZfZWdvJHVuaXZlcnNpdHkpCmRmX2VnbyR1bml2ZXJzaXR5IDwtIGdzdWIoJ1J2Ry9Vbml2ZXJzaXR5IExpbmvDtnBpbmcnLCAnUnZHJywgZGZfZWdvJHVuaXZlcnNpdHkpCmRmX2VnbyR1bml2ZXJzaXR5IDwtIGdzdWIoJ1J2Ry9Vbml2ZXJzaXR5IG9mIExlaXB6aWcnLCAnUnZHJywgZGZfZWdvJHVuaXZlcnNpdHkpCmRmX2VnbyR1bml2ZXJzaXR5IDwtIGdzdWIoJ1J2Ry9Vbml2ZXJzaXR5IG9mIFR1cmt1JywgJ1J2RycsIGRmX2VnbyR1bml2ZXJzaXR5KQpkZl9lZ28kdW5pdmVyc2l0eSA8LSBnc3ViKCdVVS9VdkEnLCAnVVUnLCBkZl9lZ28kdW5pdmVyc2l0eSkKZGZfZWdvJHVuaXZlcnNpdHkgPC0gZ3N1YignVXZBL0ZyYW5rZnVydCBTY2hvb2wgb2YgRmluYW5jZSAmIE1hbmFnZW1lbnQnLCAnVXZBJywgZGZfZWdvJHVuaXZlcnNpdHkpCmRmX2VnbyR1bml2ZXJzaXR5IDwtIGdzdWIoJ1V2QS9FVVInLCAnVXZBJywgZGZfZWdvJHVuaXZlcnNpdHkpCmRmX2VnbyR1bml2ZXJzaXR5IDwtIGdzdWIoJ1V2QS9Vbml2ZXJzaXR5IG9mIExhdXNhbm5lJywgJ1V2QScsIGRmX2VnbyR1bml2ZXJzaXR5KQpkZl9lZ28kdW5pdmVyc2l0eSA8LSBnc3ViKCdVdlQvVHJlbnRvIFVuaXZlcnNpdHknLCAnVXZUJywgZGZfZWdvJHVuaXZlcnNpdHkpCmRmX2VnbyR1bml2ZXJzaXR5IDwtIGdzdWIoJ1ZVL1V2SCcsICdWVScsIGRmX2VnbyR1bml2ZXJzaXR5KQoKdGFibGUoZGZfZWdvJHVuaXZlcnNpdHksdXNlTkE9J2Fsd2F5cycpCmNoZWNrdW5pIDwtIGNiaW5kLmRhdGEuZnJhbWUoCiAgZGZfZWdvJHVuaXZlcnNpdGVpdC4yMiwgZGZfZWdvJHVuaXZlcnNpdGVpdC4yNCwgZGZfZWdvJHVuaXZlcnNpdHkpCnZpZXcoY2hlY2t1bmkpCnJtKGNoZWNrdW5pKQoKYGBgCgpgYGB7cn0KI0JpZ2xlYWd1ZQoKZGZfZWdvID0gZGZfZWdvIHw+CiAgICBtdXRhdGUoCiAgICAgICAgYmlnbGVhZ3VlID0gY2FzZV93aGVuKAogICAgICAgICAgICBwb3NpdGlvbiA9PSAiQXNzaXN0YW50IFByb2Zlc3NvciIgfiAxLAogICAgICAgICAgICBwb3NpdGlvbiA9PSAiQXNzb2NpYXRlIFByb2Zlc3NvciIgfiAxLAogICAgICAgICAgICBwb3NpdGlvbiA9PSAiRnVsbCBQcm9mZXNzb3IiIH4gMSwKICAgICAgICAgICAgLmRlZmF1bHQgPSAwCiAgICAgICAgKQogICAgKQoKY2hlY2tiaWdsZWFndWUgPC0gY2JpbmQuZGF0YS5mcmFtZSgKICBkZl9lZ28kcG9zaXRpb24sIGRmX2VnbyRiaWdsZWFndWUpCnZpZXcoY2hlY2tiaWdsZWFndWUpCnJtKGNoZWNrYmlnbGVhZ3VlKQoKYGBgCgpgYGB7cn0KIyBHZXR0aW5nIHRoZSBhc3Npc3RhbnQvYXNzb2NpYXRlL2Z1bGwgcHJvZmVzc29ycyBpbnRvIGEgdmFyaWFibGUKdGFibGUoZGZfZWdvJGJpZ2xlYWd1ZSwgZGZfZWdvJHVuaXZlcnNpdHkpCgpibGVhZ3VlIDwtIGlmZWxzZShkZl9lZ28kYmlnbGVhZ3VlID09IDEsIGRmX2VnbyR1bml2ZXJzaXR5LCBOQSkKCmhpbmRleCA8LSBpZmVsc2UoZGZfZWdvJGJpZ2xlYWd1ZSA9PSAxLCBkZl9lZ28kaF9pbmRleCwgTkEpCgpibGhpbiA8LSBkYXRhLmZyYW1lKHVuaXZlcnNpdHkgPSBibGVhZ3VlLCBoaW5kZXggPSBoaW5kZXgpCgp0YWJsZShibGhpbiR1bml2ZXJzaXR5LCB1c2VOQSA9ICdhbHdheXMnKQp0YWJsZShibGhpbiRoaW5kZXgsIHVzZU5BID0gJ2Fsd2F5cycpCgpibGhpbiA8LSBibGhpblshaXMubmEoYmxoaW5bYygndW5pdmVyc2l0eScpXSksIF0KCnRhYmxlKGJsaGluJHVuaXZlcnNpdHksIHVzZU5BID0gJ2Fsd2F5cycpCnRhYmxlKGJsaGluJGhpbmRleCwgdXNlTkEgPSAnYWx3YXlzJykKCiMgRVVSICBSVSAgIFJ2RyAgVVUgICBVdkEgIFV2VCAgVlUgIDxOQT4gCiMgMzIgICAxOCAgIDMxICAgMjUgICAzNCAgIDE2ICAgMzMgICAgMCAKCmBgYAoKYGBge3J9CiMgYXZlcmFnZSBoLWluZGV4IG9mIGRlcGFydG1lbnQKCnVuaV9saXN0IDwtIGFzLmRhdGEuZnJhbWUoYygnRVVSJywgJ1JVJywgJ1J2RycsICdVVScsICdVdkEnLCAnVXZUJywgJ1ZVJykpCgpuYW1lcyh1bmlfbGlzdCkgPC0gJ3VuaXZlcnNpdHknCgp1bmlfZGYgPC0gbWVyZ2UodW5pX2xpc3QsIGJsaGluLCBieT0ndW5pdmVyc2l0eScpCgpyZXF1aXJlKGRwbHlyKQoKc3VtbWFyaXNlKGdyb3VwX2J5KHVuaV9kZiwgdW5pdmVyc2l0eSksIHN1bV9oID0gc3VtKGhpbmRleCkpCgp0YWJsZShibGhpbiR1bml2ZXJzaXR5LCB1c2VOQSA9ICdhbHdheXMnKQoKRVVSX21lYW5faCA8LSA0NzMgLyAzMgpSVV9tZWFuX2ggPC0gMjc5IC8gMTgKUnZHX21lYW5faCA8LSA3NjYgLyAzMQpVVV9tZWFuX2ggPC0gNDE3IC8gMjUKVXZBX21lYW5faCA8LSA1NjcgLyAzNApVdlRfbWVhbl9oIDwtIDI0NiAvIDE2ClZVX21lYW5faCA8LSA2NjAgLyAzMwoKbWVhbl9oIDwtIGMoRVVSX21lYW5faCwgUlVfbWVhbl9oLCBSdkdfbWVhbl9oLCBVVV9tZWFuX2gsIFV2QV9tZWFuX2gsIFV2VF9tZWFuX2gsIFZVX21lYW5faCkKCmRmX21lYW5faCA8LSBkYXRhLmZyYW1lKHVuaXZlcnNpdHkgPSB1bmlfbGlzdCwgbWVhbl9oKQoKZGZfZWdvMiA8LSBtZXJnZShkZl9lZ28sIGRmX21lYW5faCwgYnkgPSAidW5pdmVyc2l0eSIsIGFsbC54ID0gVFJVRSkKCmBgYAoKYGBge3J9CiMgRm9yIHRoZSB2aXN1YWxpemF0aW9uLCBzb21lIGVnb3MgdGhhdCBvbmx5IGhhdmUgZGF0YSBpbiB1bml2ZXJzaXRlaXQuMjUgYXJlIHZlcnkgZGlmZmljdWx0IHRvIHJlbW92ZS4gVGhlcmVmb3JlLCBJIGFtIGltcHV0aW5nIHRoZWlyIHVuaXZlcnNpdHkgdmFsdWUuCgpkZl9lZ28yJHVuaXZlcnNpdHkgPC0gaWZlbHNlKGlzLm5hKGRmX2VnbzIkdW5pdmVyc2l0eSksIGRmX2VnbzIkdW5pdmVyc2l0ZWl0LjI1LCBkZl9lZ28yJHVuaXZlcnNpdHkpCgpgYGAKCgpgYGB7cn0KIyB1bml2ZXJzaXR5IGFzIG51bWVyaWMKCmRmX2VnbzIkdW5pX251bSA8LSBkZl9lZ28yJHVuaXZlcnNpdHkKZGZfZWdvMiR1bmlfbnVtIDwtIGdzdWIoJ0VVUicsIDAsIGRmX2VnbzIkdW5pX251bSkKZGZfZWdvMiR1bmlfbnVtIDwtIGdzdWIoJ1JVJywgMSwgZGZfZWdvMiR1bmlfbnVtKQpkZl9lZ28yJHVuaV9udW0gPC0gZ3N1YignUnZHJywgMiwgZGZfZWdvMiR1bmlfbnVtKQpkZl9lZ28yJHVuaV9udW0gPC0gZ3N1YignVVUnLCAzLCBkZl9lZ28yJHVuaV9udW0pCmRmX2VnbzIkdW5pX251bSA8LSBnc3ViKCdVdkEnLCA0LCBkZl9lZ28yJHVuaV9udW0pCmRmX2VnbzIkdW5pX251bSA8LSBnc3ViKCdVdlQnLCA1LCBkZl9lZ28yJHVuaV9udW0pCmRmX2VnbzIkdW5pX251bSA8LSBnc3ViKCdWVScsIDYsIGRmX2VnbzIkdW5pX251bSkKCnRhYmxlKGRmX2VnbzIkdW5pdmVyc2l0eSwgZGZfZWdvMiR1bmlfbnVtLCB1c2VOQSA9ICdhbHdheXMnKQoKYGBgCgoKYGBge3J9CiMgZ2VuZGVyIGFzIG51bWVyaWMKCkdlbmRlcl92YWx1ZSA8LSBjKCdGZW1hbGUnLCdNYWxlJykKR2VuZGVyX2NvdW50IDwtIGMoMjQ1LDIxMykKZGZfZ2VuZGVyX2ZyZXEgPC0gZGF0YS5mcmFtZShHZW5kZXI9R2VuZGVyX3ZhbHVlLCBDb3VudD1HZW5kZXJfY291bnQpCmZzaG93ZGYoZGZfZ2VuZGVyX2ZyZXEpIAoKI0xhc3RseSB0aGVyZSBpcyB0aGUgZ2VuZGVyIHZhcmlhYmxlLCB3aGljaCBoYXMgZml2ZSBtaXNzaW5ncwp0YWJsZShkZl9lZ28yJGdlbmRlcix1c2VOQT0nYWx3YXlzJykKCgojZHVtbXkKZGZfZWdvMiRnZW5kZXJfbnVtIDwtIGRmX2VnbzIkZ2VuZGVyCmRmX2VnbzIkZ2VuZGVyX251bSA8LSBnc3ViKCdmZW1hbGUnLCAwLCBkZl9lZ28yJGdlbmRlcl9udW0pCmRmX2VnbzIkZ2VuZGVyX251bSA8LSBnc3ViKCdtYWxlJywgMSwgZGZfZWdvMiRnZW5kZXJfbnVtKQoKIyBjaGVjawp0YWJsZShkZl9lZ28yJGdlbmRlcixkZl9lZ28yJGdlbmRlcl9udW0sdXNlTkE9J2Fsd2F5cycpCgpgYGAKCiMgRGF0YQoKIyMgU2FtcGxlCgpTdG9jaGFzdGljIEFjdG9yIE9yaWVudGVkIE1vZGVscyAoU0FPTSkKClRoZSBkYXRhc2V0IGNvbnNpc3RzIG9mIGRpcmVjdGVkIHRpZXMgaW4gYSBuZXR3b3JrIG9mIHNjaG9sYXJzIHdvcmtpbmcgYXQgYSBEdXRjaCBzb2Npb2xvZ3kgZGVwYXJ0bWVudCBhbmQgc2Nob2xhcnMgd29ya2luZyBhdCBhIER1dGNoIHBvbGl0aWNhbCBzY2llbmNlIGRlcGFydG1lbnQuIEJ5IHVzaW5nIHRoZSBPcGVuQWxleCBBUEkgKHNvdXJjZT8pLCB0aGUgSURzIG9mIHRoZSB3b3JrcyBhZmZpbGlhdGVkIHdpdGggdGhlc2Ugc2Nob2xhcnMgaGFkIGJlZW4gd2Vic2NyYXBlZC4gCgpGaXJzdCwgdGhlIGRhdGFzZXQgd2FzIGZpbHRlcmVkIHNvIHRoYXQgb25seSB0aGUgc2Nob2xhcnMgZnJvbSB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnRzIHJlbWFpbmVkLiBUaGUgZHVwbGljYXRlIHNjaG9sYXIgSURzIHdlcmUgc3Vic2VxdWVudGx5IHJlbW92ZWQuCgpUaGUgZGF0YXNldCBjb250YWlucyBhY2FkZW1pYyB3b3JrcyBmcm9tIDIwMTUgdW50aWwgMjAyNS4gRm9yIHRoZSAyMDI1IHRpbWUgcG9pbnQsIHRoZSBhY2FkZW1pYyBmdW5jdGlvbiBvZiBtZW1iZXJzIG9mIHRoZSBFcmFzbXVzIFVuaXZlcnNpdHkgUm90dGVyZGFtIHNvY2lvbG9neSBkZXBhcnRtZW50IGlzIG1pc3NpbmcuIAoKVG8gZXhhbWluZSBjaGFuZ2Ugb3ZlciB0aW1lLCB0d28gd2F2ZXMgd2VyZSBjb25zdHJ1Y3RlZC4gV2F2ZSAxIGdvZXMgZnJvbSAyMDE1IHVudGlsIDIwMTksIGFuZCBXYXZlIDIgZ29lcyBmcm9tIDIwMjAgdG8gMjAyNCwgbWVhbmluZyBhbiBlcXVhbCB0aW1lIGRpc3RyaWJ1dGlvbiBvZiBmb3VyIHllYXJzLiAKCiMgTWV0aG9kcwoKUiB3aWxsIGJlIHVzZWQuCgojIyBNZWFzdXJlcyAKClRvIG9wZXJhdGlvbmFsaXNlIHRoZSBjb25jZXB0IG9mIOKAmGFjYWRlbWljIHByZXN0aWdl4oCZLCB0aGUgcGVyc29uYWwgaC1pbmRleCB3YXMgdXNlZCBhcyBhIHByb3h5KD8pLCByZXByZXNlbnRpbmcgaW5kaXZpZHVhbCBwcmVzdGlnZS4gVGhlIAoKU2Nob2xhcnMgd2l0aCBtb3JlIGNhcmVlciBzZW5pb3JpdHkgYW5kIGEgcGVybWFuZW50IHBvc2l0aW9uIGFyZSBtb3JlIGxpa2VseSB0byBiZSByZXByZXNlbnRhdGl2ZSBvZiB0aGUgbGV2ZWwgb2YgcXVhbGl0eSBvZiBhbiBhY2FkZW1pYyBkZXBhcnRtZW50IHRoYW4gdGhvc2Ugd2hvIGFyZSBtb3JlIGp1bmlvci4gVGhlIGZ1bmN0aW9ucyBpbiB0aGUgZGF0YSBhcmUgYWxzbyBzb21ld2hhdCBhbWJpZ3VvdXMsIFsuLi5dIFRoZXJlZm9yZSwgc29jaW9sb2dpc3RzIHdobyBoYXZlIGEgZnVuY3Rpb24gYXMgYXNzaXN0YW50IHByb2Zlc3NvciwgYXNzb2NpYXRlIHByb2Zlc3NvciBvciBmdWxsIHByb2Zlc3NvciB3ZXJlIHRha2VuIGludG8gdGhlIGRlcGFydG1lbnRhbCBwcmVzdGlnZSBtZWFzdXJlLiBUaGUgaC1pbmRleCBvZiB0aGVzZSBtZW1iZXJzIHdlcmUgY291bnRlZCB1cCB0byBjYWxjdWxhdGUgdGhlIG1lYW4gaC1pbmRleC4gVGhpcyBiZWNhbWUgdGhlIGRlcGFydG1lbnRhbCBwcmVzdGlnZSBtZWFzdXJlLiAKVGhlICpoaWdoZXIqIGVmZmVjdCBpbiBSU2llbmEsIGFuIFIgcGFja2FnZSB3aGljaCB3aWxsIGJlIHVzZWQgZm9yIHRoZSBhbmFseXNpcy4gVGhpcyBpcyB0aGUgZWZmZWN0IHRoYXQgdGhlIGVnbyBoYXMgYSBoaWdoZXIgY292YXJpYXRlIHRoYW4gdGhlIGFsdGVyLiBUaGUgZWZmZWN0IGlzIHdyaXR0ZW4gb3V0IGFzIGFuIGVxdWF0aW9uIGJlbG93CgokJCBcU2lnbWFfaiB4X3tpan1kc2lnbih2X3tpfSAtIHZfe2p9KSQkCgpXaGVyZSBkc2lnbigqZCopID0gMCBmb3IgKmQqIDwgMCwgMC41IGZvciAqZCogPSAwLCBhbmQgMSBmb3IgKmQqID4gMC4KCiMjIyBKb2IgcG9zaXRpb24KCldoaWxlIG1hbnkgY2hhbmdlcyBjYW4gaGFwcGVuIHRvIHNvbWVvbmXigJlzIGFjYWRlbWljIGZ1bmN0aW9uLCBzdWNoIGFzIGJlaW5nIGhpcmVkLCBsZWF2aW5nIG9yIGdldHRpbmcgYSBwcm9tb3Rpb24sIG1vc3QgcmVtYWluIHN0YWJsZS4gRm9yIHRoZSBzYWtlIG9mIHRoZSBhbmFseXNpcywgdGhlIGZ1bmN0aW9ucyB3ZXJlIHN0YW5kYXJkaXNlZC4gCkFmdGVyIHJlbW92aW5nIHRoZSAyMDI1IHRpbWUgcG9pbnQsIHRoZSBhdmFpbGFibGUgdmFyaWFibGVzIHdlcmUgdGhlIGZ1bmN0aW9uIGF0IDIwMjIgYW5kIDIwMjQuIFRoZSBqb2IgcG9zaXRpb24gYXQgMjAyMiB3YXMgdXNlZCBmb3IgMjAyNC4gTW9zdCBzb2Npb2xvZ2lzdHMgaGVsZCB0aGUgc2FtZSBwb3NpdGlvbiBvbiBib3RoIHRpbWUgcG9pbnRzLCBidXQgYSBwcm9tb3Rpb24gb3IgbGVhdmUgd2FzIHRoZXJlZm9yZSBub3QgaW5jbHVkZWQuIFdoZW4gYSBmdW5jdGlvbiBhdCAyMDIyIHdhcyBtaXNzaW5nLCB0aGUgZnVuY3Rpb24gYXQgMjAyNCB3YXMgdXNlZCBpbnN0ZWFkLgoKIyMjIENvbnRyb2wgdmFyaWFibGVzCgpCZXNpZGVzIHRoZSBtYWluIGVmZmVjdHMgb2YgaW5kaXZpZHVhbCBhbmQgZGVwYXJ0bWVudGFsIHByZXN0aWdlLCB0d28gY29udHJvbCB2YXJpYWJsZXMgd2VyZSBhbHNvIHRha2VuIGludG8gdGhlIGFuYWx5c2lzLiBUaGUgZmlyc3QgaXMgYSBudW1lcmljIHZlcnNpb24gb2YgdGhlIHVuaXZlcnNpdHkgdmFyaWFibGUgYW5kIHRoZSBzZWNvbmQgaXMgYSBkdW1teSB2YXJpYWJsZSBvZiBnZW5kZXIuIEJvdGggYXJlIHVzZWQgdG8gY29udHJvbCBmb3IgdGhlIGVmZmVjdCB0aGF0IHNjaG9sYXJzIG1heSBwcmVmZXIgd29ya2luZyB0b2dldGhlciB3aXRoIG90aGVycyBmcm9tIHRoZWlyIG93biBkZXBhcnRtZW50IChzb3VyY2UpLCBvciB3aG8gc2hhcmUgdGhlIHNhbWUgZ2VuZGVyIChzb3VyY2UpLiBUaGlzIGlzIGFjaGlldmVkIHRocm91Z2ggdGhlIHNhbWVYIGVmZmVjdCwgdGFraW5nIHRoZSBzYW1lIHZhbHVlIG9mIHRoZS4uLgoKQWZ0ZXIgcmVtb3ZpbmcgdGhlIDIwMjUgdGltZSBwb2ludCwgc29tZSBtaXNzaW5nbmVzcyByZW1haW5lZCBpbiB1bml2ZXJzaXR5LCBmdW5jdGlvbiBhbmQgZ2VuZGVyLiBUaGlzIG1pc3NpbmduZXNzIHdhcyB2ZXJ5IHNtYWxsLCBbbnVtYmVyXS4gUmVtb3ZpbmcgdGhlIHNjaG9sYXJzIHdpdGggbWlzc2luZyB2YXJpYWJsZXMgcHJvdmVkIHRvIGJlIG1vcmUgcHJvYmxlbWF0aWMgdG8gcnVuIHRoZSBSU2llbmEgbW9kZWwgdGhhbiBrZWVwaW5nIHRoZW0gaW4gdGhlIGRhdGFzZXQuCgojIEZyZXF1ZW5jaWVzCgojIyBVbml2ZXJzaXR5CgpgYGB7cn0KCnRhYmxlKGRmX2VnbzIkdW5pdmVyc2l0eSwgdXNlTkEgPSAnYWx3YXlzJykKYGBgCgpgYGB7cn0KIyBGcmVxdWVuY3kgdGFibGUgZm9yIHVuaXZlcnNpdHkKdW5pX3ZhbHVlIDwtIGMoJ0VVUicsICdSVScsICdSdkcnLCAnVVUnLCAnVXZBJywgIlV2VCIsICdWVScsICdtaXNzaW5nJykKdW5pX2NvdW50IDwtIGMoNTAsIDQ5LCA3NCwgNTMsIDcwLCAyOCwgODAsIDU0KQpkZl91bmlfZnJlcSA8LSBkYXRhLmZyYW1lKFVuaXZlcnNpdHkgPSB1bmlfdmFsdWUsIENvdW50ID0gdW5pX2NvdW50KQpmc2hvd2RmKGRmX3VuaV9mcmVxKQoKYGBgCgojIyBKb2IgcG9zaXRpb24KCmBgYHtyfQoKdGFibGUoZGZfZWdvMiRwb3NpdGlvbiwgdXNlTkEgPSAnYWx3YXlzJykKYGBgCgpgYGB7cn0KIyBGcmVxdWVuY3kgdGFibGUgZm9yIGpvYiBwb3NpdGlvbgoKcG9zaXRfdmFsdWUgPC0gYygnUGhEIENhbmRpZGF0ZScsICdQb3N0ZG9jdG9yYWwgUmVzZWFyY2hlcicsICdMZWN0dXJlcicsICdSZXNlYXJjaGVyJywKICAgICAgICAgICAgJ0Fzc2lzdGFudCBwcm9mZXNzb3InLCdBc3NvY2lhdGUgcHJvZmVzc29yJywgJ0Z1bGwgcHJvZmVzc29yJywgJ1N0YWZmJywgJ21pc3NpbmcnKQpwb3NpdF9jb3VudCA8LSBjKDEzNiwgMTUsIDIxLCAzMiwgODEsIDM5LCA2OSwgNCwgNjEpCmRmX2ZyZXFfcG9zaXQgPC0gZGF0YS5mcmFtZShGdW5jdGlvbiA9IHBvc2l0X3ZhbHVlLCBDb3VudCA9IHBvc2l0X2NvdW50KQpmc2hvd2RmKGRmX2ZyZXFfcG9zaXQpCgpgYGAKCiMjIEdlbmRlcgoKYGBge3J9Cgp0YWJsZShkZl9lZ28yJGdlbmRlciwgdXNlTkEgPSAnYWx3YXlzJykKYGBgCgpgYGB7cn0KIyBGcmVxdWVuY3kgdGFibGUgZm9yIGdlbmRlcgoKR2VuX3ZhbHVlIDwtIGMoJ0ZlbWFsZScsICdNYWxlJywgJ21pc3NpbmcnKQpHZW5fY291bnQgPC0gYygyNDIsIDIxMSwgNSkKZGZfZnJlcV9nZW4gPC0gZGF0YS5mcmFtZShHZW5kZXIgPSBHZW5fdmFsdWUsIENvdW50ID0gR2VuX2NvdW50KQpmc2hvd2RmKGRmX2ZyZXFfZ2VuKQoKYGBgCgoKCgoKCg==</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("DataPrepMethods.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

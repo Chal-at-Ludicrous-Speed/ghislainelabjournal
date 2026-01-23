@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Packages
 
-```{r, eval=FALSE}
+```{r}
 library(foreign)
 library(tidyverse)
 library(scholar) 
@@ -24,7 +24,7 @@ library(RSiena)
 
 ### Loading the journal dataset
 
-```{r, eval=FALSE}
+```{r}
 
 sjr2022 <- read_csv2('/Users/ghislaine/Downloads/Github/Social Networks/scimagojr 2022 Subject Category - Sociology and Political Science.csv')
 
@@ -34,13 +34,61 @@ sjr2024 <- read_csv2('/Users/ghislaine/Downloads/Github/Social Networks/scimagoj
 
 # Stealing Niels Vullings' code and linking the journals from SJR to the journals in the dataset
 
+```{r}
+ fpackage.check <- function(packages) {
+  lapply(packages, FUN = function(x) {
+       if (!require(x, character.only = TRUE)) {
+           install.packages(x, dependencies = TRUE)
+           library(x, character.only = TRUE)
+       }
+   })
+ }
+
+fsave <- function(x, file = NULL, location = "./data/processed/") {
+    ifelse(!dir.exists("data"), dir.create("data"), FALSE)
+    ifelse(!dir.exists("data/processed"), dir.create("data/processed"), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename <- substr(gsub("[:-]", "", Sys.time()), 1, 8)
+    totalname <- paste(location, datename, file, ".rda", sep = "")
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+fload <- function(filename) {
+    load(filename)
+    get(ls()[ls() != "filename"])
+}
+
+fshowdf <- function(x, ...) {
+    knitr::kable(x, digits = 2, "html", ...) %>%
+        kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+        kableExtra::scroll_box(width = "100%", height = "300px")
+}
+
+colorize <- function(x, color) {
+    sprintf("<span style='color: %s;'>%s</span>", color, x)
+}
+
+```
+
+```{r}
+scholars <- fload("./data/processed/scholars_20240924.rda")
+
+demographics <- do.call(rbind.data.frame, scholars$demographics)
+
+sample <- which(demographics$discipline.22 == "sociology" | demographics$discipline.24 == "sociology")
+
+demographics_soc <- demographics[sample,]
+sociologists <- lapply(scholars, "[",sample)
+
+```
 
 df_works doesn't work yet
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval=FALSE}
 
 df_works_dataframe <- do.call(rbind.data.frame, sociologists$works)  # put works in dataframe
-# head(df_works)
+head(df_works)
 
 df_works_dataframe <- do.call(rbind.data.frame, sociologists$works)
 
@@ -48,7 +96,20 @@ df_works_dataframe <- do.call(rbind.data.frame, sociologists$works)
 
 ### debugging
 
-```{r, eval=FALSE}
+```{r}
+demographics_soc <- demographics[sample,]
+
+ids <- demographics_soc$au_id
+wave2 <- wave1 <- matrix(0, nrow = length(ids), ncol = length(ids), dimnames = list(ids, ids))
+
+worksobject <- sociologists$works
+
+works_id <- unlist(lapply(worksobject, function(l) l$id))
+works_author <- unlist(lapply(worksobject, function(l) l$author), recursive = FALSE)
+works_year <- unlist(lapply(worksobject, function(l) l$publication_year), recursive = FALSE)
+```
+
+```{r}
 fcolnet_n <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
     2018), c(2019, 2023)), type = c("first")) {
 
@@ -130,14 +191,7 @@ fcolnet_n <- function(data = scholars, university = "RU", discipline = "sociolog
 ```
 
 
-
-
-```{r, eval=FALSE}
-scholars <- fload("./data/processed/scholars_20240924.rda")
-```
-
-
-```{r, eval=FALSE}
+```{r}
 soc_data <- fcolnet_n(data = scholars, university = c("RU", "UU"), discipline = c("sociology"), waves = list(c(2015,
     2019), c(2020, 2024)), type = c("first"))
 
@@ -147,13 +201,13 @@ df_ego <- do.call(rbind.data.frame, soc_data$data$demographics)
 df_works <- do.call(rbind.data.frame, soc_data$data$works)  # put works in dataframe
 # head(df_works)
 
-test1 <- df_works %>% select(id, so, issn_l, author) # test the works
+# test1 <- df_works %>% select(id, so, issn_l, author) # test the works
 
 soc_data$nets[2,,] # How to call a specific network
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 df_works <- tibble(works_id, works_author, works_year)
 ```
 
@@ -174,7 +228,10 @@ install.packages("reshape2")
 test1 <- df_works %>% select(id, so, issn_l, author) # test the works
 ```
 
+The very stubborn ifelse function not knitting is occurring here. I need to put it on eval=false because after two days I still haven't found a solution to it.
+
 ```{r, eval=FALSE}
+
 # Split the ISSN codes if 2 are available
 
 sjr2022$Issn_1 <- sapply(strsplit(sjr2022$Issn, ", "), `[`, 1)  # This code should work as a way to split the two issn codes
@@ -229,7 +286,7 @@ df_pres_24 <- df_pres_24 %>%
 
 ```
 
-```{r, eval=FALSE}
+```{r}
 #---- String Stripper ----
 str_strip <- function(input = "THIs StrïnG is ÑorMälìZed") {
 
@@ -347,7 +404,7 @@ df_ego <- df_ego %>% left_join(df_career_age, by = "au_id")
 
 ### own fcolnet, different from niels
 
-```{r, eval=FALSE}
+```{r}
 
 fcolnet_25 <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
     2018), c(2019, 2023)), type = c("first")) {
@@ -431,33 +488,13 @@ fcolnet_25 <- function(data = scholars, university = "RU", discipline = "sociolo
 ```
 
 
-```{r, eval=FALSE}
+```{r}
 
 # soc_test_data <- sienaDataCreate(wave1, wave2)
 
 soc_test_data <- sienaDependent(array(c(wave1, wave2), dim = c(386, 386)))
 ```
 
-Trying to get a network for RSiena
-
-```{r, eval=FALSE}
-test_RU <- fcolnet_25(data = scholars, 
-                    university = "RU",
-                    discipline = "sociology", 
-                    waves = list(c(2015, 2018), c(2019, 2023)), 
-                    type = c("first"))
-
-test_UvT <- fcolnet_25(data = scholars, 
-                    university = "UvT",
-                    discipline = "sociology", 
-                    waves = list(c(2015, 2018), c(2019, 2023)), 
-                    type = c("first"))
-
-soc_test_data <- sienaDataCreate(test_RU, test_UvT)
-
-soc_test_data <- sienaDependent(array(c(test_RU, test_UvT, dim = c(386, 386)))
-
-```
 
 ----
 # Two articles
