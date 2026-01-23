@@ -32,7 +32,6 @@ klippy::klippy(position = c('top', 'right'))
 
 
 
-
 ----
 
 <!--- This is the best way to write a comment. 
