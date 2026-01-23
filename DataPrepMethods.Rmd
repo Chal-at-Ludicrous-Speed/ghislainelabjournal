@@ -503,7 +503,7 @@ After removing the 2025 time point, the available variables were the function at
 
 ### Control variables
 
-Besides the main effects of individual and departmental prestige, two control variables were also taken into the analysis. The first is a numeric version of the university variable and the second is a dummy variable of gender. Both are used to control for the effect that scholars may prefer working together with others from their own department, or who share the same gender. This is achieved through the sameX effect, which examines whether both the sender and the receiver of a tie share a certain characteristic.
+Besides the main effects of individual and departmental prestige, two control variables were also taken into the analysis. The first is a numeric version of the university variable and the second is a dummy variable of gender. Both are used to control for the effect that scholars may prefer working together with others from their own department, or who share the same gender [@McPherson]. This is achieved through the sameX effect, which examines whether both the sender and the receiver of a tie share a certain characteristic.
 
 After removing the 2025 time point, some missingness remained in university, function and gender. This missingness was very small. Removing the scholars with missing variables proved to be more problematic to run the RSiena model than keeping them in the dataset.
 
