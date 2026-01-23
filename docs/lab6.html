@@ -433,38 +433,12 @@ div.tocify {
 <div id="packages" class="section level3" number="0.0.1">
 <h3><span class="header-section-number">0.0.1</span> Packages</h3>
 <pre class="r"><code>library(foreign)
-library(tidyverse)</code></pre>
-<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-## ✔ forcats   1.0.0     ✔ stringr   1.5.2
-## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
-## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-## ✔ purrr     1.1.0     
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
-## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-<pre class="r"><code>library(scholar) 
-library(openalexR)</code></pre>
-<pre><code>## openalexR v2.0.0 introduces breaking changes.
-## See NEWS.md for details.
-## 
-## To suppress this message, add `openalexR.message = suppressed` to your .Renviron file.</code></pre>
-<pre class="r"><code>library(rvest) </code></pre>
-<pre><code>## 
-## Attaching package: &#39;rvest&#39;
-## 
-## The following object is masked from &#39;package:readr&#39;:
-## 
-##     guess_encoding</code></pre>
-<pre class="r"><code>library(jsonlite)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;jsonlite&#39;
-## 
-## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     flatten</code></pre>
-<pre class="r"><code>library(RSiena)</code></pre>
+library(tidyverse)
+library(scholar) 
+library(openalexR)
+library(rvest) 
+library(jsonlite)
+library(RSiena)</code></pre>
 </div>
 <div id="loading-the-journal-dataset" class="section level3"
 number="0.0.2">
@@ -475,19 +449,22 @@ dataset</h3>
 <pre><code>## New names:
 ## Rows: 1484 Columns: 27
 ## ── Column specification
-## ──────────────────────────────────────────────────────── Delimiter: &quot;;&quot; chr
-## (13): Title, Type, Issn, Publisher...6, Open Access, Open Access Diamond... dbl
-## (14): Rank, Sourceid, SJR, H index, Total Docs. (2022), Total Docs. (3ye...
-## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
-## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## ────────────────────────────────────── Delimiter: &quot;;&quot; chr
+## (13): Title, Type, Issn, Publisher...6, Open Access, Open
+## Access Diamond, SJR Quartile, Coun... dbl (14): Rank,
+## Sourceid, SJR, H index, Total Docs. (2022), Total Docs.
+## (3years), Total Refs., T...
+## ℹ Use `spec()` to retrieve the full column specification for
+## this data. ℹ Specify the column types or set `show_col_types
+## = FALSE` to quiet this message.
 ## • `Publisher` -&gt; `Publisher...6`
 ## • `Publisher` -&gt; `Publisher...24`</code></pre>
 <pre class="r"><code>sjr2024 &lt;- read_csv2(&#39;/Users/ghislaine/Downloads/Github/Social Networks/scimagojr 2024 Subject Category - Sociology and Political Science.csv&#39;)</code></pre>
 <pre><code>## ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.
-## New names:Rows: 1461 Columns: 27── Column specification ────────────────────────────────────────────────────────
+## New names:Rows: 1461 Columns: 27── Column specification ──────────────────────────────────────
 ## Delimiter: &quot;;&quot;
-## chr (13): Title, Type, Issn, Publisher...6, Open Access, Open Access Diamond...
-## dbl (14): Rank, Sourceid, SJR, H index, Total Docs. (2024), Total Docs. (3ye...
+## chr (13): Title, Type, Issn, Publisher...6, Open Access, Open Access Diamond, SJR Quartile, Coun...
+## dbl (14): Rank, Sourceid, SJR, H index, Total Docs. (2024), Total Docs. (3years), Total Refs., T...
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>

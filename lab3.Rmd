@@ -32,7 +32,7 @@ The function "read_html" is having issues.
 
 ---- 
 
-```{r}
+```{r, eval=FALSE}
 
 library(tidyr)
 library(xml2)
